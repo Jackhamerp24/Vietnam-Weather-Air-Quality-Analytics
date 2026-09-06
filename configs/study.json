@@ -1,0 +1,87 @@
+{
+  "version": 1,
+  "products": [
+    {
+      "id": "openaq_airgradient_hourly",
+      "provider": "OpenAQ / AirGradient",
+      "domain": "air_quality",
+      "data_kind": "measurement",
+      "endpoint": "https://api.openaq.org/v3/sensors/{sensors_id}/hours",
+      "attribution": "OpenAQ; AirGradient; original contributor per sensor",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/"
+    },
+    {
+      "id": "open_meteo_weather_forecast",
+      "provider": "Open-Meteo / ECMWF IFS",
+      "domain": "weather",
+      "data_kind": "forecast",
+      "endpoint": "https://api.open-meteo.com/v1/forecast",
+      "attribution": "Open-Meteo; ECMWF IFS. Modeled weather, not station measurements.",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "options": {"models": "ecmwf_ifs", "timezone": "UTC", "timeformat": "unixtime", "wind_speed_unit": "ms", "temperature_unit": "celsius", "precipitation_unit": "mm"}
+    },
+    {
+      "id": "open_meteo_era5",
+      "provider": "Open-Meteo / Copernicus C3S ERA5",
+      "domain": "weather",
+      "data_kind": "reanalysis",
+      "endpoint": "https://archive-api.open-meteo.com/v1/archive",
+      "attribution": "Open-Meteo; ERA5 / Copernicus C3S, doi:10.24381/cds.adbb2d47",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "options": {"models": "era5", "timezone": "UTC", "timeformat": "unixtime", "wind_speed_unit": "ms", "temperature_unit": "celsius", "precipitation_unit": "mm"}
+    },
+    {
+      "id": "open_meteo_cams_global",
+      "provider": "Open-Meteo / Copernicus CAMS Global",
+      "domain": "air_quality",
+      "data_kind": "forecast",
+      "endpoint": "https://air-quality-api.open-meteo.com/v1/air-quality",
+      "attribution": "Open-Meteo; CAMS Global, doi:10.24381/04a0b097. Modeled concentrations and derived indices.",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "options": {"domains": "cams_global", "timezone": "UTC", "timeformat": "unixtime"}
+    }
+  ],
+  "variables": [
+    {"code": "temperature_2m", "domain": "weather", "representation": "weather", "canonical_unit": "degC", "minimum": -273.15, "temporal_support": "instant"},
+    {"code": "apparent_temperature", "domain": "weather", "representation": "weather", "canonical_unit": "degC", "minimum": -273.15, "temporal_support": "instant"},
+    {"code": "relative_humidity_2m", "domain": "weather", "representation": "weather", "canonical_unit": "%", "minimum": 0.0, "maximum": 100.0, "temporal_support": "instant"},
+    {"code": "precipitation", "domain": "weather", "representation": "weather", "canonical_unit": "mm", "minimum": 0.0, "temporal_support": "preceding_hour_sum"},
+    {"code": "wind_speed_10m", "domain": "weather", "representation": "weather", "canonical_unit": "m/s", "minimum": 0.0, "temporal_support": "instant"},
+    {"code": "wind_direction_10m", "domain": "weather", "representation": "weather", "canonical_unit": "degree", "minimum": 0.0, "maximum": 360.0, "temporal_support": "instant"},
+    {"code": "surface_pressure", "domain": "weather", "representation": "weather", "canonical_unit": "hPa", "minimum": 0.0, "temporal_support": "instant"},
+    {"code": "cloud_cover", "domain": "weather", "representation": "weather", "canonical_unit": "%", "minimum": 0.0, "maximum": 100.0, "temporal_support": "instant"},
+    {"code": "shortwave_radiation", "domain": "weather", "representation": "weather", "canonical_unit": "W/m2", "minimum": 0.0, "temporal_support": "preceding_hour_mean"},
+    {"code": "pm2_5", "domain": "air_quality", "representation": "concentration", "canonical_unit": "ug/m3", "minimum": 0.0, "temporal_support": "instant"},
+    {"code": "pm10", "domain": "air_quality", "representation": "concentration", "canonical_unit": "ug/m3", "minimum": 0.0, "temporal_support": "instant"},
+    {"code": "nitrogen_dioxide", "domain": "air_quality", "representation": "concentration", "canonical_unit": "ug/m3", "minimum": 0.0, "temporal_support": "instant"},
+    {"code": "sulphur_dioxide", "domain": "air_quality", "representation": "concentration", "canonical_unit": "ug/m3", "minimum": 0.0, "temporal_support": "instant"},
+    {"code": "carbon_monoxide", "domain": "air_quality", "representation": "concentration", "canonical_unit": "ug/m3", "minimum": 0.0, "temporal_support": "instant"},
+    {"code": "ozone", "domain": "air_quality", "representation": "concentration", "canonical_unit": "ug/m3", "minimum": 0.0, "temporal_support": "instant"},
+    {"code": "us_aqi", "domain": "air_quality", "representation": "index", "canonical_unit": "USAQI", "minimum": 0.0, "temporal_support": "instant"}
+  ],
+  "locations": [
+    {"id": "hanoi", "name": "Hanoi", "kind": "city", "country_code": "VN", "latitude": 21.0245, "longitude": 105.84117, "timezone": "Asia/Ho_Chi_Minh", "provider_timezone": "Asia/Bangkok", "geonames_id": 1581130},
+    {"id": "hcmc", "name": "Ho Chi Minh City", "kind": "city", "country_code": "VN", "latitude": 10.82302, "longitude": 106.62965, "timezone": "Asia/Ho_Chi_Minh", "provider_timezone": "Asia/Ho_Chi_Minh", "geonames_id": 1566083},
+    {"id": "da_nang", "name": "Da Nang", "kind": "city", "country_code": "VN", "latitude": 16.06778, "longitude": 108.22083, "timezone": "Asia/Ho_Chi_Minh", "provider_timezone": "Asia/Ho_Chi_Minh", "geonames_id": 1583992},
+    {"id": "cmt8", "name": "CMT8", "kind": "station", "parent_id": "hcmc", "country_code": "VN", "latitude": 10.78533, "longitude": 106.67029, "timezone": "Asia/Ho_Chi_Minh", "provider_timezone": "Asia/Ho_Chi_Minh"},
+    {"id": "oceanpark", "name": "OceanPark", "kind": "station", "parent_id": "hanoi", "country_code": "VN", "latitude": 20.9933, "longitude": 105.9441, "timezone": "Asia/Ho_Chi_Minh", "provider_timezone": "Asia/Ho_Chi_Minh"}
+  ],
+  "sensors": [
+    {
+      "id": "openaq_11357424", "location_id": "cmt8", "product_id": "openaq_airgradient_hourly",
+      "external_sensor_id": "11357424", "external_location_id": "3276359", "variable_code": "pm2_5", "canonical_unit": "ug/m3",
+      "instrument": "Unknown AirGradient Sensor", "is_reference_monitor": false,
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/", "licence_valid_from": "2023-07-15",
+      "attribution": "OpenAQ; AirGradient; Thomas Versteeg",
+      "qualification_notes": "Phase1: licensed, fresh non-reference PM2.5; 99.7222% of 2160 expected hours in the 90-day sample. Exact instrument/calibration and outdoor siting unverified. Not a city-wide mean."
+    },
+    {
+      "id": "openaq_14581375", "location_id": "oceanpark", "product_id": "openaq_airgradient_hourly",
+      "external_sensor_id": "14581375", "external_location_id": "6123215", "variable_code": "pm2_5", "canonical_unit": "ug/m3",
+      "instrument": "Unknown AirGradient Sensor", "is_reference_monitor": false,
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/", "licence_valid_from": "2023-07-15",
+      "attribution": "OpenAQ; AirGradient",
+      "qualification_notes": "Phase1: licensed, fresh non-reference PM2.5; 94.3056% of 2160 expected hours, longest gap119h. History startsNov2025. Exact instrument/calibration and outdoor siting unverified; Hanoi is regional context, not a boundary or city-average assertion."
+    }
+  ]
+}

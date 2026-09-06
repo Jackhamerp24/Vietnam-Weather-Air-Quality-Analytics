@@ -1,0 +1,20 @@
+.env
+.env.*
+!.env.example
+.venv/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+.DS_Store
+.local/
+*.egg-info/
+build/
+dist/
+
+# Local orchestration state, not a project deliverable.
+.slim/deepwork/
+
+# Project-local third-party agent guidance; not application dependencies.
+.agents/
+.opencode/skills/
+skills-lock.json

@@ -1,0 +1,25 @@
+{
+  "started_at_utc": "2026-09-06T17:30:02.444663+00:00",
+  "purpose": "Phase 1 live API contract probes; not an analytical dataset",
+  "historical_sample_date": "2023-01-01",
+  "attribution": {
+    "open_meteo": "https://open-meteo.com/",
+    "geonames": "https://www.geonames.org/",
+    "data_licence": "https://creativecommons.org/licenses/by/4.0/",
+    "cams_global": "https://doi.org/10.24381/04a0b097",
+    "era5": "https://doi.org/10.24381/cds.adbb2d47",
+    "modifications": "Raw bodies unchanged; parsed copies and contract summaries added"
+  },
+  "requests": [
+    {
+      "name": "geocoding_1581130",
+      "url": "https://geocoding-api.open-meteo.com/v1/search?name=Hanoi&count=10&language=en&countryCode=VN",
+      "requested_at_utc": "2026-09-06T17:30:02.444879+00:00",
+      "error": "<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1032)>"
+    }
+  ],
+  "checks": [],
+  "failure": "URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1032)>",
+  "passed": false,
+  "finished_at_utc": "2026-09-06T17:30:04.844364+00:00"
+}

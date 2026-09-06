@@ -1,0 +1,358 @@
+{
+  "generated_at_utc": "2026-09-06T20:59:00.669630+00:00",
+  "purpose": "Aggregate ingestion verification, not model results or a released observation dataset",
+  "database": [
+    {
+      "server_version": "17.6",
+      "bytes": 45067411
+    }
+  ],
+  "revision": [
+    {
+      "version_num": "0003_response_integrity"
+    }
+  ],
+  "runs": [
+    {
+      "product_id": "open_meteo_cams_global",
+      "status": "succeeded",
+      "runs": 42,
+      "inserted": 46872,
+      "unchanged": 0,
+      "quarantined": 0
+    },
+    {
+      "product_id": "open_meteo_era5",
+      "status": "succeeded",
+      "runs": 30,
+      "inserted": 37152,
+      "unchanged": 432,
+      "quarantined": 0
+    },
+    {
+      "product_id": "open_meteo_weather_forecast",
+      "status": "succeeded",
+      "runs": 2,
+      "inserted": 1296,
+      "unchanged": 0,
+      "quarantined": 0
+    },
+    {
+      "product_id": "openaq_airgradient_hourly",
+      "status": "failed",
+      "runs": 1,
+      "inserted": 0,
+      "unchanged": 0,
+      "quarantined": 1
+    },
+    {
+      "product_id": "openaq_airgradient_hourly",
+      "status": "succeeded",
+      "runs": 33,
+      "inserted": 4253,
+      "unchanged": 200,
+      "quarantined": 0
+    }
+  ],
+  "measurements": [
+    {
+      "sensor_id": "openaq_11357424",
+      "revisions": 2197,
+      "distinct_hours": 2173,
+      "first_start": "2026-06-08 00:00:00+00:00",
+      "last_end": "2026-09-06 19:00:00+00:00",
+      "max_revision": 2
+    },
+    {
+      "sensor_id": "openaq_14581375",
+      "revisions": 2056,
+      "distinct_hours": 2056,
+      "first_start": "2026-06-08 00:00:00+00:00",
+      "last_end": "2026-09-06 19:00:00+00:00",
+      "max_revision": 1
+    }
+  ],
+  "measurement_quality": [
+    {
+      "sensor_id": "openaq_11357424",
+      "quality_status": "accepted",
+      "hours": 2173
+    },
+    {
+      "sensor_id": "openaq_14581375",
+      "quality_status": "accepted",
+      "hours": 2056
+    }
+  ],
+  "modeled": [
+    {
+      "product_id": "open_meteo_cams_global",
+      "location_id": "da_nang",
+      "snapshots": 14,
+      "values": 15624,
+      "first_valid": "2026-06-08 00:00:00+00:00",
+      "last_valid": "2026-09-08 23:00:00+00:00"
+    },
+    {
+      "product_id": "open_meteo_cams_global",
+      "location_id": "hanoi",
+      "snapshots": 14,
+      "values": 15624,
+      "first_valid": "2026-06-08 00:00:00+00:00",
+      "last_valid": "2026-09-08 23:00:00+00:00"
+    },
+    {
+      "product_id": "open_meteo_cams_global",
+      "location_id": "hcmc",
+      "snapshots": 14,
+      "values": 15624,
+      "first_valid": "2026-06-08 00:00:00+00:00",
+      "last_valid": "2026-09-08 23:00:00+00:00"
+    },
+    {
+      "product_id": "open_meteo_era5",
+      "location_id": "cmt8",
+      "snapshots": 14,
+      "values": 18576,
+      "first_valid": "2026-06-08 00:00:00+00:00",
+      "last_valid": "2026-08-31 23:00:00+00:00"
+    },
+    {
+      "product_id": "open_meteo_era5",
+      "location_id": "oceanpark",
+      "snapshots": 14,
+      "values": 18576,
+      "first_valid": "2026-06-08 00:00:00+00:00",
+      "last_valid": "2026-08-31 23:00:00+00:00"
+    },
+    {
+      "product_id": "open_meteo_weather_forecast",
+      "location_id": "cmt8",
+      "snapshots": 1,
+      "values": 648,
+      "first_valid": "2026-09-06 00:00:00+00:00",
+      "last_valid": "2026-09-08 23:00:00+00:00"
+    },
+    {
+      "product_id": "open_meteo_weather_forecast",
+      "location_id": "oceanpark",
+      "snapshots": 1,
+      "values": 648,
+      "first_valid": "2026-09-06 00:00:00+00:00",
+      "last_valid": "2026-09-08 23:00:00+00:00"
+    }
+  ],
+  "model_quality": [
+    {
+      "product_id": "open_meteo_cams_global",
+      "quality_status": "accepted",
+      "values": 46872
+    },
+    {
+      "product_id": "open_meteo_era5",
+      "quality_status": "accepted",
+      "values": 37152
+    },
+    {
+      "product_id": "open_meteo_weather_forecast",
+      "quality_status": "accepted",
+      "values": 1296
+    }
+  ],
+  "responses": [
+    {
+      "provider_group": "open_meteo",
+      "http_status": 200,
+      "error_code": null,
+      "requests": 74,
+      "body_bytes": 574235
+    },
+    {
+      "provider_group": "openaq",
+      "http_status": 200,
+      "error_code": null,
+      "requests": 48,
+      "body_bytes": 3484560
+    }
+  ],
+  "quality_issues": [
+    {
+      "issue_code": "missing_hours",
+      "severity": "warning",
+      "issues": 6
+    },
+    {
+      "issue_code": "station_timezone_changed",
+      "severity": "error",
+      "issues": 1
+    }
+  ],
+  "checkpoints": [
+    {
+      "completed_chunks": 95
+    }
+  ],
+  "predictions": [
+    {
+      "predictions": 0
+    }
+  ],
+  "recent_runs": [
+    {
+      "id": "5b301c47-966e-466d-8974-8320f0725f2e",
+      "product_id": "open_meteo_cams_global",
+      "target_sensor_id": null,
+      "target_location_id": "da_nang",
+      "status": "succeeded",
+      "window_start": "2026-08-31 00:00:00+00:00",
+      "window_end": "2026-09-06 00:00:00+00:00",
+      "inserted_count": 1008,
+      "unchanged_count": 0,
+      "quarantined_count": 0,
+      "error_code": null
+    },
+    {
+      "id": "4fcaa6cd-3a6c-48df-9a28-1e323aac93c5",
+      "product_id": "open_meteo_cams_global",
+      "target_sensor_id": null,
+      "target_location_id": "da_nang",
+      "status": "succeeded",
+      "window_start": "2026-08-24 00:00:00+00:00",
+      "window_end": "2026-08-31 00:00:00+00:00",
+      "inserted_count": 1176,
+      "unchanged_count": 0,
+      "quarantined_count": 0,
+      "error_code": null
+    },
+    {
+      "id": "4de58e6a-6e9f-4734-8cc2-af58ff44485f",
+      "product_id": "open_meteo_cams_global",
+      "target_sensor_id": null,
+      "target_location_id": "da_nang",
+      "status": "succeeded",
+      "window_start": "2026-08-17 00:00:00+00:00",
+      "window_end": "2026-08-24 00:00:00+00:00",
+      "inserted_count": 1176,
+      "unchanged_count": 0,
+      "quarantined_count": 0,
+      "error_code": null
+    },
+    {
+      "id": "9b7aa7d6-f203-487a-bbb1-cdc9d0864c3e",
+      "product_id": "open_meteo_cams_global",
+      "target_sensor_id": null,
+      "target_location_id": "da_nang",
+      "status": "succeeded",
+      "window_start": "2026-08-10 00:00:00+00:00",
+      "window_end": "2026-08-17 00:00:00+00:00",
+      "inserted_count": 1176,
+      "unchanged_count": 0,
+      "quarantined_count": 0,
+      "error_code": null
+    },
+    {
+      "id": "d6bb5696-a908-4a81-a793-f77499c8bf60",
+      "product_id": "open_meteo_cams_global",
+      "target_sensor_id": null,
+      "target_location_id": "da_nang",
+      "status": "succeeded",
+      "window_start": "2026-08-03 00:00:00+00:00",
+      "window_end": "2026-08-10 00:00:00+00:00",
+      "inserted_count": 1176,
+      "unchanged_count": 0,
+      "quarantined_count": 0,
+      "error_code": null
+    },
+    {
+      "id": "dbb5118b-4a57-4d3e-aa39-8166146c52f2",
+      "product_id": "open_meteo_cams_global",
+      "target_sensor_id": null,
+      "target_location_id": "da_nang",
+      "status": "succeeded",
+      "window_start": "2026-07-27 00:00:00+00:00",
+      "window_end": "2026-08-03 00:00:00+00:00",
+      "inserted_count": 1176,
+      "unchanged_count": 0,
+      "quarantined_count": 0,
+      "error_code": null
+    },
+    {
+      "id": "140b9723-271c-44c2-b073-97caef9d3b15",
+      "product_id": "open_meteo_cams_global",
+      "target_sensor_id": null,
+      "target_location_id": "da_nang",
+      "status": "succeeded",
+      "window_start": "2026-07-20 00:00:00+00:00",
+      "window_end": "2026-07-27 00:00:00+00:00",
+      "inserted_count": 1176,
+      "unchanged_count": 0,
+      "quarantined_count": 0,
+      "error_code": null
+    },
+    {
+      "id": "a06ef54e-c936-44d7-8e11-ecb4b30cac46",
+      "product_id": "open_meteo_cams_global",
+      "target_sensor_id": null,
+      "target_location_id": "da_nang",
+      "status": "succeeded",
+      "window_start": "2026-07-13 00:00:00+00:00",
+      "window_end": "2026-07-20 00:00:00+00:00",
+      "inserted_count": 1176,
+      "unchanged_count": 0,
+      "quarantined_count": 0,
+      "error_code": null
+    },
+    {
+      "id": "c58d2cf4-91e9-4f6c-9271-ca8bd84fcb21",
+      "product_id": "open_meteo_cams_global",
+      "target_sensor_id": null,
+      "target_location_id": "da_nang",
+      "status": "succeeded",
+      "window_start": "2026-07-06 00:00:00+00:00",
+      "window_end": "2026-07-13 00:00:00+00:00",
+      "inserted_count": 1176,
+      "unchanged_count": 0,
+      "quarantined_count": 0,
+      "error_code": null
+    },
+    {
+      "id": "d0be30ad-991a-4427-a5ff-e78a925a705a",
+      "product_id": "open_meteo_cams_global",
+      "target_sensor_id": null,
+      "target_location_id": "da_nang",
+      "status": "succeeded",
+      "window_start": "2026-06-29 00:00:00+00:00",
+      "window_end": "2026-07-06 00:00:00+00:00",
+      "inserted_count": 1176,
+      "unchanged_count": 0,
+      "quarantined_count": 0,
+      "error_code": null
+    },
+    {
+      "id": "eef34a9b-df1f-4412-a881-acf1a42aa164",
+      "product_id": "open_meteo_cams_global",
+      "target_sensor_id": null,
+      "target_location_id": "da_nang",
+      "status": "succeeded",
+      "window_start": "2026-06-22 00:00:00+00:00",
+      "window_end": "2026-06-29 00:00:00+00:00",
+      "inserted_count": 1176,
+      "unchanged_count": 0,
+      "quarantined_count": 0,
+      "error_code": null
+    },
+    {
+      "id": "da099451-c160-495f-923c-a04ac6f78d86",
+      "product_id": "open_meteo_cams_global",
+      "target_sensor_id": null,
+      "target_location_id": "da_nang",
+      "status": "succeeded",
+      "window_start": "2026-06-15 00:00:00+00:00",
+      "window_end": "2026-06-22 00:00:00+00:00",
+      "inserted_count": 1176,
+      "unchanged_count": 0,
+      "quarantined_count": 0,
+      "error_code": null
+    }
+  ]
+}

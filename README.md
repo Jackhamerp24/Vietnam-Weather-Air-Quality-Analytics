@@ -1,0 +1,301 @@
+# Vietnam Weather & Air Quality Analytics
+
+A Data Science portfolio project investigating weather, PM2.5, and short-horizon
+air-quality prediction in Vietnamese urban areas. The intended workflow combines
+continuous data collection with historical analysis, statistical inference,
+leakage-aware model evaluation, and an interactive analytical dashboard.
+
+**Status: Phase 3 delivered: real data ingestion and historical storage work.**
+On-demand polling and resumable backfill now persist measured and modeled data
+to Supabase PostgreSQL. Scheduling, full data-quality audits, EDA, statistics,
+models and the dashboard remain future phases. No model-performance or
+statistical-significance claims exist yet.
+
+## Phase 3 Results
+
+- 4,191 measured PM2.5 hours in the verified 90-day window, plus recent polling
+  data for CMT8 and OceanPark. Missing periods remain explicit gaps.
+- 85 available days of ERA5 weather at the actual station coordinates and 90 days
+  of separate CAMS modeled context for Hanoi, HCMC and Da Nang.
+- Raw-response evidence, UTC timestamps, metadata/licence validation, retries,
+  rate/request/storage budgets, quarantine, revisions and resumable checkpoints.
+- Live repeat checks produced zero new measured/ERA5 rows for unchanged queries;
+  the measured backfill resumed with zero API calls.
+- 53 offline tests and 45 isolated PostgreSQL tests passed. About 45 MB in
+  Supabase, with no paid resource or service upgrade.
+
+See the [Phase 3 verification](docs/verification/phase_3.md),
+[captured count report](docs/verification/phase_3_counts.json), and
+[ingestion commands](docs/ingestion.md). These are data-acquisition results, not
+evidence of sensor accuracy, city-wide pollution levels or predictive skill.
+
+## Phase 2 Results
+
+- PostgreSQL schema separating measured concentrations, reanalysis/model values,
+  provider forecast captures and project predictions.
+- Immutable observation revisions and raw-response provenance with computed
+  hashes; foreign keys, canonical units, time/quality constraints and query indexes.
+- Validated editable configuration for three cities and two measured stations,
+  including licences, source identifiers and known qualification limitations.
+- Transactional Alembic migrations, idempotent metadata seeding, and a setup CLI.
+- 25 tests against an isolated PostgreSQL cluster, plus 27 offline tests. Tests
+  include migration rollback/re-upgrade, revisions, as-of queries and source-kind
+  separation. See the [Phase 2 verification record](docs/verification/phase_2.md).
+
+Reference metadata contains 4 products, 16 variables, 5 locations and 2 sensors.
+Supabase now contains the verified Phase 3 historical loads; the separate local
+development database contains bounded live smoke data. No synthetic test records
+were inserted into either study database. Project model/prediction tables are empty.
+
+Read the [architecture](docs/architecture.md), [schema and setup](docs/database.md)
+and [source contracts](docs/source_contracts.md). A free-tier deployment can use
+the documented [Supabase setup](docs/supabase.md).
+
+## Research Question
+
+How are weather conditions associated with variation in ground-level PM2.5 at
+monitored locations in Vietnam, and does weather information available at forecast
+time improve 6-hour and 24-hour predictions beyond recent PM2.5 history?
+
+The study investigated Hanoi, Ho Chi Minh City, and Da Nang. Authenticated research
+supports an initial measured-data study at CMT8 in HCMC and OceanPark in the Hanoi
+urban area. Da Nang remains modeled-only because no OpenAQ location appeared
+within 25 km of the study point. Neither a sensor nor a city-centre model grid
+cell represents a population-wide mean.
+
+Short-horizon forecasts could inform same-day or next-day planning. This project
+will evaluate that potential, not provide validated health or safety advice.
+The scientific contribution will be an honest assessment of weather's incremental
+predictive value, including cases where a simple baseline wins.
+
+## Phase 1 Results
+
+Official documentation and terms checked on **7 September 2026, Vietnam time**:
+
+| Source | Decision | Reason |
+| --- | --- | --- |
+| Open-Meteo weather | Selected for the first ingestion implementation | Keyless non-commercial access, usable historical weather, required variables, successful three-city probes |
+| OpenAQ v3 / AirGradient | Selected for a two-location measured-data MVP | Authorized access verified; two CC BY 4.0 sensor feeds and a 90-day hourly audit; non-reference sensor limitations remain |
+| Open-Meteo air quality / CAMS Global | Selected as a separate modeled-data stream | Three-city coverage and historical sample verified; **not measured ground truth** |
+| OpenWeather Free | Reserve candidate | Useful free air-pollution history; requires a key and ODbL-aware data handling; provenance needs further qualification |
+| WAQI | Not selected for the historical pipeline | Pollutant sub-indices differ from concentrations; archived-data redistribution restrictions |
+| WeatherAPI | Not selected for permanent current/forecast collection | Retention limits conflict with this project; free AQ history unavailable |
+| Direct CAMS ADS | Optional later research archive | Free model/reanalysis datasets; account, licence acceptance, and larger retrieval workflow |
+| Vietnam CEM / Envisoft portal | Further investigation required | Public environmental information does not establish an open, licensed collection API |
+
+Read the [full API comparison](docs/data_sources.md),
+[research evidence and environment report](docs/research/phase_1.md), and
+[scientific source decision](docs/decisions/0001-data-sources.md).
+The comparison records quotas, authentication, history, forecasts, variables,
+resolution, timestamps, stability, attribution, and collection restrictions.
+
+## Verified So Far
+
+- Three GeoNames city matches, with provider IDs and coordinates.
+- Weather and air-quality JSON at all three coordinates, with six hourly values
+  per city and requested current conditions.
+- Twenty-four hourly historical values per city for **2023-01-01 UTC**, from
+  ERA5 weather and the Open-Meteo air-quality archive.
+- Expected variable units, matching array lengths, nonmissing sample values,
+  monotonic hourly UTC timestamps, and a documented HTTP 400 error response.
+- The original Phase 1 suite of 21 offline tests for response contracts, interval completeness,
+  credential-safe redirects, evidence integrity, local links and secret exclusion.
+- Authenticated discovery of 59 Vietnamese locations; two selected sensors
+  supplied 4,191 hourly PM2.5 records in a common 90-day qualification window.
+
+The captures verify access and payload structure, not environmental accuracy or
+year-round completeness. See [captured evidence](docs/research/evidence/README.md)
+for attribution and limitations. After the initial keyless HTTP 401, the user
+authorized an OpenAQ key and authenticated requests succeeded.
+
+| Measured Location | Expected Hours | Present Hours | Completeness | Longest Gap |
+| --- | --- | --- | --- | --- |
+| CMT8, HCMC | 2,160 | 2,154 | 99.72% | 3 hours |
+| OceanPark, Hanoi urban area | 2,160 | 2,037 | 94.31% | 119 hours |
+
+Window: 2026-06-08 00:00 to 2026-09-06 00:00 UTC, using fully enclosed hourly
+periods. These are **coverage findings**, not pollution or model-performance
+results. Both sensors are non-reference AirGradient instruments. Phase 3 observed
+a named OceanPark instrument, but calibration and siting remain unverified.
+Credit OpenAQ, AirGradient and CMT8's
+named data contributor Thomas Versteeg under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+See the [authenticated qualification report](docs/research/openaq_qualification.md).
+
+## Architecture
+
+The database, reviewed configuration and on-demand ingestion exist. Scheduling,
+analytical computation and dashboard components below remain planned.
+
+```mermaid
+flowchart LR
+    W[Open-Meteo weather] --> I[On-demand ingestion jobs]
+    O[OpenAQ / AirGradient sensors] --> I
+    C[CAMS modeled air quality] --> I
+    I --> V[Validation, provenance, quality flags]
+    V --> D[(PostgreSQL historical store)]
+    D --> A[Coverage audits, EDA, statistics]
+    D --> F[Availability-aware features]
+    F --> M[Baselines and chronological ML evaluation]
+    A --> U[Streamlit and Plotly dashboard]
+    M --> U
+```
+
+Phase 2 establishes the schema and source/analytical contracts, including revisions,
+forecast provenance and availability semantics. PostgreSQL is the persistent
+store; research JSON files remain small, separately labeled evidence artifacts.
+
+## Scientific Commitments
+
+- Preserve raw values and quality flags; investigate extremes instead of deleting
+  every outlier or treating missing pollutants as zero.
+- Match weather to station coordinates and measurement intervals. Report
+  geographic coverage and missingness before comparing cities.
+- Use descriptive analysis, effect sizes, and dependence-aware uncertainty.
+  Seasonal confounding and autocorrelation matter; correlation alone cannot
+  establish a weather effect.
+- Fit transformations only on training data. Use shared chronological cutoffs
+  across locations, purge overlapping target windows, and reserve a final test
+  period before model selection.
+- Compare persistence, trailing averages, and time-of-day baselines before Ridge
+  or tree-based models. Evaluate weather's contribution through ablations.
+- Report MAE, RMSE, R-squared, per-city results, and uncertainty around differences
+  from baselines. Do not assume a machine-learning model will improve forecasts.
+- Treat feature importance as predictive evidence, not a causal explanation.
+
+The [source decision](docs/decisions/0001-data-sources.md) explains the distinction
+between retrospective association analysis and deployable forecasting. Full
+methodology and evaluation reports will follow real data qualification.
+
+## Setup
+
+Requires Python 3.11+ and PostgreSQL 15+. From the repository root:
+
+```bash
+python3 -m venv .venv
+.venv/bin/python -m pip install -r requirements.lock
+.venv/bin/python -m pip install --no-deps .
+.venv/bin/vn-air validate-config configs/study.json
+```
+
+For a fresh local database, run `createdb vietnam_environment` once. It already
+exists on the inspected workspace; do not recreate or drop it. Then:
+
+```bash
+export DATABASE_URL='postgresql+psycopg:///vietnam_environment'
+.venv/bin/vn-air db upgrade
+.venv/bin/vn-air db seed --config configs/study.json
+.venv/bin/vn-air db status
+```
+
+Database commands require an explicitly selected database and do not load `.env`.
+Keep remote credentials in an ignored environment or secret store. Full connection,
+metadata-versioning and installation details are in [database.md](docs/database.md).
+
+For Supabase, export the credentials from your own trusted ignored `.env` rather
+than the local-database example above. Then run bounded polling:
+
+```bash
+set -a
+source .env
+set +a
+.venv/bin/vn-air db upgrade
+.venv/bin/vn-air ingest poll --source openaq --max-requests 10
+.venv/bin/vn-air ingest poll --source weather --max-requests 5
+.venv/bin/vn-air ingest poll --source cams --max-requests 5
+.venv/bin/vn-air report
+```
+
+No schedule is installed. The [ingestion runbook](docs/ingestion.md) documents
+historical backfills, repeat/resume behavior, limits and partial/failure exit codes.
+
+Test source code without API calls or changes to the existing database:
+
+```bash
+PYTHONPATH=src .venv/bin/python -B -m unittest discover -s tests -v
+PYTHONPATH=src .venv/bin/python -B scripts/test_database.py
+```
+
+The integration runner needs PostgreSQL server binaries on PATH and creates its
+own disposable socket-only cluster. The exact API-key exclusion test skips when
+`OPENAQ_API_KEY` is not exported. All other offline checks need no credential.
+The regular installed package works without `PYTHONPATH`; use it for local source
+development and reinstall after edits when testing the installed CLI.
+
+## Research Probes
+
+The Phase 1 probe scripts use only the Python standard library. The application
+package and complete test suite also require the Phase 2 dependencies above.
+
+Run offline tests without API calls:
+
+```bash
+PYTHONPATH=src .venv/bin/python -B -m unittest discover -s tests -v
+```
+
+Repeat the bounded live probe with a **new output filename**:
+
+```bash
+python3 -B scripts/probe_sources.py --output docs/research/evidence/local_probe.json
+```
+
+The probe makes at most eight sequential requests, separated by a one-second
+delay, with 30-second timeouts and no automatic retries. It refuses to overwrite
+evidence. It does not read API keys, create accounts, or connect to a database.
+
+On the inspected macOS Python installation, the default CA bundle was missing.
+The successful run used the existing system trust bundle for that command only:
+
+```bash
+SSL_CERT_FILE=/etc/ssl/cert.pem python3 -B scripts/probe_sources.py --output docs/research/evidence/local_probe_system_ca.json
+```
+
+Use this override only where that trust bundle exists. On other machines,
+configure the interpreter's certificate store. Do not disable TLS verification.
+
+For authenticated research, a new user needs a free
+[OpenAQ account](https://explore.openaq.org/register) and `OPENAQ_API_KEY`, as
+described in [.env.example](.env.example). This workspace already has the
+user-authorized key in ignored `.env` with owner-only permissions. Keep credentials
+out of source control, client-side code, request logs and future chat messages.
+
+The [OpenAQ research instructions](docs/research/openaq_qualification.md) describe
+loading the variable, staged captures and the offline coverage audit.
+`probe_sources.py` stays keyless; `probe_openaq.py` reads the exported environment
+variable and sends it only to OpenAQ in `X-API-Key`.
+
+There are no training, dashboard, scheduler or Docker commands yet. Full
+data-quality audits come next; acquisition success does not establish scientific
+validity for every analysis.
+
+## Roadmap
+
+| Phase | Acceptance Evidence | Status |
+| --- | --- | --- |
+| 1. Research | Official-source comparison, live payload checks, measured-source audit | Delivered; two-location measured MVP supported, broader qualification ongoing |
+| 2. Architecture | Executable schema, provenance/source contracts, configuration, isolated database tests | Delivered; dedicated local database migrated and metadata seeded |
+| 3. MVP ingestion | Real data persisted in PostgreSQL; repeat/revision/recovery behavior verified | Delivered; on-demand jobs and bounded Supabase backfill, no schedule yet |
+| 4. Data quality | Audits of missingness, units, duplicates, gaps, anomalies | Planned |
+| 5. EDA | Coverage-qualified temporal, geographic, and weather comparisons | Planned |
+| 6. Statistics | Stated hypotheses, assumptions, effect sizes and uncertainty | Planned |
+| 7. Features | Availability-time and leakage tests | Planned |
+| 8. Baselines | Reproducible chronological baseline results | Planned |
+| 9. ML | Walk-forward comparisons, final holdout, ablations and interpretation | Planned |
+| 10. Dashboard | Analytical views, source labels, working interactions | Planned |
+| 11. Automation | Scheduled ingestion, failure alerts, recovery and backups | Planned |
+| 12. Portfolio polish | Executed notebooks, results, screenshots, reproducible runbook | Planned |
+
+## Limitations
+
+No source currently establishes a complete, up-to-date measured PM2.5 dataset for
+all three cities in this repository. The two selected low-cost sensor locations
+cannot establish city-wide exposure, and their common record has not yet covered
+a full annual cycle. Exact siting and calibration need further qualification.
+CAMS covers Vietnam but represents coarse
+modeled atmospheric conditions. Reanalysis and retrospectively retrieved values
+may incorporate information unavailable to a historical forecaster. Free hosted
+APIs can change their terms, data, quotas, or availability without guaranteeing
+continuity. Licences for code, stored datasets, and hosted API access are separate
+questions.
+
+**Best model, EDA findings, statistical results, and lessons from modeling remain
+unreported until the corresponding work has been performed and verified.**
