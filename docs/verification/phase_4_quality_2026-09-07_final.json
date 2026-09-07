@@ -1,0 +1,5821 @@
+{
+  "extraction": {
+    "isolation_level": "REPEATABLE READ",
+    "read_only": true,
+    "snapshot_at_utc": "2026-09-06T22:53:20.879563+00:00",
+    "source_tables": [
+      "air_quality_observations",
+      "source_responses",
+      "ingestion_runs",
+      "model_snapshots",
+      "modeled_values",
+      "data_quality_issues",
+      "quarantined_records"
+    ]
+  },
+  "ingestion_run_statuses_at_cutoff": {
+    "failed": 1,
+    "succeeded": 107
+  },
+  "limitations": [
+    "Accepted means provisional ingestion screening, not verified calibration, outdoor siting or city-wide representativeness.",
+    "Retrieval ages include backfill/revision lag; they do not estimate historical publication latency or availability.",
+    "Snapshot selection is retrospective. Unknown model run provenance stays unknown. CAMS and ERA5 are not measured ground truth.",
+    "Extraction sees rows committed now and eligible by stored timestamps; historical commit visibility cannot be reconstructed.",
+    "Raw bodies stay in PostgreSQL. Sentinel checks inspect canonical values and retained quarantine reasons, not an exhaustive raw reparse.",
+    "Flatlines, sentinel candidates and high PM prompt review only. No deletion, imputation or automatic relabeling occurs.",
+    "Input hashes detect replay changes; the aggregate artifact cannot restore source rows if the source database is lost."
+  ],
+  "manifest": {
+    "audit_version": "phase4_quality_audit_v1",
+    "configuration_sha256": "296be9aad8aa2f1ffdaf908333c247de042d9ee69f6523857a865f7b2f2c5570",
+    "cutoff": "2026-09-06T20:59:00.669630+00:00",
+    "end": "2026-09-06T00:00:00+00:00",
+    "implementation_sha256": "e55d0661f6817e68ce4371f769712b59de9b82d9f931067d85e7f3540a9d78db",
+    "input_counts": {
+      "issues": 7,
+      "measurements": 4215,
+      "model_values": 85320,
+      "quarantines": 1,
+      "responses": 122,
+      "runs": 108,
+      "snapshots": 72
+    },
+    "input_sha256": {
+      "issues": "5f1c7ecdccac5ba1165cf359b97bfe914f2961e618f5b8eff9de04848ab7305d",
+      "measurements": "575fac88804b4371c39a7e9fd501924b6e7cf2d622f054e25ca4704245126c22",
+      "model_values": "4b83066d482eb72728c98192da367d276ebccc05167ce6279ddac14c31731d86",
+      "quarantines": "b078d8eec84e5d9f1c48cfc6ba279195640936fb4e85db9c547fc4acd9cc6c4e",
+      "responses": "9eea4c0bc2eb61dfe10bc5a370158572eb6fc52fc544cd4996ed8a793094e8bb",
+      "runs": "24f148d41ba6e2154f27dc52eb1cef7c10c98a3594403b3ee520d7a4c1604c1e",
+      "snapshots": "03a0e196e3b9b7e2a7e1a6d7dddb5d3f8f9cd44c5d90e4a2c1cfbe000e576c20"
+    },
+    "policy": {
+      "alignment": "PM [t,t+1h): instantaneous weather at t; preceding-hour totals/means at t+1h",
+      "flatline_review_hours": 6,
+      "measurement_selection": "Latest eligible revision before quality; no fallback",
+      "minimum_hour_coverage_percent": 75,
+      "model_selection": "Within product/location/purpose, latest retrieved capture covering valid time before variable/quality selection; no fallback",
+      "model_tie_break": "retrieved_at, snapshot recorded_at, UUID; deterministic, not provider run order",
+      "pm_review_above_ug_m3": 500,
+      "sentinel_candidates": [
+        -999,
+        -9999,
+        9999
+      ],
+      "use": "Retrospective screening only; thresholds are review prompts, not calibrated error detectors"
+    },
+    "query_sha256": "b12d2be522075adcfd4ea9e268f6dda950da819a7e082f4890de567bb35254f2",
+    "schema_revision": "0003_response_integrity",
+    "start": "2026-06-08T00:00:00+00:00"
+  },
+  "manifest_sha256": "20f4c27390d14b7a0ce988a7ef51efeb79946dc4abe090ffc41c0b5afe7a21e9",
+  "measurements": {
+    "openaq_11357424": {
+      "accepted_coverage": {
+        "completeness_percent": 99.7222,
+        "expected_hours": 2160,
+        "longest_missing_run_hours": 3,
+        "missing_hours": 6,
+        "missing_runs": [
+          {
+            "first": "2026-07-07T03:00:00+00:00",
+            "hours": 2,
+            "last": "2026-07-07T04:00:00+00:00"
+          },
+          {
+            "first": "2026-08-17T04:00:00+00:00",
+            "hours": 3,
+            "last": "2026-08-17T06:00:00+00:00"
+          },
+          {
+            "first": "2026-08-20T05:00:00+00:00",
+            "hours": 1,
+            "last": "2026-08-20T05:00:00+00:00"
+          }
+        ],
+        "present_hours": 2154
+      },
+      "all_revision_screening": {
+        "nonfinite_or_nonnumeric": 0,
+        "physical_range_violation": 0,
+        "pm_extreme_review": 0,
+        "quality_null_mismatch": 0,
+        "sentinel_candidate": 0,
+        "unit_mismatch": 0,
+        "unknown_quality_status": 0,
+        "variable_mismatch": 0
+      },
+      "coordinate_drift_rows_over_100m": 0,
+      "coverage": {
+        "completeness_percent": 99.7222,
+        "expected_hours": 2160,
+        "longest_missing_run_hours": 3,
+        "missing_hours": 6,
+        "missing_runs": [
+          {
+            "first": "2026-07-07T03:00:00+00:00",
+            "hours": 2,
+            "last": "2026-07-07T04:00:00+00:00"
+          },
+          {
+            "first": "2026-08-17T04:00:00+00:00",
+            "hours": 3,
+            "last": "2026-08-17T06:00:00+00:00"
+          },
+          {
+            "first": "2026-08-20T05:00:00+00:00",
+            "hours": 1,
+            "last": "2026-08-20T05:00:00+00:00"
+          }
+        ],
+        "present_hours": 2154
+      },
+      "flatline_candidates": [],
+      "interval_errors": 0,
+      "licence_interval_violations": 0,
+      "location_id": "cmt8",
+      "metadata_distinct_counts": {
+        "external_location_id": 1,
+        "instrument": 1,
+        "licences": 1,
+        "provider_id": 1,
+        "provider_timezone": 2
+      },
+      "missingness": {
+        "utc_day": {
+          "2026-06-08": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-09": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-10": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-11": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-12": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-13": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-14": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-15": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-16": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-17": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-18": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-19": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-20": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-21": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-22": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-23": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-24": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-25": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-26": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-27": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-28": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-29": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-30": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-01": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-02": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-03": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-04": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-05": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-06": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-07": {
+            "accepted": 22,
+            "expected": 24,
+            "present": 22
+          },
+          "2026-07-08": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-09": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-10": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-11": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-12": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-13": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-14": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-15": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-16": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-17": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-18": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-19": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-20": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-21": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-22": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-23": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-24": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-25": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-26": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-27": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-28": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-29": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-30": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-31": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-01": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-02": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-03": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-04": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-05": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-06": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-07": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-08": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-09": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-10": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-11": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-12": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-13": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-14": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-15": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-16": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-17": {
+            "accepted": 21,
+            "expected": 24,
+            "present": 21
+          },
+          "2026-08-18": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-19": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-20": {
+            "accepted": 23,
+            "expected": 24,
+            "present": 23
+          },
+          "2026-08-21": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-22": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-23": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-24": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-25": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-26": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-27": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-28": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-29": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-30": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-31": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-09-01": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-09-02": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-09-03": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-09-04": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-09-05": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          }
+        },
+        "vietnam_day": {
+          "2026-06-08": {
+            "accepted": 17,
+            "expected": 17,
+            "present": 17
+          },
+          "2026-06-09": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-10": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-11": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-12": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-13": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-14": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-15": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-16": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-17": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-18": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-19": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-20": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-21": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-22": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-23": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-24": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-25": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-26": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-27": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-28": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-29": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-30": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-01": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-02": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-03": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-04": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-05": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-06": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-07": {
+            "accepted": 22,
+            "expected": 24,
+            "present": 22
+          },
+          "2026-07-08": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-09": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-10": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-11": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-12": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-13": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-14": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-15": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-16": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-17": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-18": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-19": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-20": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-21": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-22": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-23": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-24": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-25": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-26": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-27": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-28": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-29": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-30": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-31": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-01": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-02": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-03": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-04": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-05": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-06": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-07": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-08": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-09": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-10": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-11": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-12": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-13": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-14": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-15": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-16": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-17": {
+            "accepted": 21,
+            "expected": 24,
+            "present": 21
+          },
+          "2026-08-18": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-19": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-20": {
+            "accepted": 23,
+            "expected": 24,
+            "present": 23
+          },
+          "2026-08-21": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-22": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-23": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-24": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-25": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-26": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-27": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-28": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-29": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-30": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-31": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-09-01": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-09-02": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-09-03": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-09-04": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-09-05": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-09-06": {
+            "accepted": 7,
+            "expected": 7,
+            "present": 7
+          }
+        },
+        "vietnam_hour": {
+          "00": {
+            "accepted": 90,
+            "expected": 90,
+            "present": 90
+          },
+          "01": {
+            "accepted": 90,
+            "expected": 90,
+            "present": 90
+          },
+          "02": {
+            "accepted": 90,
+            "expected": 90,
+            "present": 90
+          },
+          "03": {
+            "accepted": 90,
+            "expected": 90,
+            "present": 90
+          },
+          "04": {
+            "accepted": 90,
+            "expected": 90,
+            "present": 90
+          },
+          "05": {
+            "accepted": 90,
+            "expected": 90,
+            "present": 90
+          },
+          "06": {
+            "accepted": 90,
+            "expected": 90,
+            "present": 90
+          },
+          "07": {
+            "accepted": 90,
+            "expected": 90,
+            "present": 90
+          },
+          "08": {
+            "accepted": 90,
+            "expected": 90,
+            "present": 90
+          },
+          "09": {
+            "accepted": 89,
+            "expected": 90,
+            "present": 89
+          },
+          "10": {
+            "accepted": 88,
+            "expected": 90,
+            "present": 88
+          },
+          "11": {
+            "accepted": 88,
+            "expected": 90,
+            "present": 88
+          },
+          "12": {
+            "accepted": 89,
+            "expected": 90,
+            "present": 89
+          },
+          "13": {
+            "accepted": 90,
+            "expected": 90,
+            "present": 90
+          },
+          "14": {
+            "accepted": 90,
+            "expected": 90,
+            "present": 90
+          },
+          "15": {
+            "accepted": 90,
+            "expected": 90,
+            "present": 90
+          },
+          "16": {
+            "accepted": 90,
+            "expected": 90,
+            "present": 90
+          },
+          "17": {
+            "accepted": 90,
+            "expected": 90,
+            "present": 90
+          },
+          "18": {
+            "accepted": 90,
+            "expected": 90,
+            "present": 90
+          },
+          "19": {
+            "accepted": 90,
+            "expected": 90,
+            "present": 90
+          },
+          "20": {
+            "accepted": 90,
+            "expected": 90,
+            "present": 90
+          },
+          "21": {
+            "accepted": 90,
+            "expected": 90,
+            "present": 90
+          },
+          "22": {
+            "accepted": 90,
+            "expected": 90,
+            "present": 90
+          },
+          "23": {
+            "accepted": 90,
+            "expected": 90,
+            "present": 90
+          }
+        }
+      },
+      "provider_flag_unknown_hours": 0,
+      "provider_flagged_hours": 0,
+      "quality_status_counts": {
+        "accepted": 2154
+      },
+      "retrieval_age_hours_by_purpose": {
+        "backfill": {
+          "count": 2126,
+          "maximum": 2179.378921636111,
+          "median": 1139.0074310669445,
+          "minimum": 72.52276588722222
+        },
+        "poll": {
+          "count": 52,
+          "maximum": 71.44000298666667,
+          "median": 45.94000298666667,
+          "minimum": 20.440002986666666
+        }
+      },
+      "revision_handling": {
+        "changed_fields": {
+          "source_metadata": 24
+        },
+        "distinct_intervals": 2154,
+        "extra_revision_rows": 24,
+        "revised_intervals": 24,
+        "revision_rows": 2178,
+        "transitions": {
+          "chain_errors": 0,
+          "metadata_only_transitions": 24,
+          "unchanged_transitions": 0,
+          "value_changing_transitions": 0
+        }
+      },
+      "unknown_or_low_hour_coverage": 0,
+      "value_screening": {
+        "nonfinite_or_nonnumeric": 0,
+        "physical_range_violation": 0,
+        "pm_extreme_review": 0,
+        "quality_null_mismatch": 0,
+        "sentinel_candidate": 0,
+        "unit_mismatch": 0,
+        "unknown_quality_status": 0,
+        "variable_mismatch": 0
+      },
+      "value_summary_ug_m3": {
+        "count": 2154,
+        "maximum": 82.2,
+        "median": 20.9,
+        "minimum": 3.6
+      }
+    },
+    "openaq_14581375": {
+      "accepted_coverage": {
+        "completeness_percent": 94.3056,
+        "expected_hours": 2160,
+        "longest_missing_run_hours": 119,
+        "missing_hours": 123,
+        "missing_runs": [
+          {
+            "first": "2026-07-01T02:00:00+00:00",
+            "hours": 119,
+            "last": "2026-07-06T00:00:00+00:00"
+          },
+          {
+            "first": "2026-08-17T04:00:00+00:00",
+            "hours": 3,
+            "last": "2026-08-17T06:00:00+00:00"
+          },
+          {
+            "first": "2026-08-20T05:00:00+00:00",
+            "hours": 1,
+            "last": "2026-08-20T05:00:00+00:00"
+          }
+        ],
+        "present_hours": 2037
+      },
+      "all_revision_screening": {
+        "nonfinite_or_nonnumeric": 0,
+        "physical_range_violation": 0,
+        "pm_extreme_review": 0,
+        "quality_null_mismatch": 0,
+        "sentinel_candidate": 0,
+        "unit_mismatch": 0,
+        "unknown_quality_status": 0,
+        "variable_mismatch": 0
+      },
+      "coordinate_drift_rows_over_100m": 0,
+      "coverage": {
+        "completeness_percent": 94.3056,
+        "expected_hours": 2160,
+        "longest_missing_run_hours": 119,
+        "missing_hours": 123,
+        "missing_runs": [
+          {
+            "first": "2026-07-01T02:00:00+00:00",
+            "hours": 119,
+            "last": "2026-07-06T00:00:00+00:00"
+          },
+          {
+            "first": "2026-08-17T04:00:00+00:00",
+            "hours": 3,
+            "last": "2026-08-17T06:00:00+00:00"
+          },
+          {
+            "first": "2026-08-20T05:00:00+00:00",
+            "hours": 1,
+            "last": "2026-08-20T05:00:00+00:00"
+          }
+        ],
+        "present_hours": 2037
+      },
+      "flatline_candidates": [],
+      "interval_errors": 0,
+      "licence_interval_violations": 0,
+      "location_id": "oceanpark",
+      "metadata_distinct_counts": {
+        "external_location_id": 1,
+        "instrument": 1,
+        "licences": 1,
+        "provider_id": 1,
+        "provider_timezone": 1
+      },
+      "missingness": {
+        "utc_day": {
+          "2026-06-08": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-09": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-10": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-11": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-12": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-13": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-14": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-15": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-16": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-17": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-18": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-19": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-20": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-21": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-22": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-23": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-24": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-25": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-26": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-27": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-28": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-29": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-30": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-01": {
+            "accepted": 1,
+            "expected": 24,
+            "present": 1
+          },
+          "2026-07-02": {
+            "accepted": 0,
+            "expected": 24,
+            "present": 0
+          },
+          "2026-07-03": {
+            "accepted": 0,
+            "expected": 24,
+            "present": 0
+          },
+          "2026-07-04": {
+            "accepted": 0,
+            "expected": 24,
+            "present": 0
+          },
+          "2026-07-05": {
+            "accepted": 0,
+            "expected": 24,
+            "present": 0
+          },
+          "2026-07-06": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-07": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-08": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-09": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-10": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-11": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-12": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-13": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-14": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-15": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-16": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-17": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-18": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-19": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-20": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-21": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-22": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-23": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-24": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-25": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-26": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-27": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-28": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-29": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-30": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-31": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-01": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-02": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-03": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-04": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-05": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-06": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-07": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-08": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-09": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-10": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-11": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-12": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-13": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-14": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-15": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-16": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-17": {
+            "accepted": 21,
+            "expected": 24,
+            "present": 21
+          },
+          "2026-08-18": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-19": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-20": {
+            "accepted": 23,
+            "expected": 24,
+            "present": 23
+          },
+          "2026-08-21": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-22": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-23": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-24": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-25": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-26": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-27": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-28": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-29": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-30": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-31": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-09-01": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-09-02": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-09-03": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-09-04": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-09-05": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          }
+        },
+        "vietnam_day": {
+          "2026-06-08": {
+            "accepted": 17,
+            "expected": 17,
+            "present": 17
+          },
+          "2026-06-09": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-10": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-11": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-12": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-13": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-14": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-15": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-16": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-17": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-18": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-19": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-20": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-21": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-22": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-23": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-24": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-25": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-26": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-27": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-28": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-29": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-06-30": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-01": {
+            "accepted": 8,
+            "expected": 24,
+            "present": 8
+          },
+          "2026-07-02": {
+            "accepted": 0,
+            "expected": 24,
+            "present": 0
+          },
+          "2026-07-03": {
+            "accepted": 0,
+            "expected": 24,
+            "present": 0
+          },
+          "2026-07-04": {
+            "accepted": 0,
+            "expected": 24,
+            "present": 0
+          },
+          "2026-07-05": {
+            "accepted": 0,
+            "expected": 24,
+            "present": 0
+          },
+          "2026-07-06": {
+            "accepted": 17,
+            "expected": 24,
+            "present": 17
+          },
+          "2026-07-07": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-08": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-09": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-10": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-11": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-12": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-13": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-14": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-15": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-16": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-17": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-18": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-19": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-20": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-21": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-22": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-23": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-24": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-25": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-26": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-27": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-28": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-29": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-30": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-07-31": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-01": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-02": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-03": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-04": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-05": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-06": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-07": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-08": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-09": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-10": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-11": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-12": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-13": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-14": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-15": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-16": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-17": {
+            "accepted": 21,
+            "expected": 24,
+            "present": 21
+          },
+          "2026-08-18": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-19": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-20": {
+            "accepted": 23,
+            "expected": 24,
+            "present": 23
+          },
+          "2026-08-21": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-22": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-23": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-24": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-25": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-26": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-27": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-28": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-29": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-30": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-08-31": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-09-01": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-09-02": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-09-03": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-09-04": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-09-05": {
+            "accepted": 24,
+            "expected": 24,
+            "present": 24
+          },
+          "2026-09-06": {
+            "accepted": 7,
+            "expected": 7,
+            "present": 7
+          }
+        },
+        "vietnam_hour": {
+          "00": {
+            "accepted": 85,
+            "expected": 90,
+            "present": 85
+          },
+          "01": {
+            "accepted": 85,
+            "expected": 90,
+            "present": 85
+          },
+          "02": {
+            "accepted": 85,
+            "expected": 90,
+            "present": 85
+          },
+          "03": {
+            "accepted": 85,
+            "expected": 90,
+            "present": 85
+          },
+          "04": {
+            "accepted": 85,
+            "expected": 90,
+            "present": 85
+          },
+          "05": {
+            "accepted": 85,
+            "expected": 90,
+            "present": 85
+          },
+          "06": {
+            "accepted": 85,
+            "expected": 90,
+            "present": 85
+          },
+          "07": {
+            "accepted": 86,
+            "expected": 90,
+            "present": 86
+          },
+          "08": {
+            "accepted": 85,
+            "expected": 90,
+            "present": 85
+          },
+          "09": {
+            "accepted": 85,
+            "expected": 90,
+            "present": 85
+          },
+          "10": {
+            "accepted": 84,
+            "expected": 90,
+            "present": 84
+          },
+          "11": {
+            "accepted": 83,
+            "expected": 90,
+            "present": 83
+          },
+          "12": {
+            "accepted": 84,
+            "expected": 90,
+            "present": 84
+          },
+          "13": {
+            "accepted": 85,
+            "expected": 90,
+            "present": 85
+          },
+          "14": {
+            "accepted": 85,
+            "expected": 90,
+            "present": 85
+          },
+          "15": {
+            "accepted": 85,
+            "expected": 90,
+            "present": 85
+          },
+          "16": {
+            "accepted": 85,
+            "expected": 90,
+            "present": 85
+          },
+          "17": {
+            "accepted": 85,
+            "expected": 90,
+            "present": 85
+          },
+          "18": {
+            "accepted": 85,
+            "expected": 90,
+            "present": 85
+          },
+          "19": {
+            "accepted": 85,
+            "expected": 90,
+            "present": 85
+          },
+          "20": {
+            "accepted": 85,
+            "expected": 90,
+            "present": 85
+          },
+          "21": {
+            "accepted": 85,
+            "expected": 90,
+            "present": 85
+          },
+          "22": {
+            "accepted": 85,
+            "expected": 90,
+            "present": 85
+          },
+          "23": {
+            "accepted": 85,
+            "expected": 90,
+            "present": 85
+          }
+        }
+      },
+      "provider_flag_unknown_hours": 0,
+      "provider_flagged_hours": 0,
+      "quality_status_counts": {
+        "accepted": 2037
+      },
+      "retrieval_age_hours_by_purpose": {
+        "backfill": {
+          "count": 1985,
+          "maximum": 2179.3824282269443,
+          "median": 1068.5429048333333,
+          "minimum": 72.55870300972222
+        },
+        "poll": {
+          "count": 52,
+          "maximum": 71.44353245222223,
+          "median": 45.94353245222222,
+          "minimum": 20.44353245222222
+        }
+      },
+      "revision_handling": {
+        "changed_fields": {},
+        "distinct_intervals": 2037,
+        "extra_revision_rows": 0,
+        "revised_intervals": 0,
+        "revision_rows": 2037,
+        "transitions": {
+          "chain_errors": 0
+        }
+      },
+      "unknown_or_low_hour_coverage": 0,
+      "value_screening": {
+        "nonfinite_or_nonnumeric": 0,
+        "physical_range_violation": 0,
+        "pm_extreme_review": 0,
+        "quality_null_mismatch": 0,
+        "sentinel_candidate": 0,
+        "unit_mismatch": 0,
+        "unknown_quality_status": 0,
+        "variable_mismatch": 0
+      },
+      "value_summary_ug_m3": {
+        "count": 2037,
+        "maximum": 149.0,
+        "median": 31.1,
+        "minimum": 0.0
+      }
+    }
+  },
+  "models": {
+    "open_meteo_cams_global/da_nang/backfill": {
+      "distinct_grids": 1,
+      "grid_displacement_km": {
+        "count": 13,
+        "maximum": 4.216914686646347,
+        "median": 4.216914686646347,
+        "minimum": 4.216914686646347
+      },
+      "requested_hours": 2160,
+      "run_provenance_counts": {
+        "unknown": 13
+      },
+      "snapshots": 13,
+      "variables": {
+        "carbon_monoxide": {
+          "accepted_hours": 2160,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 2160,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 2160,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 2160
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 2160,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 2160
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "nitrogen_dioxide": {
+          "accepted_hours": 2160,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 2160,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 2160,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 2160
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 2160,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 2160
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "ozone": {
+          "accepted_hours": 2160,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 2160,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 2160,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 2160
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 2160,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 2160
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "pm10": {
+          "accepted_hours": 2160,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 2160,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 2160,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 2160
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 2160,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 2160
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "pm2_5": {
+          "accepted_hours": 2160,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 2160,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 2160,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 2160
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 2160,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 2160
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "sulphur_dioxide": {
+          "accepted_hours": 2160,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 2160,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 2160,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 2160
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 2160,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 2160
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "us_aqi": {
+          "accepted_hours": 2160,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 2160,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 2160,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 2160
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 2160,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 2160
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        }
+      }
+    },
+    "open_meteo_cams_global/da_nang/poll": {
+      "distinct_grids": 1,
+      "grid_displacement_km": {
+        "count": 1,
+        "maximum": 4.216914686646347,
+        "median": 4.216914686646347,
+        "minimum": 4.216914686646347
+      },
+      "requested_hours": 72,
+      "run_provenance_counts": {
+        "unknown": 1
+      },
+      "snapshots": 1,
+      "variables": {
+        "carbon_monoxide": {
+          "accepted_hours": 72,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 72,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 72,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 72
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 72,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 72
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "nitrogen_dioxide": {
+          "accepted_hours": 72,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 72,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 72,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 72
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 72,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 72
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "ozone": {
+          "accepted_hours": 72,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 72,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 72,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 72
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 72,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 72
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "pm10": {
+          "accepted_hours": 72,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 72,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 72,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 72
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 72,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 72
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "pm2_5": {
+          "accepted_hours": 72,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 72,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 72,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 72
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 72,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 72
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "sulphur_dioxide": {
+          "accepted_hours": 72,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 72,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 72,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 72
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 72,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 72
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "us_aqi": {
+          "accepted_hours": 72,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 72,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 72,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 72
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 72,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 72
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        }
+      }
+    },
+    "open_meteo_cams_global/hanoi/backfill": {
+      "distinct_grids": 1,
+      "grid_displacement_km": {
+        "count": 13,
+        "maximum": 5.066220519757213,
+        "median": 5.066220519757213,
+        "minimum": 5.066220519757213
+      },
+      "requested_hours": 2160,
+      "run_provenance_counts": {
+        "unknown": 13
+      },
+      "snapshots": 13,
+      "variables": {
+        "carbon_monoxide": {
+          "accepted_hours": 2160,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 2160,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 2160,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 2160
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 2160,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 2160
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "nitrogen_dioxide": {
+          "accepted_hours": 2160,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 2160,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 2160,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 2160
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 2160,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 2160
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "ozone": {
+          "accepted_hours": 2160,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 2160,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 2160,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 2160
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 2160,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 2160
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "pm10": {
+          "accepted_hours": 2160,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 2160,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 2160,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 2160
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 2160,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 2160
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "pm2_5": {
+          "accepted_hours": 2160,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 2160,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 2160,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 2160
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 2160,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 2160
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "sulphur_dioxide": {
+          "accepted_hours": 2160,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 2160,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 2160,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 2160
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 2160,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 2160
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "us_aqi": {
+          "accepted_hours": 2160,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 2160,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 2160,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 2160
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 2160,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 2160
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        }
+      }
+    },
+    "open_meteo_cams_global/hanoi/poll": {
+      "distinct_grids": 1,
+      "grid_displacement_km": {
+        "count": 1,
+        "maximum": 5.066220519757213,
+        "median": 5.066220519757213,
+        "minimum": 5.066220519757213
+      },
+      "requested_hours": 72,
+      "run_provenance_counts": {
+        "unknown": 1
+      },
+      "snapshots": 1,
+      "variables": {
+        "carbon_monoxide": {
+          "accepted_hours": 72,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 72,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 72,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 72
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 72,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 72
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "nitrogen_dioxide": {
+          "accepted_hours": 72,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 72,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 72,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 72
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 72,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 72
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "ozone": {
+          "accepted_hours": 72,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 72,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 72,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 72
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 72,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 72
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "pm10": {
+          "accepted_hours": 72,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 72,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 72,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 72
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 72,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 72
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "pm2_5": {
+          "accepted_hours": 72,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 72,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 72,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 72
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 72,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 72
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "sulphur_dioxide": {
+          "accepted_hours": 72,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 72,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 72,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 72
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 72,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 72
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "us_aqi": {
+          "accepted_hours": 72,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 72,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 72,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 72
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 72,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 72
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        }
+      }
+    },
+    "open_meteo_cams_global/hcmc/backfill": {
+      "distinct_grids": 1,
+      "grid_displacement_km": {
+        "count": 13,
+        "maximum": 4.127158057999757,
+        "median": 4.127158057999757,
+        "minimum": 4.127158057999757
+      },
+      "requested_hours": 2160,
+      "run_provenance_counts": {
+        "unknown": 13
+      },
+      "snapshots": 13,
+      "variables": {
+        "carbon_monoxide": {
+          "accepted_hours": 2160,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 2160,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 2160,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 2160
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 2160,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 2160
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "nitrogen_dioxide": {
+          "accepted_hours": 2160,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 2160,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 2160,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 2160
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 2160,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 2160
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "ozone": {
+          "accepted_hours": 2160,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 2160,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 2160,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 2160
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 2160,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 2160
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "pm10": {
+          "accepted_hours": 2160,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 2160,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 2160,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 2160
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 2160,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 2160
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "pm2_5": {
+          "accepted_hours": 2160,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 2160,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 2160,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 2160
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 2160,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 2160
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "sulphur_dioxide": {
+          "accepted_hours": 2160,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 2160,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 2160,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 2160
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 2160,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 2160
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "us_aqi": {
+          "accepted_hours": 2160,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 2160,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 2160,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 2160
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 2160,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 2160
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        }
+      }
+    },
+    "open_meteo_cams_global/hcmc/poll": {
+      "distinct_grids": 1,
+      "grid_displacement_km": {
+        "count": 1,
+        "maximum": 4.127158057999757,
+        "median": 4.127158057999757,
+        "minimum": 4.127158057999757
+      },
+      "requested_hours": 72,
+      "run_provenance_counts": {
+        "unknown": 1
+      },
+      "snapshots": 1,
+      "variables": {
+        "carbon_monoxide": {
+          "accepted_hours": 72,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 72,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 72,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 72
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 72,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 72
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "nitrogen_dioxide": {
+          "accepted_hours": 72,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 72,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 72,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 72
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 72,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 72
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "ozone": {
+          "accepted_hours": 72,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 72,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 72,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 72
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 72,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 72
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "pm10": {
+          "accepted_hours": 72,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 72,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 72,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 72
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 72,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 72
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "pm2_5": {
+          "accepted_hours": 72,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 72,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 72,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 72
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 72,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 72
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "sulphur_dioxide": {
+          "accepted_hours": 72,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 72,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 72,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 72
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 72,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 72
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "us_aqi": {
+          "accepted_hours": 72,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 72,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 72,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 72
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 72,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 72
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        }
+      }
+    },
+    "open_meteo_era5/cmt8/backfill": {
+      "distinct_grids": 1,
+      "grid_displacement_km": {
+        "count": 14,
+        "maximum": 9.55249323318177,
+        "median": 9.55249323318177,
+        "minimum": 9.55249323318177
+      },
+      "requested_hours": 2040,
+      "run_provenance_counts": {
+        "reanalysis": 14
+      },
+      "snapshots": 14,
+      "variables": {
+        "apparent_temperature": {
+          "accepted_hours": 2040,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 2064,
+          "coverage": {
+            "completeness_percent": 94.4444,
+            "expected_hours": 2160,
+            "longest_missing_run_hours": 120,
+            "missing_hours": 120,
+            "missing_runs": [
+              {
+                "first": "2026-09-01T00:00:00+00:00",
+                "hours": 120,
+                "last": "2026-09-05T23:00:00+00:00"
+              }
+            ],
+            "present_hours": 2040
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 0,
+          "not_requested_hours": 120,
+          "overlapping_value_rows": 24,
+          "quality_status_counts": {
+            "accepted": 2040
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "cloud_cover": {
+          "accepted_hours": 2040,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 2064,
+          "coverage": {
+            "completeness_percent": 94.4444,
+            "expected_hours": 2160,
+            "longest_missing_run_hours": 120,
+            "missing_hours": 120,
+            "missing_runs": [
+              {
+                "first": "2026-09-01T00:00:00+00:00",
+                "hours": 120,
+                "last": "2026-09-05T23:00:00+00:00"
+              }
+            ],
+            "present_hours": 2040
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 0,
+          "not_requested_hours": 120,
+          "overlapping_value_rows": 24,
+          "quality_status_counts": {
+            "accepted": 2040
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "precipitation": {
+          "accepted_hours": 2040,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 2064,
+          "coverage": {
+            "completeness_percent": 94.4444,
+            "expected_hours": 2160,
+            "longest_missing_run_hours": 120,
+            "missing_hours": 120,
+            "missing_runs": [
+              {
+                "first": "2026-09-01T00:00:00+00:00",
+                "hours": 120,
+                "last": "2026-09-05T23:00:00+00:00"
+              }
+            ],
+            "present_hours": 2040
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 0,
+          "not_requested_hours": 120,
+          "overlapping_value_rows": 24,
+          "quality_status_counts": {
+            "accepted": 2040
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "relative_humidity_2m": {
+          "accepted_hours": 2040,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 2064,
+          "coverage": {
+            "completeness_percent": 94.4444,
+            "expected_hours": 2160,
+            "longest_missing_run_hours": 120,
+            "missing_hours": 120,
+            "missing_runs": [
+              {
+                "first": "2026-09-01T00:00:00+00:00",
+                "hours": 120,
+                "last": "2026-09-05T23:00:00+00:00"
+              }
+            ],
+            "present_hours": 2040
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 0,
+          "not_requested_hours": 120,
+          "overlapping_value_rows": 24,
+          "quality_status_counts": {
+            "accepted": 2040
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "shortwave_radiation": {
+          "accepted_hours": 2040,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 2064,
+          "coverage": {
+            "completeness_percent": 94.4444,
+            "expected_hours": 2160,
+            "longest_missing_run_hours": 120,
+            "missing_hours": 120,
+            "missing_runs": [
+              {
+                "first": "2026-09-01T00:00:00+00:00",
+                "hours": 120,
+                "last": "2026-09-05T23:00:00+00:00"
+              }
+            ],
+            "present_hours": 2040
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 0,
+          "not_requested_hours": 120,
+          "overlapping_value_rows": 24,
+          "quality_status_counts": {
+            "accepted": 2040
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "surface_pressure": {
+          "accepted_hours": 2040,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 2064,
+          "coverage": {
+            "completeness_percent": 94.4444,
+            "expected_hours": 2160,
+            "longest_missing_run_hours": 120,
+            "missing_hours": 120,
+            "missing_runs": [
+              {
+                "first": "2026-09-01T00:00:00+00:00",
+                "hours": 120,
+                "last": "2026-09-05T23:00:00+00:00"
+              }
+            ],
+            "present_hours": 2040
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 0,
+          "not_requested_hours": 120,
+          "overlapping_value_rows": 24,
+          "quality_status_counts": {
+            "accepted": 2040
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "temperature_2m": {
+          "accepted_hours": 2040,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 2064,
+          "coverage": {
+            "completeness_percent": 94.4444,
+            "expected_hours": 2160,
+            "longest_missing_run_hours": 120,
+            "missing_hours": 120,
+            "missing_runs": [
+              {
+                "first": "2026-09-01T00:00:00+00:00",
+                "hours": 120,
+                "last": "2026-09-05T23:00:00+00:00"
+              }
+            ],
+            "present_hours": 2040
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 0,
+          "not_requested_hours": 120,
+          "overlapping_value_rows": 24,
+          "quality_status_counts": {
+            "accepted": 2040
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "wind_direction_10m": {
+          "accepted_hours": 2040,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 2064,
+          "coverage": {
+            "completeness_percent": 94.4444,
+            "expected_hours": 2160,
+            "longest_missing_run_hours": 120,
+            "missing_hours": 120,
+            "missing_runs": [
+              {
+                "first": "2026-09-01T00:00:00+00:00",
+                "hours": 120,
+                "last": "2026-09-05T23:00:00+00:00"
+              }
+            ],
+            "present_hours": 2040
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 0,
+          "not_requested_hours": 120,
+          "overlapping_value_rows": 24,
+          "quality_status_counts": {
+            "accepted": 2040
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "wind_speed_10m": {
+          "accepted_hours": 2040,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 2064,
+          "coverage": {
+            "completeness_percent": 94.4444,
+            "expected_hours": 2160,
+            "longest_missing_run_hours": 120,
+            "missing_hours": 120,
+            "missing_runs": [
+              {
+                "first": "2026-09-01T00:00:00+00:00",
+                "hours": 120,
+                "last": "2026-09-05T23:00:00+00:00"
+              }
+            ],
+            "present_hours": 2040
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 0,
+          "not_requested_hours": 120,
+          "overlapping_value_rows": 24,
+          "quality_status_counts": {
+            "accepted": 2040
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        }
+      }
+    },
+    "open_meteo_era5/oceanpark/backfill": {
+      "distinct_grids": 1,
+      "grid_displacement_km": {
+        "count": 14,
+        "maximum": 5.850703000529834,
+        "median": 5.850703000529834,
+        "minimum": 5.850703000529834
+      },
+      "requested_hours": 2040,
+      "run_provenance_counts": {
+        "reanalysis": 14
+      },
+      "snapshots": 14,
+      "variables": {
+        "apparent_temperature": {
+          "accepted_hours": 2040,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 2064,
+          "coverage": {
+            "completeness_percent": 94.4444,
+            "expected_hours": 2160,
+            "longest_missing_run_hours": 120,
+            "missing_hours": 120,
+            "missing_runs": [
+              {
+                "first": "2026-09-01T00:00:00+00:00",
+                "hours": 120,
+                "last": "2026-09-05T23:00:00+00:00"
+              }
+            ],
+            "present_hours": 2040
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 0,
+          "not_requested_hours": 120,
+          "overlapping_value_rows": 24,
+          "quality_status_counts": {
+            "accepted": 2040
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "cloud_cover": {
+          "accepted_hours": 2040,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 2064,
+          "coverage": {
+            "completeness_percent": 94.4444,
+            "expected_hours": 2160,
+            "longest_missing_run_hours": 120,
+            "missing_hours": 120,
+            "missing_runs": [
+              {
+                "first": "2026-09-01T00:00:00+00:00",
+                "hours": 120,
+                "last": "2026-09-05T23:00:00+00:00"
+              }
+            ],
+            "present_hours": 2040
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 0,
+          "not_requested_hours": 120,
+          "overlapping_value_rows": 24,
+          "quality_status_counts": {
+            "accepted": 2040
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "precipitation": {
+          "accepted_hours": 2040,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 2064,
+          "coverage": {
+            "completeness_percent": 94.4444,
+            "expected_hours": 2160,
+            "longest_missing_run_hours": 120,
+            "missing_hours": 120,
+            "missing_runs": [
+              {
+                "first": "2026-09-01T00:00:00+00:00",
+                "hours": 120,
+                "last": "2026-09-05T23:00:00+00:00"
+              }
+            ],
+            "present_hours": 2040
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 0,
+          "not_requested_hours": 120,
+          "overlapping_value_rows": 24,
+          "quality_status_counts": {
+            "accepted": 2040
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "relative_humidity_2m": {
+          "accepted_hours": 2040,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 2064,
+          "coverage": {
+            "completeness_percent": 94.4444,
+            "expected_hours": 2160,
+            "longest_missing_run_hours": 120,
+            "missing_hours": 120,
+            "missing_runs": [
+              {
+                "first": "2026-09-01T00:00:00+00:00",
+                "hours": 120,
+                "last": "2026-09-05T23:00:00+00:00"
+              }
+            ],
+            "present_hours": 2040
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 0,
+          "not_requested_hours": 120,
+          "overlapping_value_rows": 24,
+          "quality_status_counts": {
+            "accepted": 2040
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "shortwave_radiation": {
+          "accepted_hours": 2040,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 2064,
+          "coverage": {
+            "completeness_percent": 94.4444,
+            "expected_hours": 2160,
+            "longest_missing_run_hours": 120,
+            "missing_hours": 120,
+            "missing_runs": [
+              {
+                "first": "2026-09-01T00:00:00+00:00",
+                "hours": 120,
+                "last": "2026-09-05T23:00:00+00:00"
+              }
+            ],
+            "present_hours": 2040
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 0,
+          "not_requested_hours": 120,
+          "overlapping_value_rows": 24,
+          "quality_status_counts": {
+            "accepted": 2040
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "surface_pressure": {
+          "accepted_hours": 2040,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 2064,
+          "coverage": {
+            "completeness_percent": 94.4444,
+            "expected_hours": 2160,
+            "longest_missing_run_hours": 120,
+            "missing_hours": 120,
+            "missing_runs": [
+              {
+                "first": "2026-09-01T00:00:00+00:00",
+                "hours": 120,
+                "last": "2026-09-05T23:00:00+00:00"
+              }
+            ],
+            "present_hours": 2040
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 0,
+          "not_requested_hours": 120,
+          "overlapping_value_rows": 24,
+          "quality_status_counts": {
+            "accepted": 2040
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "temperature_2m": {
+          "accepted_hours": 2040,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 2064,
+          "coverage": {
+            "completeness_percent": 94.4444,
+            "expected_hours": 2160,
+            "longest_missing_run_hours": 120,
+            "missing_hours": 120,
+            "missing_runs": [
+              {
+                "first": "2026-09-01T00:00:00+00:00",
+                "hours": 120,
+                "last": "2026-09-05T23:00:00+00:00"
+              }
+            ],
+            "present_hours": 2040
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 0,
+          "not_requested_hours": 120,
+          "overlapping_value_rows": 24,
+          "quality_status_counts": {
+            "accepted": 2040
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "wind_direction_10m": {
+          "accepted_hours": 2040,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 2064,
+          "coverage": {
+            "completeness_percent": 94.4444,
+            "expected_hours": 2160,
+            "longest_missing_run_hours": 120,
+            "missing_hours": 120,
+            "missing_runs": [
+              {
+                "first": "2026-09-01T00:00:00+00:00",
+                "hours": 120,
+                "last": "2026-09-05T23:00:00+00:00"
+              }
+            ],
+            "present_hours": 2040
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 0,
+          "not_requested_hours": 120,
+          "overlapping_value_rows": 24,
+          "quality_status_counts": {
+            "accepted": 2040
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "wind_speed_10m": {
+          "accepted_hours": 2040,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 2064,
+          "coverage": {
+            "completeness_percent": 94.4444,
+            "expected_hours": 2160,
+            "longest_missing_run_hours": 120,
+            "missing_hours": 120,
+            "missing_runs": [
+              {
+                "first": "2026-09-01T00:00:00+00:00",
+                "hours": 120,
+                "last": "2026-09-05T23:00:00+00:00"
+              }
+            ],
+            "present_hours": 2040
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 0,
+          "not_requested_hours": 120,
+          "overlapping_value_rows": 24,
+          "quality_status_counts": {
+            "accepted": 2040
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        }
+      }
+    },
+    "open_meteo_weather_forecast/cmt8/poll": {
+      "distinct_grids": 1,
+      "grid_displacement_km": {
+        "count": 1,
+        "maximum": 4.303043496754178,
+        "median": 4.303043496754178,
+        "minimum": 4.303043496754178
+      },
+      "requested_hours": 72,
+      "run_provenance_counts": {
+        "unknown": 1
+      },
+      "snapshots": 1,
+      "variables": {
+        "apparent_temperature": {
+          "accepted_hours": 72,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 72,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 72,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 72
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 72,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 72
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "cloud_cover": {
+          "accepted_hours": 72,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 72,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 72,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 72
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 72,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 72
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "precipitation": {
+          "accepted_hours": 72,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 72,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 72,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 72
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 72,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 72
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "relative_humidity_2m": {
+          "accepted_hours": 72,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 72,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 72,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 72
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 72,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 72
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "shortwave_radiation": {
+          "accepted_hours": 72,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 72,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 72,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 72
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 72,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 72
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "surface_pressure": {
+          "accepted_hours": 72,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 72,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 72,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 72
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 72,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 72
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "temperature_2m": {
+          "accepted_hours": 72,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 72,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 72,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 72
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 72,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 72
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "wind_direction_10m": {
+          "accepted_hours": 72,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 72,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 72,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 72
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 72,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 72
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "wind_speed_10m": {
+          "accepted_hours": 72,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 72,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 72,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 72
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 72,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 72
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        }
+      }
+    },
+    "open_meteo_weather_forecast/oceanpark/poll": {
+      "distinct_grids": 1,
+      "grid_displacement_km": {
+        "count": 1,
+        "maximum": 3.2290246915519094,
+        "median": 3.2290246915519094,
+        "minimum": 3.2290246915519094
+      },
+      "requested_hours": 72,
+      "run_provenance_counts": {
+        "unknown": 1
+      },
+      "snapshots": 1,
+      "variables": {
+        "apparent_temperature": {
+          "accepted_hours": 72,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 72,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 72,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 72
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 72,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 72
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "cloud_cover": {
+          "accepted_hours": 72,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 72,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 72,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 72
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 72,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 72
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "precipitation": {
+          "accepted_hours": 72,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 72,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 72,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 72
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 72,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 72
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "relative_humidity_2m": {
+          "accepted_hours": 72,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 72,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 72,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 72
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 72,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 72
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "shortwave_radiation": {
+          "accepted_hours": 72,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 72,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 72,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 72
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 72,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 72
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "surface_pressure": {
+          "accepted_hours": 72,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 72,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 72,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 72
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 72,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 72
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "temperature_2m": {
+          "accepted_hours": 72,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 72,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 72,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 72
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 72,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 72
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "wind_direction_10m": {
+          "accepted_hours": 72,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 72,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 72,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 72
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 72,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 72
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        },
+        "wind_speed_10m": {
+          "accepted_hours": 72,
+          "all_capture_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          },
+          "capture_value_rows": 72,
+          "coverage": {
+            "completeness_percent": 100.0,
+            "expected_hours": 72,
+            "longest_missing_run_hours": 0,
+            "missing_hours": 0,
+            "missing_runs": [],
+            "present_hours": 72
+          },
+          "interval_errors": 0,
+          "native_cadence_unknown_values": 72,
+          "not_requested_hours": 0,
+          "overlapping_value_rows": 0,
+          "quality_status_counts": {
+            "accepted": 72
+          },
+          "requested_but_absent_hours": 0,
+          "selected_value_screening": {
+            "nonfinite_or_nonnumeric": 0,
+            "physical_range_violation": 0,
+            "pm_extreme_review": 0,
+            "quality_null_mismatch": 0,
+            "sentinel_candidate": 0,
+            "unit_mismatch": 0,
+            "unknown_quality_status": 0,
+            "variable_mismatch": 0
+          }
+        }
+      }
+    }
+  },
+  "preexisting_quality_issues": {
+    "missing_hours": 6,
+    "station_timezone_changed": 1
+  },
+  "purpose": "Phase 4 structural screening of sensor measurements and separate modeled context",
+  "quarantine_reasons": {
+    "station_timezone_changed": 1
+  },
+  "result_sha256": "5c37cbb31dfbd7276218f733a8debd66bcf71ec14068c56a644574bb7d3afd97",
+  "sensor_model_alignment": {
+    "openaq_11357424": {
+      "accepted_hours_with_all_nine_era5_variables": 2033,
+      "accepted_hours_without_all_weather": 121,
+      "accepted_sensor_hours": 2154,
+      "expected_sensor_hours": 2160,
+      "matched_by_variable": {
+        "apparent_temperature": 2034,
+        "cloud_cover": 2034,
+        "precipitation": 2033,
+        "relative_humidity_2m": 2034,
+        "shortwave_radiation": 2033,
+        "surface_pressure": 2034,
+        "temperature_2m": 2034,
+        "wind_direction_10m": 2034,
+        "wind_speed_10m": 2034
+      }
+    },
+    "openaq_14581375": {
+      "accepted_hours_with_all_nine_era5_variables": 1916,
+      "accepted_hours_without_all_weather": 121,
+      "accepted_sensor_hours": 2037,
+      "expected_sensor_hours": 2160,
+      "matched_by_variable": {
+        "apparent_temperature": 1917,
+        "cloud_cover": 1917,
+        "precipitation": 1916,
+        "relative_humidity_2m": 1917,
+        "shortwave_radiation": 1916,
+        "surface_pressure": 1917,
+        "temperature_2m": 1917,
+        "wind_direction_10m": 1917,
+        "wind_speed_10m": 1917
+      }
+    }
+  },
+  "source_response_statuses": {
+    "open_meteo/200/none": 74,
+    "openaq/200/none": 48
+  }
+}

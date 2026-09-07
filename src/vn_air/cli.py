@@ -16,6 +16,13 @@ from vn_air.ingestion.parsing import timestamp
 from vn_air.ingestion.pipeline import Ingestor, PRODUCTS
 
 
+def audit_timestamp(value):
+    try:
+        return timestamp(value)
+    except IngestionError:
+        raise argparse.ArgumentTypeError("Use an offset-aware ISO timestamp") from None
+
+
 def main():
     parser = argparse.ArgumentParser(prog="vn-air")
     commands = parser.add_subparsers(dest="command", required=True)
@@ -38,6 +45,14 @@ def main():
     ingest.add_argument("--max-requests", type=int, default=250)
     report = commands.add_parser("report", help="Read-only ingestion counts, provenance and storage summary")
     report.add_argument("--output", type=Path, help="Optional NEW JSON evidence file; parent must exist")
+    quality = commands.add_parser("data-quality", help="Frozen, read-only Phase 4 data-quality audits")
+    quality_actions = quality.add_subparsers(dest="quality_action", required=True)
+    audit = quality_actions.add_parser("audit")
+    audit.add_argument("--cutoff", type=audit_timestamp, required=True, help="UTC cutoff for response and revision eligibility")
+    audit.add_argument("--start", type=audit_timestamp, required=True, help="Inclusive UTC measurement window start")
+    audit.add_argument("--end", type=audit_timestamp, required=True, help="Exclusive UTC measurement window end")
+    audit.add_argument("--config", type=Path, default=Path("configs/study.json"))
+    audit.add_argument("--output", type=Path, required=True, help="NEW JSON audit artifact; parent must exist")
     args = parser.parse_args()
     engine = None
     try:
@@ -73,6 +88,20 @@ def main():
             else:
                 print(report_text)
             return 0
+        if args.command == "data-quality":
+            if args.quality_action == "audit":
+                if args.output.exists() or not args.output.parent.is_dir():
+                    raise ValueError("Audit output must not exist and its parent must exist")
+                from vn_air.quality import audit_database, json_default, validate_window
+                validate_window(args.cutoff, args.start, args.end)
+                config = load_config(args.config)
+                engine = database_engine()
+                audit_report = audit_database(engine, config, cutoff=args.cutoff, start=args.start, end=args.end)
+                report_text = json.dumps(audit_report, indent=2, sort_keys=True, default=json_default, allow_nan=False)
+                from vn_air.quality_store import write_audit
+                write_audit(args.output, report_text, engine)
+                print(f"Audit written: {args.output}")
+                return 0
         config = load_config(args.config) if args.action == "seed" else None
         engine = database_engine()
         with engine.begin() as connection:
@@ -95,10 +124,14 @@ def main():
     except IngestionError as error:
         print(f"Ingestion stopped: {error.code}", file=sys.stderr)
     except (ValueError, OSError) as error:
-        print(str(error), file=sys.stderr)
+        print("Audit failed: invalid input, extraction or output; no source data changed" if args.command == "data-quality" else str(error), file=sys.stderr)
     except SQLAlchemyError as error:
         sqlstate = getattr(getattr(error, "orig", None), "sqlstate", None)
         print(f"Database operation failed ({sqlstate or type(error).__name__}); check connection, schema and permissions", file=sys.stderr)
+    except Exception:
+        if args.command != "data-quality":
+            raise
+        print("Audit failed: unexpected error; no source data changed", file=sys.stderr)
     finally:
         if engine is not None:
             engine.dispose()

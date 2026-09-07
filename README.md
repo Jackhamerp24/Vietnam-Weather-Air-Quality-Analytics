@@ -5,11 +5,10 @@ air-quality prediction in Vietnamese urban areas. The intended workflow combines
 continuous data collection with historical analysis, statistical inference,
 leakage-aware model evaluation, and an interactive analytical dashboard.
 
-**Status: Phase 3 delivered: real data ingestion and historical storage work.**
-On-demand polling and resumable backfill now persist measured and modeled data
-to Supabase PostgreSQL. Scheduling, full data-quality audits, EDA, statistics,
-models and the dashboard remain future phases. No model-performance or
-statistical-significance claims exist yet.
+**Status: Phase 4 delivered: frozen data-quality audit completed.** On-demand
+polling and resumable backfill persist measured and modeled data to Supabase
+PostgreSQL. EDA, statistics, models, dashboard work and scheduling remain future
+phases. No model-performance or statistical-significance claims exist yet.
 
 ## Phase 3 Results
 
@@ -47,7 +46,7 @@ Supabase now contains the verified Phase 3 historical loads; the separate local
 development database contains bounded live smoke data. No synthetic test records
 were inserted into either study database. Project model/prediction tables are empty.
 
-Read the [architecture](docs/architecture.md), [schema and setup](docs/database.md)
+Read the [architecture](docs/architecture.md), [Phase 4 verification](docs/verification/phase_4.md), [schema and setup](docs/database.md)
 and [source contracts](docs/source_contracts.md). A free-tier deployment can use
 the documented [Supabase setup](docs/supabase.md).
 
@@ -274,7 +273,7 @@ validity for every analysis.
 | 1. Research | Official-source comparison, live payload checks, measured-source audit | Delivered; two-location measured MVP supported, broader qualification ongoing |
 | 2. Architecture | Executable schema, provenance/source contracts, configuration, isolated database tests | Delivered; dedicated local database migrated and metadata seeded |
 | 3. MVP ingestion | Real data persisted in PostgreSQL; repeat/revision/recovery behavior verified | Delivered; on-demand jobs and bounded Supabase backfill, no schedule yet |
-| 4. Data quality | Audits of missingness, units, duplicates, gaps, anomalies | Planned |
+| 4. Data quality | Audits of missingness, units, duplicates, gaps, anomalies | Delivered; frozen audit and dated artifact |
 | 5. EDA | Coverage-qualified temporal, geographic, and weather comparisons | Planned |
 | 6. Statistics | Stated hypotheses, assumptions, effect sizes and uncertainty | Planned |
 | 7. Features | Availability-time and leakage tests | Planned |

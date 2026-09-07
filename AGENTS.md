@@ -10,10 +10,10 @@ Phases 1-3 are implemented:
 - Bounded OpenAQ/Open-Meteo ingestion with provenance, retries, revisions,
   quarantine, checkpoints and read-only reporting.
 
-The next planned phase is **Phase 4: Data Quality**. EDA, statistical analysis,
-feature engineering, model training, dashboard work and scheduling are not yet
-implemented. Do not claim model performance, significance, causal findings or
-production automation.
+Phase 4 data-quality auditing is implemented and verified. The next planned
+phase is **Phase 5: EDA**. Statistical analysis, feature engineering, model
+training, dashboard work and scheduling are not yet implemented. Do not claim
+model performance, significance, causal findings or production automation.
 
 ## Required Reading
 
@@ -101,11 +101,10 @@ at Supabase or the project database.
 
 ## Phase 4 Focus
 
-When authorized, build a frozen, reproducible data-quality audit over the stored
-dataset. Start with completeness, duplicate/revision handling, timestamp grids,
-unit/range checks, quality flags, metadata drift, missingness patterns, suspicious
-sentinels and sensor/model alignment. Report uncertainty and limitations before
-starting EDA. Keep the audit separate from automatic deletion or imputation.
+The frozen, reproducible audit is recorded in `docs/verification/phase_4.md` and
+the dated JSON artifact beside it. Preserve its cutoff, selection rules,
+uncertainty and limitations when using the data for EDA. Keep the audit separate
+from automatic deletion or imputation.
 
 ## Suggested Skills
 
