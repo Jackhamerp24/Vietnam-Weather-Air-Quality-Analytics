@@ -1,0 +1,10 @@
+{
+  "files_sha256": {
+    "phase_6_assumptions.md": "9bee068a151fc36fd36a13905e824be6c92090dff19d211db583a3f2e57ea9b9",
+    "phase_6_bootstrap_summary.csv": "b0be610268180ad235b2a1ddf5118f4ad11251f5d61d586ba66e86f64cce157a",
+    "phase_6_estimates.csv": "54c120a41f293cdeae98b457d6782a2bb9b0d9811a0b7d2ceb279b4306a73f4b",
+    "phase_6_statistics_summary.json": "be892273a00064f871214176c0311eb72955c652e94d1d9efa48dbbd99793acc"
+  },
+  "manifest_sha256": "276211321ad3a79e0758d112e485aa8bf26ba5b76d7c97baf6c6abc0018bead4",
+  "stats_version": "phase6_statistics_v1"
+}

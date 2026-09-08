@@ -65,6 +65,16 @@ def main():
     eda_replay = eda_actions.add_parser("replay")
     eda_replay.add_argument("--bundle", type=Path, required=True, help="Existing Phase 5 EDA bundle JSON")
     eda_replay.add_argument("--output-dir", type=Path, required=True, help="NEW output directory; parent must exist")
+    stats = commands.add_parser("stats", help="Phase 6 pre-registered statistics from the frozen Phase 5 bundle")
+    stats_actions = stats.add_subparsers(dest="stats_action", required=True)
+    stats_run = stats_actions.add_parser("run")
+    stats_run.add_argument("--bundle", type=Path, required=True, help="Phase 5 EDA bundle JSON")
+    stats_run.add_argument("--phase4-artifact", type=Path,
+                           default=Path("docs/verification/phase_4_quality_2026-09-07_final.json"))
+    stats_run.add_argument("--output-dir", type=Path, required=True, help="NEW output directory; parent must exist")
+    stats_replay = stats_actions.add_parser("replay")
+    stats_replay.add_argument("--bundle", type=Path, required=True, help="Phase 5 EDA bundle JSON")
+    stats_replay.add_argument("--output-dir", type=Path, required=True, help="NEW output directory; parent must exist")
     args = parser.parse_args()
     engine = None
     try:
@@ -134,6 +144,23 @@ def main():
                 result = replay_eda(args.bundle, args.output_dir)
                 print(json.dumps(result, sort_keys=True))
                 return 0
+        if args.command == "stats":
+            from vn_air.statistics import bundle_file_sha256, load_bundle, run_statistics, verify_phase4_file
+            from vn_air.statistics_output import write_outputs
+            if args.output_dir.exists() or not args.output_dir.parent.is_dir():
+                raise ValueError("Statistics output directory must be new and its parent must exist")
+            if not args.bundle.is_file():
+                raise ValueError("Phase 5 bundle does not exist")
+            if args.stats_action == "run":
+                if not args.phase4_artifact.is_file():
+                    raise ValueError("Phase 4 artifact does not exist")
+                bundle = load_bundle(args.bundle)
+                verify_phase4_file(bundle, args.phase4_artifact)
+            else:
+                bundle = load_bundle(args.bundle)
+            result = run_statistics(bundle, bundle_file_sha256(args.bundle))
+            print(json.dumps(write_outputs(args.output_dir, result), sort_keys=True))
+            return 0
         config = load_config(args.config) if args.action == "seed" else None
         engine = database_engine()
         with engine.begin() as connection:

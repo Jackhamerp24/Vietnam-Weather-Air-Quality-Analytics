@@ -5,10 +5,45 @@ air-quality prediction in Vietnamese urban areas. The intended workflow combines
 continuous data collection with historical analysis, statistical inference,
 leakage-aware model evaluation, and an interactive analytical dashboard.
 
-**Status: Phase 5 delivered: frozen data-quality audit and descriptive EDA completed.** On-demand
+**Status: Phase 6 delivered and verified: pre-registered sensor-level statistical analysis completed.** On-demand
 polling and resumable backfill persist measured and modeled data to Supabase
-PostgreSQL. Statistical analysis, models, dashboard work and scheduling remain
-future phases. No model-performance or statistical-significance claims exist.
+PostgreSQL; a frozen data-quality audit and descriptive EDA feed a pre-registered
+association study with block-bootstrap uncertainty. Forecast models, dashboard
+work and scheduling remain future phases. No model-performance or
+operational-forecast claims exist.
+
+## Phase 6 Results
+
+- Pre-registered H1: after adjustment for sensor, Vietnam local hour, weekday and
+  a bounded date trend, log1p(PM2.5) changes by −0.208 per one
+  analysis-window standard deviation of ERA5 wind speed (95% block-bootstrap
+  interval −0.257 to −0.166; Holm-adjusted bootstrap p = 0.002) over 3,951
+  accepted sensor-hours.
+- H2 humidity: adjusted estimate +0.099 (interval −0.006 to +0.186) — not
+  significant after Holm adjustment (adjusted p = 0.068).
+- H3 site contrast on the 2,035 shared accepted hours: OceanPark is +0.179
+  log1p(PM2.5) relative to CMT8 (interval +0.060 to +0.296), an exploratory
+  sensor contrast, not a city comparison.
+- Secondary family (temperature, precipitation, pressure, cloud cover,
+  radiation) under Benjamini–Hochberg FDR: only cloud cover survives (adjusted
+  p = 0.010). Wind speed conclusions are stable across raw scale, 48-hour and
+  168-hour blocks, complete-weather rows and the predeclared extreme-value rule.
+- Uncertainty uses 2,000 moving-block bootstrap replicates over Vietnam local
+  calendar days (seed 20260908, 1/2/7-day blocks, gaps preserved, exactly 91
+  dates per replicate), gated on non-overlapping independent date partitions
+  (91/46/13 by block length), with Holm and Benjamini–Hochberg multiple-testing
+  control and three explicit labels: inferential (adjusted family members only),
+  exploratory (unadjusted), descriptive_only. No imputation; CAMS and provider
+  forecasts stay out of the measured-target models.
+
+These are sensor-level associations over one 90-day window at two non-reference
+low-cost sites — not city-wide exposure, causal effects, or validated forecast
+skill. See the [Phase 6 verification](docs/verification/phase_6.md),
+[Phase 6 plan](docs/verification/phase_6_plan.md) (with the 2026-09-09 correction
+addendum) and the frozen
+[statistics bundle](docs/verification/phase_6_statistics_2026-09-09_corrected/phase_6_statistics_summary.json).
+The earlier 2026-09-08 output is superseded by the documented correction and
+preserved unchanged.
 
 ## Phase 3 Results
 
@@ -48,7 +83,7 @@ Supabase now contains the verified Phase 3 historical loads; the separate local
 development database contains bounded live smoke data. No synthetic test records
 were inserted into either study database. Project model/prediction tables are empty.
 
-Read the [architecture](docs/architecture.md), [Phase 4 verification](docs/verification/phase_4.md), [Phase 5 plan](docs/verification/phase_5_plan.md), [schema and setup](docs/database.md)
+Read the [architecture](docs/architecture.md), [Phase 4 verification](docs/verification/phase_4.md), [Phase 5 plan](docs/verification/phase_5_plan.md), [Phase 6 plan](docs/verification/phase_6_plan.md), [Phase 6 verification](docs/verification/phase_6.md), [schema and setup](docs/database.md)
 and [source contracts](docs/source_contracts.md). A free-tier deployment can use
 the documented [Supabase setup](docs/supabase.md).
 
@@ -277,7 +312,7 @@ validity for every analysis.
 | 3. MVP ingestion | Real data persisted in PostgreSQL; repeat/revision/recovery behavior verified | Delivered; on-demand jobs and bounded Supabase backfill, no schedule yet |
 | 4. Data quality | Audits of missingness, units, duplicates, gaps, anomalies | Delivered; frozen audit and dated artifact |
 | 5. EDA | Coverage-qualified temporal, geographic, and weather comparisons | Delivered; frozen descriptive outputs and SVG plots |
-| 6. Statistics | Stated hypotheses, assumptions, effect sizes and uncertainty | Next |
+| 6. Statistics | Stated hypotheses, assumptions, effect sizes and uncertainty | Delivered; pre-registered estimates, intervals and sensitivity matrix |
 | 7. Features | Availability-time and leakage tests | Planned |
 | 8. Baselines | Reproducible chronological baseline results | Planned |
 | 9. ML | Walk-forward comparisons, final holdout, ablations and interpretation | Planned |
