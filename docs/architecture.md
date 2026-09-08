@@ -3,8 +3,9 @@
 Phase 2 implements the PostgreSQL schema, migrations, reviewed configuration and
 setup tooling. Phase 3 adds [on-demand ingestion](ingestion.md), retained raw
 evidence, resumable backfill and basic quality checks. Phase 4 adds a frozen,
-read-only data-quality audit. Scheduling, EDA, feature computation, training and
-the dashboard remain **future phases**. The design follows
+read-only data-quality audit. Phase 5 adds descriptive EDA artifacts based on
+that frozen audit. Scheduling, statistical analysis, feature computation,
+training and the dashboard remain **future phases**. The design follows
 [Decision 0001](decisions/0001-data-sources.md) and the
 [authenticated source audit](research/openaq_qualification.md).
 

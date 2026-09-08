@@ -10,8 +10,8 @@ Phases 1-3 are implemented:
 - Bounded OpenAQ/Open-Meteo ingestion with provenance, retries, revisions,
   quarantine, checkpoints and read-only reporting.
 
-Phase 4 data-quality auditing is implemented and verified. The next planned
-phase is **Phase 5: EDA**. Statistical analysis, feature engineering, model
+Phases 4-5 are implemented and verified. Phase 5 provides descriptive EDA from
+the frozen Phase 4 dataset. Statistical analysis, feature engineering, model
 training, dashboard work and scheduling are not yet implemented. Do not claim
 model performance, significance, causal findings or production automation.
 
@@ -25,6 +25,9 @@ model performance, significance, causal findings or production automation.
 - `docs/decisions/0001-data-sources.md`
 - `docs/research/openaq_qualification.md`
 - `docs/verification/phase_3_counts.json`
+- `docs/verification/phase_4.md`
+- `docs/verification/phase_5.md`
+- `docs/verification/phase_5_plan.md`
 
 The detailed continuation handoff is outside the repository at:
 `/var/folders/wf/z4hrd0fd667599w3yq_gbvpr0000gn/T/opencode/vietnam-weather-handoff-2026-09-07.md`.
@@ -105,6 +108,18 @@ The frozen, reproducible audit is recorded in `docs/verification/phase_4.md` and
 the dated JSON artifact beside it. Preserve its cutoff, selection rules,
 uncertainty and limitations when using the data for EDA. Keep the audit separate
 from automatic deletion or imputation.
+
+## Phase 5 Focus
+
+EDA outputs live under `docs/verification/phase_5_eda_2026-09-07_final/`. Preserve the
+Phase 4 cutoff, input hashes, source separation, hourly gaps and interval
+alignment. Treat correlations, lag profiles and descriptive group summaries as
+exploration only. Do not turn them into significance or causal claims.
+
+The final EDA bundle hash is
+`92370a857153f2d2a476ab35dbceab3873503239ad6211170e99b8075d1e9e63`.
+Phase 5 added no database migration or schema change. The next phase is Phase 6:
+statistical design with predeclared hypotheses and dependence-aware uncertainty.
 
 ## Suggested Skills
 

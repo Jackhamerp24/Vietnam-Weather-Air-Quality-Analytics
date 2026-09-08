@@ -1,0 +1,31 @@
+{
+  "bundle_sha256": "92370a857153f2d2a476ab35dbceab3873503239ad6211170e99b8075d1e9e63",
+  "files_sha256": {
+    "README.md": "f6e76ba8011e6657c3894124639c7789806a17db9097dc4b82a5921f24d625cd",
+    "cams_context.svg": "aa4b3a722bcada5d097d1090ad962a257d6fb39cd20a142a6b7553c527b77f2f",
+    "cams_modeled_pm25.csv": "6ada5e78df570dc063567be7f635a1b1846d0c303614904164a7c53194f0aeb2",
+    "daily.csv": "aeb6db1accd5421b09abbec0d5e513e555cf829de4e56d4cf33d42a959960649",
+    "daily_coverage.svg": "e5cd3c4bb665993b8b675ea568ae1fbad8139f3015dfd5709531bfc30acdba41",
+    "daily_pm25.svg": "b30b2d9f516315be835a06fc07afa91aba52f153548647126acf7de21431ca8d",
+    "diurnal.csv": "0e6c6c23583db4e6827d161d5639a07d4cd9fa82b5957733bd58c26792988031",
+    "diurnal_pm25.svg": "ec06e6aa9803d49d105eccb6dc5140f8ac4b00794be01b6b11a7bdbc0062c137",
+    "eda_bundle.json": "00012495fd3fc455f5d9e43fdac18de9fd42ef686678f4ee843fa9ade82da18c",
+    "eda_summary.json": "2007b3c8b06d932f592afb71664698e7c4c2a00a45c9cf7aac1eddb07404e021",
+    "hourly_pm25.svg": "8d04dd1f5c4e453f180107986c43d2ee7391512942a9b3455cc9b56c0575a220",
+    "hourly_pm25_weather_grid.csv": "414f9746f733d1ffa34789bd9fb0b1aa34dd2afee6a4aaedd2645fa74888a2ca",
+    "lag_correlation.svg": "056ec5f706a12aebaddac0585f03785ae6693483394d3a6ee970c575c3e61e1e",
+    "lag_correlations.csv": "cd38380bc46d45b1a9984728259dd3392a71277bc8892668f1e5eb97a527a399",
+    "pm25_distribution.svg": "363dc03d4c05c7f03e21637110205ca7bea86941f555b6684277f2962fc99c3f",
+    "snapshot_provenance.csv": "e80b477bf230642d95b0a6df49c6c7f058d6a2bf41ea0e89a3a7bc941912cf2b",
+    "weather_apparent_temperature.svg": "9fd7becd1a35645f9ec5732115c59c3745282df081ea7fd70fbc9063ca0f8155",
+    "weather_associations.csv": "b7c11d9ec1f5d825f89c275e55b9af500ab56f5162500a862207d0574cf5e41a",
+    "weather_cloud_cover.svg": "44ae639d05d3106ea2bcb6e72acb93b40df5cb15445d3cd090313930c1905e19",
+    "weather_precipitation.svg": "1e50e287e3546bf39bbd819bb94e3746390d8f3ffce5a515fd601c46bf730b94",
+    "weather_relative_humidity_2m.svg": "6b90ace49e0a6966bd7753e3df02a992919315a182547fed1faa0afde117e63f",
+    "weather_shortwave_radiation.svg": "531928323fa9196a47dab5c908241bc1c1e08a7218bfd947e5535fc8342693ed",
+    "weather_surface_pressure.svg": "9833ba6a53fdd59801ff2cf648838d02779b09f484acf35e0e42b16a5f460b2c",
+    "weather_temperature_2m.svg": "fff4dd25b61f2c923f37c79c04e4da2b990f0f1e3fd87956ec1e1f4d2125a77a",
+    "weather_wind_speed_10m.svg": "f05b2a41290fe877653f7f36b844b6e0b09298cb53b842f10d90c066ef064d84",
+    "weekday.csv": "e6825fe98a391463e48ef3e7f0ff117f7bab7a825099efe3983013966c91907a"
+  }
+}

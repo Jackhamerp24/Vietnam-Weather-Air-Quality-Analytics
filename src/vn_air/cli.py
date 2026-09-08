@@ -53,6 +53,18 @@ def main():
     audit.add_argument("--end", type=audit_timestamp, required=True, help="Exclusive UTC measurement window end")
     audit.add_argument("--config", type=Path, default=Path("configs/study.json"))
     audit.add_argument("--output", type=Path, required=True, help="NEW JSON audit artifact; parent must exist")
+    eda = commands.add_parser("eda", help="Phase 5 descriptive exploratory data analysis")
+    eda_actions = eda.add_subparsers(dest="eda_action", required=True)
+    eda_run = eda_actions.add_parser("run")
+    eda_run.add_argument("--cutoff", type=audit_timestamp, required=True)
+    eda_run.add_argument("--start", type=audit_timestamp, required=True)
+    eda_run.add_argument("--end", type=audit_timestamp, required=True)
+    eda_run.add_argument("--phase4-artifact", type=Path, required=True)
+    eda_run.add_argument("--config", type=Path, default=Path("configs/study.json"))
+    eda_run.add_argument("--output-dir", type=Path, required=True, help="NEW output directory; parent must exist")
+    eda_replay = eda_actions.add_parser("replay")
+    eda_replay.add_argument("--bundle", type=Path, required=True, help="Existing Phase 5 EDA bundle JSON")
+    eda_replay.add_argument("--output-dir", type=Path, required=True, help="NEW output directory; parent must exist")
     args = parser.parse_args()
     engine = None
     try:
@@ -101,6 +113,26 @@ def main():
                 from vn_air.quality_store import write_audit
                 write_audit(args.output, report_text, engine)
                 print(f"Audit written: {args.output}")
+                return 0
+        if args.command == "eda":
+            if args.eda_action == "run":
+                from vn_air.eda import run_eda
+                from vn_air.quality import validate_window
+                validate_window(args.cutoff, args.start, args.end)
+                if args.output_dir.exists() or not args.output_dir.parent.is_dir():
+                    raise ValueError("EDA output directory must be new and its parent must exist")
+                if not args.phase4_artifact.is_file():
+                    raise ValueError("Phase 4 artifact does not exist")
+                config = load_config(args.config)
+                engine = database_engine()
+                result = run_eda(engine, config, cutoff=args.cutoff, start=args.start, end=args.end,
+                                 phase4_artifact=args.phase4_artifact, output_dir=args.output_dir)
+                print(json.dumps(result, sort_keys=True))
+                return 0
+            if args.eda_action == "replay":
+                from vn_air.eda import replay_eda
+                result = replay_eda(args.bundle, args.output_dir)
+                print(json.dumps(result, sort_keys=True))
                 return 0
         config = load_config(args.config) if args.action == "seed" else None
         engine = database_engine()

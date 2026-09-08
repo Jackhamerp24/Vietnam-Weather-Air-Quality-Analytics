@@ -5,10 +5,10 @@ air-quality prediction in Vietnamese urban areas. The intended workflow combines
 continuous data collection with historical analysis, statistical inference,
 leakage-aware model evaluation, and an interactive analytical dashboard.
 
-**Status: Phase 4 delivered: frozen data-quality audit completed.** On-demand
+**Status: Phase 5 delivered: frozen data-quality audit and descriptive EDA completed.** On-demand
 polling and resumable backfill persist measured and modeled data to Supabase
-PostgreSQL. EDA, statistics, models, dashboard work and scheduling remain future
-phases. No model-performance or statistical-significance claims exist yet.
+PostgreSQL. Statistical analysis, models, dashboard work and scheduling remain
+future phases. No model-performance or statistical-significance claims exist.
 
 ## Phase 3 Results
 
@@ -24,6 +24,8 @@ phases. No model-performance or statistical-significance claims exist yet.
   Supabase, with no paid resource or service upgrade.
 
 See the [Phase 3 verification](docs/verification/phase_3.md),
+[Phase 4 verification](docs/verification/phase_4.md),
+[Phase 5 verification](docs/verification/phase_5.md),
 [captured count report](docs/verification/phase_3_counts.json), and
 [ingestion commands](docs/ingestion.md). These are data-acquisition results, not
 evidence of sensor accuracy, city-wide pollution levels or predictive skill.
@@ -46,7 +48,7 @@ Supabase now contains the verified Phase 3 historical loads; the separate local
 development database contains bounded live smoke data. No synthetic test records
 were inserted into either study database. Project model/prediction tables are empty.
 
-Read the [architecture](docs/architecture.md), [Phase 4 verification](docs/verification/phase_4.md), [schema and setup](docs/database.md)
+Read the [architecture](docs/architecture.md), [Phase 4 verification](docs/verification/phase_4.md), [Phase 5 plan](docs/verification/phase_5_plan.md), [schema and setup](docs/database.md)
 and [source contracts](docs/source_contracts.md). A free-tier deployment can use
 the documented [Supabase setup](docs/supabase.md).
 
@@ -274,8 +276,8 @@ validity for every analysis.
 | 2. Architecture | Executable schema, provenance/source contracts, configuration, isolated database tests | Delivered; dedicated local database migrated and metadata seeded |
 | 3. MVP ingestion | Real data persisted in PostgreSQL; repeat/revision/recovery behavior verified | Delivered; on-demand jobs and bounded Supabase backfill, no schedule yet |
 | 4. Data quality | Audits of missingness, units, duplicates, gaps, anomalies | Delivered; frozen audit and dated artifact |
-| 5. EDA | Coverage-qualified temporal, geographic, and weather comparisons | Planned |
-| 6. Statistics | Stated hypotheses, assumptions, effect sizes and uncertainty | Planned |
+| 5. EDA | Coverage-qualified temporal, geographic, and weather comparisons | Delivered; frozen descriptive outputs and SVG plots |
+| 6. Statistics | Stated hypotheses, assumptions, effect sizes and uncertainty | Next |
 | 7. Features | Availability-time and leakage tests | Planned |
 | 8. Baselines | Reproducible chronological baseline results | Planned |
 | 9. ML | Walk-forward comparisons, final holdout, ablations and interpretation | Planned |
