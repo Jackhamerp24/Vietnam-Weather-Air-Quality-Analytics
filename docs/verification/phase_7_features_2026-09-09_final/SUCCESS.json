@@ -1,0 +1,13 @@
+{
+  "availability_basis": "captured",
+  "bundle_sha256": "bfe5874d1767f1b3dfe2310e7d9a527e3fac64d6d8830ac75ddc7bc6c28212c2",
+  "feature_version": "phase7_features_v3",
+  "files_sha256": {
+    "phase_7_assumptions.md": "458d2ee6a30f73d9687ebf7b78267c945221b05ea1e870da533219e5a40f8089",
+    "phase_7_feature_summary.json": "27a1ff0d967c687449c924844feeb5f2e84b2091c85d5a4a35dc01c399025f52",
+    "phase_7_features.csv": "8d918bc610b119ad1af71d9a88e92c4573b95de71e78d6ea398bc475bb0fc604",
+    "phase_7_lineage.csv": "621a88c28b2f88f267c3671969cbb4df262a52defd571e3eb689975476056aaa",
+    "phase_7_targets.csv": "d3e5198ccba3814259e5c9e8cfe647f481d58481b1bb8d774997e982e0f51073"
+  },
+  "manifest_sha256": "0b7c0e5a18b66c2a8819490926d4d7097ea489601f1369a0d34266275bb36dfa"
+}

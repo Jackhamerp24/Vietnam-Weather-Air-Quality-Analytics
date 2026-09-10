@@ -5,12 +5,57 @@ air-quality prediction in Vietnamese urban areas. The intended workflow combines
 continuous data collection with historical analysis, statistical inference,
 leakage-aware model evaluation, and an interactive analytical dashboard.
 
-**Status: Phase 6 delivered and verified: pre-registered sensor-level statistical analysis completed.** On-demand
+**Status: Phase 7 delivered: leakage-safe feature engineering completed.** On-demand
 polling and resumable backfill persist measured and modeled data to Supabase
 PostgreSQL; a frozen data-quality audit and descriptive EDA feed a pre-registered
-association study with block-bootstrap uncertainty. Forecast models, dashboard
-work and scheduling remain future phases. No model-performance or
-operational-forecast claims exist.
+association study, and an availability-aware feature pipeline (6h/24h horizons)
+is built and verified. The frozen historical window contains no prospectively
+captured evidence, so the captured feature artifact is a limited diagnostic and
+a prospective collection period is required before baselines on real data.
+Dashboard work, model training and scheduling remain future phases. No
+model-performance or operational-forecast claims exist.
+
+## Phase 7 Results
+
+- Read-only extractor plus a pure deterministic builder: for every forecast
+  origin, every feature is derived only from data whose evidence timestamps
+  strictly precede the origin; targets are aligned to the exact horizon
+  contract and stored separately from features.
+- Catalog: exact PM2.5 lags (1–72h), last-available value with exposed age,
+  strict trailing means/std with observation counts, calendar features,
+  forecast-weather features (wind direction only as sin/cos), per-row lineage
+  and missingness reasons.
+- One shared 60/20/20 chronological split for both sensors and horizons
+  (validation starts 2026-07-31T10:00Z, test starts 2026-08-18T05:00Z) with
+  horizon-overlap purge reported separately (112 rows); the final test period
+  stays untouched.
+- Captured artifact is a limited diagnostic: all 4,215 measured rows were
+  retrieved after the historical window (backfill/poll), so captured
+  availability is zero and the artifact records
+  `prospective_collection_period_required = true` with all data features null
+  and explicit reasons. The final pipeline (`phase7_features_v7`) adds
+  prospective-window support with an optional frozen-boundary assertion, 72h
+  warm-up extraction, assumed-mode forecast event-time policy, source/vintage
+  identity checks (product, purpose, model key, coordinates), value-level
+  lineage/leakage, null-label target semantics, period_start validation,
+  config/bundle boundary checks, complete reviewed variable/sensor/location
+  registry validation, derived sensor metadata and snapshot/product identity
+  binding, structural malformed-input rejection and summary-bound replay. Assumed-lag mode is
+  implemented and tested but requires explicit user authorization and is never
+  an operational backtest.
+- Verification: 85 non-CLI v7 builder/regression tests, pure-builder v7
+  build/replay with byte-identical six-file output, complete registry and
+  input-table hash verification, and preserved prior full gates (180 offline,
+  52 isolated PostgreSQL). The post-v7 full rerun is currently blocked by a
+  macOS dataless `.venv` package hydration stall; no database code changed.
+  `git diff --check`, one live read-only Supabase extraction. Status counts
+  usable accepted evidence only: invalid-only input can never produce
+  `status = ok`.
+
+See the [Phase 7 verification](docs/verification/phase_7.md),
+[Phase 7 plan](docs/verification/phase_7_plan.md) and the authoritative
+[feature summary](docs/verification/phase_7_features_2026-09-10_structural_hardened/phase_7_feature_summary.json).
+No forecast-skill, model-performance or operational claim exists.
 
 ## Phase 6 Results
 
@@ -83,7 +128,7 @@ Supabase now contains the verified Phase 3 historical loads; the separate local
 development database contains bounded live smoke data. No synthetic test records
 were inserted into either study database. Project model/prediction tables are empty.
 
-Read the [architecture](docs/architecture.md), [Phase 4 verification](docs/verification/phase_4.md), [Phase 5 plan](docs/verification/phase_5_plan.md), [Phase 6 plan](docs/verification/phase_6_plan.md), [Phase 6 verification](docs/verification/phase_6.md), [schema and setup](docs/database.md)
+Read the [architecture](docs/architecture.md), [Phase 4 verification](docs/verification/phase_4.md), [Phase 5 plan](docs/verification/phase_5_plan.md), [Phase 6 plan](docs/verification/phase_6_plan.md), [Phase 6 verification](docs/verification/phase_6.md), [Phase 7 plan](docs/verification/phase_7_plan.md), [Phase 7 verification](docs/verification/phase_7.md), [schema and setup](docs/database.md)
 and [source contracts](docs/source_contracts.md). A free-tier deployment can use
 the documented [Supabase setup](docs/supabase.md).
 
@@ -313,8 +358,8 @@ validity for every analysis.
 | 4. Data quality | Audits of missingness, units, duplicates, gaps, anomalies | Delivered; frozen audit and dated artifact |
 | 5. EDA | Coverage-qualified temporal, geographic, and weather comparisons | Delivered; frozen descriptive outputs and SVG plots |
 | 6. Statistics | Stated hypotheses, assumptions, effect sizes and uncertainty | Delivered; pre-registered estimates, intervals and sensitivity matrix |
-| 7. Features | Availability-time and leakage tests | Planned |
-| 8. Baselines | Reproducible chronological baseline results | Planned |
+| 7. Features | Availability-time and leakage tests | Delivered; captured limited diagnostic, prospective collection required |
+| 8. Baselines | Reproducible chronological baseline results | Next (needs prospective captured data) |
 | 9. ML | Walk-forward comparisons, final holdout, ablations and interpretation | Planned |
 | 10. Dashboard | Analytical views, source labels, working interactions | Planned |
 | 11. Automation | Scheduled ingestion, failure alerts, recovery and backups | Planned |

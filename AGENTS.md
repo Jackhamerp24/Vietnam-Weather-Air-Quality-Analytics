@@ -10,17 +10,24 @@ Phases 1-3 are implemented:
 - Bounded OpenAQ/Open-Meteo ingestion with provenance, retries, revisions,
   quarantine, checkpoints and read-only reporting.
 
-Phases 4-6 are implemented and verified. Phase 5 provides descriptive EDA from
+Phases 4-7 are implemented and verified. Phase 5 provides descriptive EDA from
 the frozen Phase 4 dataset. Phase 6 provides pre-registered, sensor-level
 weather-PM2.5 association estimates with block-bootstrap uncertainty, replayed
 read-only from the frozen Phase 5 bundle; the authoritative Phase 6 artifact is
 the 2026-09-09 corrected run, and the 2026-09-08 artifact is superseded but
-preserved. Feature engineering, model training,
+preserved. Phase 7 provides availability-aware, leakage-safe feature
+construction (6h/24h horizons) with a read-only extractor and a captured
+limited-diagnostic artifact. The authoritative artifact is the 2026-09-10
+structural-hardened `phase7_features_v7` run; v1 through v6 remain preserved as
+superseded historical evidence. The frozen window contains no prospectively
+captured evidence, so a prospective collection period is required before
+operational features or baselines on real data. Feature engineering is
+delivered; model training (Phase 8 baselines, Phase 9 ML),
 dashboard work and scheduling are not yet implemented. Do not claim model
-performance, causal findings, forecast skill or production automation. The Phase
-6 estimates are sensor-level associations over one 90-day window; treat the Holm-
-and FDR-adjusted results as the only inferential outputs and everything else as
-exploratory sensitivity.
+performance, forecast skill, causal findings, operational readiness or
+production automation. The Phase 6 estimates are sensor-level associations over
+one 90-day window; treat the Holm- and FDR-adjusted results as the only
+inferential outputs and everything else as exploratory sensitivity.
 
 ## Required Reading
 
@@ -39,6 +46,12 @@ exploratory sensitivity.
 - `docs/verification/phase_6_plan.md`
 - `docs/verification/phase_6.md`
 - `docs/verification/phase_6_statistics_2026-09-09_corrected/phase_6_statistics_summary.json`
+- `docs/verification/phase_7_plan.md`
+- `docs/verification/phase_7.md`
+- `docs/verification/phase_7_registry_hardening_plan.md`
+- `docs/verification/phase_7_snapshot_boundary_hardening_plan.md`
+- `docs/verification/phase_7_structural_schema_hardening_plan.md`
+- `docs/verification/phase_7_features_2026-09-10_structural_hardened/phase_7_feature_summary.json`
 
 The detailed continuation handoff is outside the repository at:
 `/var/folders/wf/z4hrd0fd667599w3yq_gbvpr0000gn/T/opencode/vietnam-weather-handoff-2026-09-07.md`.
@@ -243,6 +256,75 @@ dates; only Holm/BH-adjusted outputs are labelled inferential. Stop conditions
 (hash mismatch, rank deficiency, insufficient independent blocks) remain active
 for any re-analysis. No independent reviewer is available unless a future
 runtime explicitly performs one.
+
+## Phase 7 Focus: Availability-Aware Feature Engineering
+
+Phase 7 is delivered and verified against the authoritative artifact
+`docs/verification/phase_7_features_2026-09-10_structural_hardened/`
+(`phase7_features_v7`; see `docs/verification/phase_7.md`). The earlier
+artifacts (`phase7_features_v1` captured, `phase7_features_v2` corrected and
+`phase7_features_v3` final, `phase7_features_v4` intermediate,
+`phase7_features_v5` hardened and `phase7_features_v6` snapshot-hardened) are
+preserved unchanged and superseded: review
+corrections A–J in
+`docs/verification/phase_7_correction_plan.md` fixed prospective-window
+boundaries, 72h warm-up extraction, assumed-mode forecast value policy,
+source/vintage identity checks, value-level lineage and leakage, null-label
+target semantics, period_start validation, summary-bound replay binding and
+config/bundle boundary checks, and the final fix
+(`docs/verification/phase_7_final_fix_plan.md`) made status count usable
+accepted evidence only (invalid-only input cannot produce `status = ok`) and
+added input-table hash verification with re-signed tamper rejection. The
+registry-boundary correction in `docs/verification/phase_7_registry_fix_plan.md`
+now validates the complete reviewed variable, sensor and location registries,
+modeled-value identity/support, duplicate keys, derived sensor name/timezone,
+snapshot/product identity, embedded IDs and structural required-field checks
+before construction. The next
+phase is Phase 8: reproducible chronological baselines. Do not implement
+baselines or ML while completing a handoff/read-only task.
+
+Contract to preserve:
+
+- Two explicit availability modes: `captured` (evidence timestamps strictly
+  before the origin; conservative, never described as as-issued provider
+  availability) and `assumed` (declared lag on event times; user-authorized
+  scenario only; never an operational backtest). No silent captured→assumed
+  fallback. The Phase 3 backfill's `retrieved_at` is not historical
+  availability.
+- Source separation: measured OpenAQ PM2.5 is the target/history source;
+  Open-Meteo forecast snapshots are the only captured weather source; ERA5 and
+  CAMS are excluded from the captured measured-target matrix; missing measured
+  PM2.5 is never replaced with model output.
+- Target contract: `target_end = origin + h`, target row
+  `[target_end − 1h, target_end)`; targets live in `phase_7_targets.csv` only
+  and never enter feature lineage. Horizons are exactly 6 and 24 hours.
+- Revision-before-quality selection with a deterministic composite tie-break;
+  exact-timestamp lags; strict trailing windows with reported counts; wind
+  direction only as sin/cos; one deterministic forecast vintage per
+  location/origin with the documented ranking and no averaging.
+- One shared 60/20/20 chronological split (2026-07-31T10:00Z and
+  2026-08-18T05:00Z for the frozen window) with horizon purge reported
+  separately; the final test period stays untouched.
+- The captured artifact is a limited diagnostic (`status =
+  limited_diagnostic`): all PM and forecast-weather features are null with
+  explicit reasons because no evidence predates any historical origin. A
+  prospective collection period is required before captured operational
+  features or Phase 8 baselines on real data exist.
+
+Delivered code: `src/vn_air/features.py` (v7), `src/vn_air/features_store.py`
+(v3), `src/vn_air/features_output.py`, `vn-air features extract|build|replay`
+(`--config` required for build/replay; `--require-frozen-boundary` optional;
+summary-bound replay binds bundle digest, file digest, version, horizons,
+availability and lag), `tests/test_features.py` (85 non-CLI v7 tests executed;
+five CLI replay tests remain blocked by the local package stall) and
+`tests/integration/test_features_database.py` (7 isolated-PostgreSQL tests).
+Evidence completed: 85 non-CLI v7 builder/regression tests, pure-builder v7
+build/replay with byte-identical six-file output, preserved v1–v6 artifact
+hashes, complete registry and input-table hash verification, `git diff --check`,
+and the prior v5 full gates (180 offline tests, 52 isolated PostgreSQL tests).
+The post-v7 full-suite rerun is blocked by macOS stalling on dataless `.venv`
+SQLAlchemy/Pydantic files; no database code changed in v6. Assumed-mode
+artifacts require explicit user authorization per scenario.
 
 ## Suggested Skills
 

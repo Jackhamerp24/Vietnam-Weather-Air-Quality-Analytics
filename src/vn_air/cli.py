@@ -75,6 +75,33 @@ def main():
     stats_replay = stats_actions.add_parser("replay")
     stats_replay.add_argument("--bundle", type=Path, required=True, help="Phase 5 EDA bundle JSON")
     stats_replay.add_argument("--output-dir", type=Path, required=True, help="NEW output directory; parent must exist")
+    features = commands.add_parser("features", help="Phase 7 availability-aware feature engineering")
+    feature_actions = features.add_subparsers(dest="feature_action", required=True)
+    feature_extract = feature_actions.add_parser("extract")
+    feature_extract.add_argument("--cutoff", type=audit_timestamp, required=True)
+    feature_extract.add_argument("--start", type=audit_timestamp, required=True)
+    feature_extract.add_argument("--end", type=audit_timestamp, required=True)
+    feature_extract.add_argument("--config", type=Path, default=Path("configs/study.json"))
+    feature_extract.add_argument("--output", type=Path, required=True, help="NEW input-bundle JSON file; parent must exist")
+    feature_build = feature_actions.add_parser("build")
+    feature_build.add_argument("--bundle", type=Path, required=True, help="Phase 7 input bundle JSON")
+    feature_build.add_argument("--config", type=Path, required=True, help="Reviewed configuration for boundary checks")
+    feature_build.add_argument("--output-dir", type=Path, required=True, help="NEW output directory; parent must exist")
+    feature_build.add_argument("--horizons", type=int, nargs="+", required=True, help="Horizons in hours, subset of 6 and 24")
+    feature_build.add_argument("--availability", choices=("captured", "assumed"), required=True)
+    feature_build.add_argument("--assumed-lag-hours", type=float, default=None, help="Required for assumed mode; forbidden for captured")
+    feature_build.add_argument("--require-frozen-boundary", action="store_true",
+                               help="Require the frozen historical Phase 7 boundary instead of an explicit new window")
+    feature_replay = feature_actions.add_parser("replay")
+    feature_replay.add_argument("--bundle", type=Path, required=True, help="Phase 7 input bundle JSON")
+    feature_replay.add_argument("--config", type=Path, required=True, help="Reviewed configuration for boundary checks")
+    feature_replay.add_argument("--output-dir", type=Path, required=True, help="NEW output directory; parent must exist")
+    feature_replay.add_argument("--summary", type=Path, help="Previous phase_7_feature_summary.json supplying the recorded build request")
+    feature_replay.add_argument("--horizons", type=int, nargs="+")
+    feature_replay.add_argument("--availability", choices=("captured", "assumed"))
+    feature_replay.add_argument("--assumed-lag-hours", type=float)
+    feature_replay.add_argument("--require-frozen-boundary", action="store_true",
+                                help="Require the frozen historical Phase 7 boundary instead of an explicit new window")
     args = parser.parse_args()
     engine = None
     try:
@@ -160,6 +187,69 @@ def main():
                 bundle = load_bundle(args.bundle)
             result = run_statistics(bundle, bundle_file_sha256(args.bundle))
             print(json.dumps(write_outputs(args.output_dir, result), sort_keys=True))
+            return 0
+        if args.command == "features":
+            from vn_air.features import bundle_file_sha256, build_features, load_bundle
+            from vn_air.features_output import write_outputs
+            if args.feature_action == "extract":
+                if args.output.exists() or not args.output.parent.is_dir():
+                    raise ValueError("Feature bundle output must be a new file with an existing parent")
+                from vn_air.features_store import extract_features
+                from vn_air.quality import validate_window
+                validate_window(args.cutoff, args.start, args.end)
+                config = load_config(args.config)
+                engine = database_engine()
+                bundle = extract_features(engine, config, cutoff=args.cutoff, start=args.start, end=args.end)
+                with args.output.open("x", encoding="utf-8") as handle:
+                    json.dump(bundle, handle, sort_keys=True, ensure_ascii=True, allow_nan=False, separators=(",", ":"))
+                    handle.write("\n")
+                print(json.dumps({"bundle": str(args.output), "bundle_sha256": bundle["bundle_sha256"],
+                                  "input_counts": bundle["manifest"]["input_counts"]}, sort_keys=True))
+                return 0
+            if args.output_dir.exists() or not args.output_dir.parent.is_dir():
+                raise ValueError("Features output directory must be new and its parent must exist")
+            if not args.bundle.is_file():
+                raise ValueError("Feature input bundle does not exist")
+            reviewed = load_config(args.config).model_dump(mode="json")
+            file_sha = bundle_file_sha256(args.bundle)
+            bundle = load_bundle(args.bundle)
+            if args.feature_action == "build":
+                horizons, basis, lag = args.horizons, args.availability, args.assumed_lag_hours
+                replay_mode = "build"
+                replay_frozen = args.require_frozen_boundary
+            else:
+                if args.summary is not None:
+                    if not args.summary.is_file():
+                        raise ValueError("Feature summary does not exist")
+                    request = json.loads(args.summary.read_text(encoding="utf-8"))["manifest"]
+                    if request.get("bundle_sha256") != bundle["bundle_sha256"]:
+                        raise ValueError("Summary-bound replay mismatch: input bundle digest differs")
+                    if request.get("bundle_file_sha256") != file_sha:
+                        raise ValueError("Summary-bound replay mismatch: input bundle file digest differs")
+                    from vn_air.features import FEATURES_VERSION
+                    if request.get("feature_version") != FEATURES_VERSION:
+                        raise ValueError("Summary-bound replay mismatch: feature version differs")
+                    if args.horizons and sorted(args.horizons) != sorted(request["horizons"]):
+                        raise ValueError("Summary-bound replay mismatch: horizons differ")
+                    if args.availability and args.availability != request["availability_basis"]:
+                        raise ValueError("Summary-bound replay mismatch: availability differs")
+                    if args.availability and (args.assumed_lag_hours or None) != (request.get("availability_assumption") or None):
+                        raise ValueError("Summary-bound replay mismatch: assumed lag differs")
+                    replay_mode = "summary_bound"
+                    horizons, basis, lag = (request["horizons"], request["availability_basis"],
+                                            request["availability_assumption"])
+                    replay_frozen = bool(request.get("boundary", {}).get("frozen_boundary_applied"))
+                elif args.horizons and args.availability:
+                    replay_mode = "explicit"
+                    horizons, basis, lag = args.horizons, args.availability, args.assumed_lag_hours
+                    replay_frozen = args.require_frozen_boundary
+                else:
+                    raise ValueError("Replay requires --summary or explicit --horizons/--availability")
+            result = build_features(bundle, file_sha, horizons=horizons,
+                                    availability_basis=basis, assumed_lag_hours=lag,
+                                    reviewed=reviewed, require_frozen_boundary=replay_frozen)
+            print(json.dumps({**write_outputs(args.output_dir, result), "replay_request_mode": replay_mode},
+                             sort_keys=True))
             return 0
         config = load_config(args.config) if args.action == "seed" else None
         engine = database_engine()
