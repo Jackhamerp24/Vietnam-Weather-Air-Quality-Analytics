@@ -1,0 +1,10 @@
+{
+  "baseline_version": "phase8_baselines_v2",
+  "files_sha256": {
+    "phase_8_assumptions.md": "e77111278c3456221480f44a173fab0aa99e8a79f9b4e173a095094ac1588ebc",
+    "phase_8_baseline_metrics.csv": "9626e4112689f108afba1256100e3911675bc44712b4072e9d87f267b675ca63",
+    "phase_8_baselines_summary.json": "1cfdb8883d9c74a041676f7d291b646bf5e546f7dd0e5f8b867d20322fa659d0",
+    "phase_8_predictions.csv": "ea9f9f4a8568170e4f36a56059c18784a1260bcd1335c8b52df8856180f5a0bf"
+  },
+  "manifest_sha256": "3e2ff46975954b2c23fe1bad66795b219fc2fcafa9950224fe74c7e61d055d7e"
+}

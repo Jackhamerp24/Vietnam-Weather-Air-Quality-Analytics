@@ -5,15 +5,47 @@ air-quality prediction in Vietnamese urban areas. The intended workflow combines
 continuous data collection with historical analysis, statistical inference,
 leakage-aware model evaluation, and an interactive analytical dashboard.
 
-**Status: Phase 7 delivered: leakage-safe feature engineering completed.** On-demand
+**Status: Phase 8 delivered: reproducible chronological baselines completed.** On-demand
 polling and resumable backfill persist measured and modeled data to Supabase
 PostgreSQL; a frozen data-quality audit and descriptive EDA feed a pre-registered
-association study, and an availability-aware feature pipeline (6h/24h horizons)
-is built and verified. The frozen historical window contains no prospectively
-captured evidence, so the captured feature artifact is a limited diagnostic and
+association study; an availability-aware feature pipeline (6h/24h horizons) is
+built and verified; and a database-free baseline runner evaluates persistence,
+strict trailing means, train-only local-hour climatology and an optional
+weather-augmented diagnostic under the inherited chronological split and purge.
+The frozen historical window contains no prospectively captured evidence, so the
+captured feature artifact and the baseline artifact are limited diagnostics, and
 a prospective collection period is required before baselines on real data.
-Dashboard work, model training and scheduling remain future phases. No
+Dashboard work, Phase 9 model training and scheduling remain future phases. No
 model-performance or operational-forecast claims exist.
+
+## Phase 8 Results
+
+- Database-free, deterministic baseline runner over the Phase 7 artifact: every
+  declared input hash, the summary manifest digest, feature version, horizons,
+  captured basis, split/purge metadata and feature/target key alignment are
+  verified before fitting. Required input hashes cannot be omitted; replay
+  binds the complete manifest and purpose and supports relocated identical
+  inputs. No test row is used for fitting or selection.
+- Declared baselines: `persistence_last_available` (primary history-only
+  reference), `persistence_lag_1h`, `trailing_mean_24h`, train-only
+  `local_hour_climatology` and `weather_augmented_climatology` (only when finite
+  captured weather features exist; no ERA5/CAMS/assumed fallback).
+- The frozen Phase 7 artifact has zero usable captured PM/weather feature
+  evidence, so the authoritative artifact is a limited diagnostic: 72 of 90
+  metric cells are unavailable with explicit reasons and no fabricated scores,
+  while the 18 local-hour climatology cells use non-purged training targets only
+  and remain descriptive calendar diagnostics.
+- Verification: 26 baseline tests passed; the offline suite ran 209 tests
+  (207 passed, 2 credential skips); 52 isolated PostgreSQL tests passed. CLI
+  run and CLI/module replay match the authoritative v2 artifact byte-for-byte
+  (5/5 files including `SUCCESS.json`); `git diff --check` clean. No study
+  database write, migration or schedule was added.
+- Real baseline evaluation remains blocked until the prospective collection
+  period supplies captured evidence.
+
+See the [Phase 8 verification](docs/verification/phase_8.md), [Phase 8 plan](docs/verification/phase_8_plan.md) and the authoritative
+[baseline summary](docs/verification/phase_8_baselines_2026-09-11_v2_verified/phase_8_baselines_summary.json).
+No forecast-skill or model-performance claim exists.
 
 ## Phase 7 Results
 
@@ -46,8 +78,9 @@ model-performance or operational-forecast claims exist.
 - Verification: 85 non-CLI v7 builder/regression tests, pure-builder v7
   build/replay with byte-identical six-file output, complete registry and
   input-table hash verification, and preserved prior full gates (180 offline,
-  52 isolated PostgreSQL). The post-v7 full rerun is currently blocked by a
-  macOS dataless `.venv` package hydration stall; no database code changed.
+  52 isolated PostgreSQL). The earlier macOS dataless `.venv` hydration stall
+  was resolved during Phase 8: the full suite, including Phase 7 CLI replay
+  tests, and the 52-test isolated PostgreSQL suite now pass.
   `git diff --check`, one live read-only Supabase extraction. Status counts
   usable accepted evidence only: invalid-only input can never produce
   `status = ok`.
@@ -128,7 +161,7 @@ Supabase now contains the verified Phase 3 historical loads; the separate local
 development database contains bounded live smoke data. No synthetic test records
 were inserted into either study database. Project model/prediction tables are empty.
 
-Read the [architecture](docs/architecture.md), [Phase 4 verification](docs/verification/phase_4.md), [Phase 5 plan](docs/verification/phase_5_plan.md), [Phase 6 plan](docs/verification/phase_6_plan.md), [Phase 6 verification](docs/verification/phase_6.md), [Phase 7 plan](docs/verification/phase_7_plan.md), [Phase 7 verification](docs/verification/phase_7.md), [schema and setup](docs/database.md)
+Read the [architecture](docs/architecture.md), [Phase 4 verification](docs/verification/phase_4.md), [Phase 5 plan](docs/verification/phase_5_plan.md), [Phase 6 plan](docs/verification/phase_6_plan.md), [Phase 6 verification](docs/verification/phase_6.md), [Phase 7 plan](docs/verification/phase_7_plan.md), [Phase 7 verification](docs/verification/phase_7.md), [Phase 8 plan](docs/verification/phase_8_plan.md), [Phase 8 verification](docs/verification/phase_8.md), [schema and setup](docs/database.md)
 and [source contracts](docs/source_contracts.md). A free-tier deployment can use
 the documented [Supabase setup](docs/supabase.md).
 
@@ -344,7 +377,7 @@ loading the variable, staged captures and the offline coverage audit.
 `probe_sources.py` stays keyless; `probe_openaq.py` reads the exported environment
 variable and sends it only to OpenAQ in `X-API-Key`.
 
-There are no training, dashboard, scheduler or Docker commands yet. Full
+There are no model-training, dashboard, scheduler or Docker commands yet. Full
 data-quality audits come next; acquisition success does not establish scientific
 validity for every analysis.
 
@@ -359,7 +392,7 @@ validity for every analysis.
 | 5. EDA | Coverage-qualified temporal, geographic, and weather comparisons | Delivered; frozen descriptive outputs and SVG plots |
 | 6. Statistics | Stated hypotheses, assumptions, effect sizes and uncertainty | Delivered; pre-registered estimates, intervals and sensitivity matrix |
 | 7. Features | Availability-time and leakage tests | Delivered; captured limited diagnostic, prospective collection required |
-| 8. Baselines | Reproducible chronological baseline results | Next (needs prospective captured data) |
+| 8. Baselines | Reproducible chronological baseline results | Delivered; deterministic engine and limited-diagnostic artifact, prospective captured data required |
 | 9. ML | Walk-forward comparisons, final holdout, ablations and interpretation | Planned |
 | 10. Dashboard | Analytical views, source labels, working interactions | Planned |
 | 11. Automation | Scheduled ingestion, failure alerts, recovery and backups | Planned |

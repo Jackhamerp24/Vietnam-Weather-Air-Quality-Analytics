@@ -75,6 +75,15 @@ def main():
     stats_replay = stats_actions.add_parser("replay")
     stats_replay.add_argument("--bundle", type=Path, required=True, help="Phase 5 EDA bundle JSON")
     stats_replay.add_argument("--output-dir", type=Path, required=True, help="NEW output directory; parent must exist")
+    baselines = commands.add_parser("baselines", help="Phase 8 reproducible chronological PM2.5 baselines")
+    baseline_actions = baselines.add_subparsers(dest="baseline_action", required=True)
+    baseline_run = baseline_actions.add_parser("run")
+    baseline_run.add_argument("--artifact", type=Path, required=True, help="Phase 7 feature artifact directory")
+    baseline_run.add_argument("--output-dir", type=Path, required=True, help="NEW Phase 8 output directory; parent must exist")
+    baseline_replay = baseline_actions.add_parser("replay")
+    baseline_replay.add_argument("--artifact", type=Path, required=True, help="Phase 7 feature artifact directory")
+    baseline_replay.add_argument("--summary", type=Path, required=True, help="Previous Phase 8 summary JSON")
+    baseline_replay.add_argument("--output-dir", type=Path, required=True, help="NEW Phase 8 output directory; parent must exist")
     features = commands.add_parser("features", help="Phase 7 availability-aware feature engineering")
     feature_actions = features.add_subparsers(dest="feature_action", required=True)
     feature_extract = feature_actions.add_parser("extract")
@@ -187,6 +196,15 @@ def main():
                 bundle = load_bundle(args.bundle)
             result = run_statistics(bundle, bundle_file_sha256(args.bundle))
             print(json.dumps(write_outputs(args.output_dir, result), sort_keys=True))
+            return 0
+        if args.command == "baselines":
+            from vn_air.baselines import replay_baselines, run_baselines
+            from vn_air.baselines_output import write_outputs
+            if args.baseline_action == "run":
+                result = run_baselines(args.artifact)
+                print(json.dumps(write_outputs(args.output_dir, result), sort_keys=True))
+                return 0
+            print(json.dumps(replay_baselines(args.artifact, args.summary, args.output_dir), sort_keys=True))
             return 0
         if args.command == "features":
             from vn_air.features import bundle_file_sha256, build_features, load_bundle

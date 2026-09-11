@@ -10,7 +10,7 @@ Phases 1-3 are implemented:
 - Bounded OpenAQ/Open-Meteo ingestion with provenance, retries, revisions,
   quarantine, checkpoints and read-only reporting.
 
-Phases 4-7 are implemented and verified. Phase 5 provides descriptive EDA from
+Phases 4-8 are implemented and verified. Phase 5 provides descriptive EDA from
 the frozen Phase 4 dataset. Phase 6 provides pre-registered, sensor-level
 weather-PM2.5 association estimates with block-bootstrap uncertainty, replayed
 read-only from the frozen Phase 5 bundle; the authoritative Phase 6 artifact is
@@ -19,10 +19,15 @@ preserved. Phase 7 provides availability-aware, leakage-safe feature
 construction (6h/24h horizons) with a read-only extractor and a captured
 limited-diagnostic artifact. The authoritative artifact is the 2026-09-10
 structural-hardened `phase7_features_v7` run; v1 through v6 remain preserved as
-superseded historical evidence. The frozen window contains no prospectively
-captured evidence, so a prospective collection period is required before
-operational features or baselines on real data. Feature engineering is
-delivered; model training (Phase 8 baselines, Phase 9 ML),
+superseded historical evidence. Phase 8 provides a database-free, deterministic
+baseline runner over the Phase 7 artifact with train-only fitting, inherited
+chronological split/purge and summary-bound replay. Its authoritative artifact
+is the 2026-09-11 v2 verified run; the v1 and intermediate v2 runs are preserved
+unchanged and superseded. The frozen window contains no prospectively captured evidence,
+so the Phase 8 artifact is a limited diagnostic (72 of 90 metric cells
+unavailable; only the local-hour calendar diagnostic runs) and a prospective
+collection period is required before baselines on real data. Feature
+engineering and baseline evaluation are delivered; model training (Phase 9 ML),
 dashboard work and scheduling are not yet implemented. Do not claim model
 performance, forecast skill, causal findings, operational readiness or
 production automation. The Phase 6 estimates are sensor-level associations over
@@ -52,9 +57,14 @@ inferential outputs and everything else as exploratory sensitivity.
 - `docs/verification/phase_7_snapshot_boundary_hardening_plan.md`
 - `docs/verification/phase_7_structural_schema_hardening_plan.md`
 - `docs/verification/phase_7_features_2026-09-10_structural_hardened/phase_7_feature_summary.json`
+- `docs/verification/phase_8_plan.md`
+- `docs/verification/phase_8.md`
+- `docs/verification/phase_8_integrity_replay_hardening_plan.md`
+- `docs/verification/phase_8_baselines_2026-09-11_v2_verified/phase_8_baselines_summary.json`
 
-The detailed continuation handoff is outside the repository at:
-`/var/folders/wf/z4hrd0fd667599w3yq_gbvpr0000gn/T/opencode/vietnam-weather-handoff-2026-09-07.md`.
+The previous runtime's continuation handoff file is no longer present in this
+runtime; `docs/verification/phase_8.md` and the dated verification documents are
+the continuation authority.
 
 ## Data Rules
 
@@ -279,9 +289,9 @@ registry-boundary correction in `docs/verification/phase_7_registry_fix_plan.md`
 now validates the complete reviewed variable, sensor and location registries,
 modeled-value identity/support, duplicate keys, derived sensor name/timezone,
 snapshot/product identity, embedded IDs and structural required-field checks
-before construction. The next
-phase is Phase 8: reproducible chronological baselines. Do not implement
-baselines or ML while completing a handoff/read-only task.
+before construction. The next phase was Phase 8: reproducible chronological
+baselines (delivered; see the Phase 8 Focus section). Do not implement ML while
+completing a handoff/read-only task.
 
 Contract to preserve:
 
@@ -321,10 +331,56 @@ five CLI replay tests remain blocked by the local package stall) and
 Evidence completed: 85 non-CLI v7 builder/regression tests, pure-builder v7
 build/replay with byte-identical six-file output, preserved v1–v6 artifact
 hashes, complete registry and input-table hash verification, `git diff --check`,
-and the prior v5 full gates (180 offline tests, 52 isolated PostgreSQL tests).
-The post-v7 full-suite rerun is blocked by macOS stalling on dataless `.venv`
-SQLAlchemy/Pydantic files; no database code changed in v6. Assumed-mode
-artifacts require explicit user authorization per scenario.
+and full repository gates (209 offline tests with two documented credential
+skips, 52 isolated PostgreSQL tests). Assumed-mode artifacts require explicit
+user authorization per scenario.
+
+## Phase 8 Focus: Reproducible Chronological Baselines
+
+Phase 8 is delivered and verified against the authoritative artifact
+`docs/verification/phase_8_baselines_2026-09-11_v2_verified/`
+(`phase8_baselines_v2`; see `docs/verification/phase_8.md`). The v1 artifact and
+all intermediate v2 correction artifacts are preserved unchanged and
+superseded. The next phase is Phase 9: chronological ML.
+Do not implement ML while completing a handoff/read-only task.
+
+Contract to preserve:
+
+- Phase 8 consumes a Phase 7 artifact only: every declared hash, the summary
+  manifest digest, feature version, horizons, captured availability basis,
+  split/purge metadata and feature/target key and identity alignment are
+  verified before any baseline is computed. No database access for `run` or
+  `replay`.
+- Declared baselines: `persistence_last_available` (primary history-only
+  reference), `persistence_lag_1h`, `trailing_mean_24h`, train-only
+  `local_hour_climatology`, and `weather_augmented_climatology` only when finite
+  captured weather features exist (no ERA5/CAMS/assumed fallback). No
+  imputation, no target-derived features and no test-based selection.
+- Metrics are `descriptive_only`, computed on finite accepted targets and finite
+  predictions from non-purged rows; MASE uses the training one-hour naive
+  denominator and sMAPE a zero-safe denominator. Coverage and exclusion reasons
+  are reported per baseline × sensor × horizon × split, and pooled metrics
+  remain a descriptive combination of two non-reference sensors.
+- The frozen artifact is a limited diagnostic (`status = limited_diagnostic`,
+  reasons `input_phase7_missing_pm_history` and
+  `input_phase7_missing_forecast_weather`): 72 of 90 metric cells are
+  unavailable with explicit reasons and no fabricated scores, and the 18
+  local-hour climatology cells are calendar diagnostics fit on non-purged
+  training targets only.
+- Replay is summary-bound and deterministic; required Phase 7 hashes cannot be
+  omitted, unsafe payload paths and symlinks are rejected, output directories
+  must be new, and the local input path is excluded so equivalent checkouts can
+  replay identically;
+  no database write, migration, schedule or paid resource was added.
+
+Delivered code: `src/vn_air/baselines.py` (`phase8_baselines_v2`),
+`src/vn_air/baselines_output.py`, `vn-air baselines run|replay` and
+`tests/test_baselines.py` (26 tests). Evidence completed: 209 offline tests
+(2 credential skips) and 52 isolated PostgreSQL tests passed, CLI and module
+replay byte-identical (5/5 files), `git diff --check` clean. The installed
+`.venv/bin/vn-air` entry point predates the Phase 7/8 subcommands; use
+`PYTHONPATH=src .venv/bin/python -m vn_air.cli` until the package is
+reinstalled.
 
 ## Suggested Skills
 
