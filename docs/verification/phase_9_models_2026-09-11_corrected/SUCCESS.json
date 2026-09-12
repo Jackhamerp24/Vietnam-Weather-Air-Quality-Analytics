@@ -1,0 +1,12 @@
+{
+  "files_sha256": {
+    "phase_9_assumptions.md": "88ed1ae950be268de5696b7818c98feea8ae20b12910ce55bb35b12bbc125829",
+    "phase_9_feature_manifest.json": "615c6bff253c7bace45cc86f6326b82eb2592a1a2a471b58ddfb701131e43019",
+    "phase_9_metrics.csv": "7c2f286ab619e7a97626c6d8e68ce5029f5c5b9f439fb745c61b94c20915e222",
+    "phase_9_model_parameters.json": "56d72fbdb624d4568df0cb26ed16f3fe06660f3ac91be9ba97902f882ec67857",
+    "phase_9_model_summary.json": "778c215b38458f628f0e81a8ebd9af85a0165d9dfed2a247a9cf78a66d818dc0",
+    "phase_9_predictions.csv": "1aee184786a87225b9fb023131cd36564ec62d25f5dd3e2febb3bf1ce2f58564"
+  },
+  "manifest_sha256": "f729fe7eee8428c92da1fc3b4becd7f77bc4eb92f7ec5a142ebffaa291256795",
+  "model_version": "phase9_ml_v2"
+}

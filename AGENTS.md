@@ -10,7 +10,9 @@ Phases 1-3 are implemented:
 - Bounded OpenAQ/Open-Meteo ingestion with provenance, retries, revisions,
   quarantine, checkpoints and read-only reporting.
 
-Phases 4-8 are implemented and verified. Phase 5 provides descriptive EDA from
+Phases 4-9 are implemented and verified; the Phase 9 v4 comparison-reporting
+review is complete. Phase 10 adds the local read-only dashboard described below.
+Phase 5 provides descriptive EDA from
 the frozen Phase 4 dataset. Phase 6 provides pre-registered, sensor-level
 weather-PM2.5 association estimates with block-bootstrap uncertainty, replayed
 read-only from the frozen Phase 5 bundle; the authoritative Phase 6 artifact is
@@ -23,13 +25,19 @@ superseded historical evidence. Phase 8 provides a database-free, deterministic
 baseline runner over the Phase 7 artifact with train-only fitting, inherited
 chronological split/purge and summary-bound replay. Its authoritative artifact
 is the 2026-09-11 v2 verified run; the v1 and intermediate v2 runs are preserved
-unchanged and superseded. The frozen window contains no prospectively captured evidence,
-so the Phase 8 artifact is a limited diagnostic (72 of 90 metric cells
-unavailable; only the local-hour calendar diagnostic runs) and a prospective
-collection period is required before baselines on real data. Feature
-engineering and baseline evaluation are delivered; model training (Phase 9 ML),
-dashboard work and scheduling are not yet implemented. Do not claim model
-performance, forecast skill, causal findings, operational readiness or
+unchanged and superseded. Phase 9 provides a database-free, deterministic
+Ridge and shallow bagged-tree runner over the Phase 7 artifact with train-only
+transforms, validation-only selection, train-plus-validation final fitting and
+an untouched test period. Its authoritative artifact is the 2026-09-12
+comparison-hardened run (`phase9_ml_v4`, `comparison_hardened`); the v1 final,
+v2 corrected and v3 review-hardened runs are preserved unchanged and superseded
+after the integrity, follow-up and comparison-reporting reviews. All are limited
+diagnostics: only calendar-only diagnostics
+trained because the frozen window contains no prospectively captured evidence,
+and a prospective collection period is required before captured-feature ML
+evaluation. Feature engineering, baselines, the ML runner and local dashboard
+are delivered; scheduling and deployment remain future work. Do not claim
+model performance, forecast skill, causal findings, operational readiness or
 production automation. The Phase 6 estimates are sensor-level associations over
 one 90-day window; treat the Holm- and FDR-adjusted results as the only
 inferential outputs and everything else as exploratory sensitivity.
@@ -61,6 +69,15 @@ inferential outputs and everything else as exploratory sensitivity.
 - `docs/verification/phase_8.md`
 - `docs/verification/phase_8_integrity_replay_hardening_plan.md`
 - `docs/verification/phase_8_baselines_2026-09-11_v2_verified/phase_8_baselines_summary.json`
+- `docs/verification/phase_9_plan.md`
+- `docs/verification/phase_9_integrity_replay_hardening_plan.md`
+- `docs/verification/phase_9.md`
+- `docs/verification/phase_9_models_2026-09-12_comparison_hardened/phase_9_model_summary.json`
+- `docs/verification/phase_10_plan.md`
+- `docs/verification/phase_10_contract.md`
+- `docs/verification/phase_10.md`
+- `dashboard/README.md`
+- `design-system/vietnam-air-observatory/pages/dashboard.md`
 
 The previous runtime's continuation handoff file is no longer present in this
 runtime; `docs/verification/phase_8.md` and the dated verification documents are
@@ -341,8 +358,9 @@ Phase 8 is delivered and verified against the authoritative artifact
 `docs/verification/phase_8_baselines_2026-09-11_v2_verified/`
 (`phase8_baselines_v2`; see `docs/verification/phase_8.md`). The v1 artifact and
 all intermediate v2 correction artifacts are preserved unchanged and
-superseded. The next phase is Phase 9: chronological ML.
-Do not implement ML while completing a handoff/read-only task.
+superseded. The local Phase 10 dashboard is delivered; Phase 11 automation is
+future work. Do not implement scheduling while completing a handoff/read-only
+task.
 
 Contract to preserve:
 
@@ -381,6 +399,109 @@ replay byte-identical (5/5 files), `git diff --check` clean. The installed
 `.venv/bin/vn-air` entry point predates the Phase 7/8 subcommands; use
 `PYTHONPATH=src .venv/bin/python -m vn_air.cli` until the package is
 reinstalled.
+
+## Phase 9 Focus: Chronological Machine Learning
+
+Phase 9 is delivered and verified against the authoritative artifact
+`docs/verification/phase_9_models_2026-09-12_comparison_hardened/` (`phase9_ml_v4`,
+revision `comparison_hardened`, manifest
+`378f2e7f34476fe885ce6ec9827b7a48c346706f36b548fbc8db78ce94d8a770`). The v1
+`docs/verification/phase_9_models_2026-09-11_final/`, v2
+`docs/verification/phase_9_models_2026-09-11_corrected/` and v3
+`docs/verification/phase_9_models_2026-09-12_review_hardened/` artifacts are
+preserved unchanged and superseded by the integrity corrections (A–D),
+follow-up review corrections (E–J) and comparison-reporting closeout (K–M) in
+`docs/verification/phase_9_integrity_replay_hardening_plan.md`. Phase 10 is the
+delivered local dashboard; Phase 11 scheduling is future work. Do not add
+scheduling or automation while completing a handoff or read-only task.
+
+Contract to preserve:
+
+- Phase 9 consumes the Phase 7 artifact and the Phase 8 v2 reference artifact
+  from disk only; `run` and `replay` open no database and make no network calls.
+  The frozen path preflights the fixed expected payload SHA-256 maps before the
+  inherited loader parses any CSV, records observed and expected maps in the
+  manifest, and verifies every declared hash, input identity, split/purge
+  contract and feature/target key alignment before fitting.
+- Phase 8 reference rows are aligned to Phase 7 keys with declared baseline
+  identity/role, location, split, purge, target availability and a
+  `predicted`/`unavailable` status enum; predicted rows need a finite value and
+  no reason, unavailable rows a null value and a reason.
+- Feature sets are exactly `calendar_only`, `history_only`, `weather_only` and
+  `history_weather`; target transforms are `log1p` (primary) and `raw`;
+  scopes are `pooled` and `per_sensor`; families are Ridge (unregularized
+  intercept, train-only standardization, predeclared alpha grid) and shallow
+  bagged trees (25 trees, depth 4, minimum leaf 10, 80% bootstrap, SHA-256
+  seeds). No imputation, no target/lineage/retrospective-timestamp predictors,
+  no ERA5/CAMS/assumed substitution and no library beyond the standard library.
+  Per-sensor identities use the reviewed location (`cmt8`, `oceanpark`);
+  conflicting sensor/location mappings stop before fitting.
+- Ridge alpha is selected by validation RMSE with a smaller-alpha tie-break;
+  failing candidates are recorded with null scores and an exact failure code;
+  if all candidates fail the instance is unavailable with no fallback. The
+  final model is refit on train plus validation and the test period is scored
+  once. No model, feature set or transform is selected on test; validation
+  metrics are tuning diagnostics.
+- Comparison records carry `location_id`, `fit_partition`, fit-key digests and
+  sensor-scoped `model_finite_rows`/`reference_finite_rows` before pair
+  intersection; the Phase 8 local-hour reference fit digest is derived from
+  verified Phase 7 train rows without refitting. `history_status` is
+  `not_paired`, `not_applicable` (direct feature reference), `unknown` (no
+  established fit membership), `training_history_mismatch` (partition or digest
+  differs) or `matched`; all comparisons remain `descriptive_only`.
+- The frozen artifact is a limited diagnostic: 24 of 96 declared model
+  instances trained (calendar-only), 72 of 288 metric cells available, 216
+  unavailable with explicit reasons, no fabricated scores, all metrics
+  `descriptive_only`. `prospective_collection_period_required = true`.
+- Replay is summary-bound and deterministic with a pre-fit static contract
+  projection, full manifest comparison and digest equality (type substitutions
+  rejected); local paths are excluded from the replay identity. Output
+  directories must be new and are preflighted before any input loading or
+  fitting; the frozen artifact must not be overwritten. The inverse log1p path
+  has no undeclared upper clamp: overflow is an unavailable cell with
+  `prediction_inverse_overflow`.
+
+Delivered code: `src/vn_air/ml.py` (`phase9_ml_v4`), `src/vn_air/ml_output.py`,
+`vn-air ml run|replay` and `tests/test_ml.py` (53 tests). Evidence completed:
+262 offline tests run (260 passed, 2 credential checks skipped) and 52 isolated
+PostgreSQL tests passed, module replay, CLI replay and relocated-input replay
+all byte-identical across all 7 output files, `git diff --check` clean, Phase
+7/8 artifacts and the v1/v2/v3 Phase 9 artifacts unchanged. The v4
+predictions, metrics, fitted parameters and seeds are unchanged from v3
+(metadata-only comparison correction). The installed `.venv/bin/vn-air` entry
+point predates the Phase 7/8/9 subcommands; use
+`PYTHONPATH=src .venv/bin/python -m vn_air.cli` until the package is
+reinstalled.
+
+## Phase 10 Focus: Read-only Research Dashboard
+
+The dashboard lives in `dashboard/`, with a deterministic public JSON bundle
+built by `scripts/build_dashboard.py` from pinned Phase 5–9 artifacts. Launch
+with `python3 -B scripts/serve_dashboard.py`; open `http://127.0.0.1:8765/`.
+Use the loopback allowlisted server, not a server rooted at the repository.
+Static HTML/CSS/JS replaces the originally planned Streamlit/Plotly stack; no
+new application dependencies, database access, external fonts/scripts, live
+source polling or scheduler are added.
+
+Preserve measured/reanalysis/modeled separation, Vietnam-local dates, chart
+gaps, full-day/18-hour daily qualification, fixed-window summary labels and
+model unavailable/fit-history warnings. Use `ui-ux-pro-max` and the reviewed
+page design override for future interface work. Never render raw source text
+as trusted HTML or expose source-response identifiers/credentials.
+
+The public bundle canonical digest is
+`b3b43813751628cc0d3439c209484a7c588cbdc9f355eb38cbe9233b1e0a167d`.
+All consumed data payloads verify. The unused Phase 5 README has an exact
+pre-existing one-additional-LF checksum discrepancy, documented in the Phase 10
+contract and visible in Methods. Keep that source untouched; do not generalize
+the exception or call the complete Phase 5 artifact verified. The builder
+rejects any other mismatch and never overwrites an output file.
+
+Checks: 44 dashboard-data tests + 7 static-server tests, 313 offline tests
+(311 passed, 2 credential checks skipped), 52 isolated PostgreSQL tests, and
+browser interaction/contrast/reflow evidence in `docs/verification/phase_10.md`.
+The dashboard is a local presentation of limited diagnostics, not a deployed
+forecast product. Phase 11 scheduling remains separately authorized future work.
 
 ## Suggested Skills
 

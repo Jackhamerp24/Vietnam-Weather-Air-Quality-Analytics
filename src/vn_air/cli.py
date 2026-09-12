@@ -84,6 +84,17 @@ def main():
     baseline_replay.add_argument("--artifact", type=Path, required=True, help="Phase 7 feature artifact directory")
     baseline_replay.add_argument("--summary", type=Path, required=True, help="Previous Phase 8 summary JSON")
     baseline_replay.add_argument("--output-dir", type=Path, required=True, help="NEW Phase 8 output directory; parent must exist")
+    ml = commands.add_parser("ml", help="Phase 9 chronological machine learning")
+    ml_actions = ml.add_subparsers(dest="ml_action", required=True)
+    ml_run = ml_actions.add_parser("run")
+    ml_run.add_argument("--artifact", type=Path, required=True, help="Phase 7 feature artifact directory")
+    ml_run.add_argument("--baseline-artifact", type=Path, required=True, help="Phase 8 v2 baseline artifact directory")
+    ml_run.add_argument("--output-dir", type=Path, required=True, help="NEW Phase 9 output directory; parent must exist")
+    ml_replay = ml_actions.add_parser("replay")
+    ml_replay.add_argument("--artifact", type=Path, required=True, help="Phase 7 feature artifact directory")
+    ml_replay.add_argument("--baseline-artifact", type=Path, required=True, help="Phase 8 v2 baseline artifact directory")
+    ml_replay.add_argument("--summary", type=Path, required=True, help="Previous Phase 9 model summary JSON")
+    ml_replay.add_argument("--output-dir", type=Path, required=True, help="NEW Phase 9 output directory; parent must exist")
     features = commands.add_parser("features", help="Phase 7 availability-aware feature engineering")
     feature_actions = features.add_subparsers(dest="feature_action", required=True)
     feature_extract = feature_actions.add_parser("extract")
@@ -205,6 +216,15 @@ def main():
                 print(json.dumps(write_outputs(args.output_dir, result), sort_keys=True))
                 return 0
             print(json.dumps(replay_baselines(args.artifact, args.summary, args.output_dir), sort_keys=True))
+            return 0
+        if args.command == "ml":
+            from vn_air.ml import replay_ml, run_ml, write_outputs
+            if args.ml_action == "run":
+                result = run_ml(args.artifact, args.baseline_artifact, output_dir=args.output_dir)
+                print(json.dumps(write_outputs(args.output_dir, result), sort_keys=True))
+                return 0
+            print(json.dumps(replay_ml(args.artifact, args.baseline_artifact, args.summary,
+                                       args.output_dir), sort_keys=True))
             return 0
         if args.command == "features":
             from vn_air.features import bundle_file_sha256, build_features, load_bundle

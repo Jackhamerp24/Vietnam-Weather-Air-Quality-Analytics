@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="description" content="Vietnam Air Observatory research dashboard" />
+    <title>Vietnam Air Observatory</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" id="skip-to-content" href="#main-content">Skip to content</a>
+    <div class="app-shell">
+      <aside class="sidebar" id="sidebar" aria-label="Primary navigation">
+        <div class="brand-lockup">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 36 36" role="img"><path d="M5 25.5C8.2 22.4 11.2 21 14.2 21c3.6 0 5.4 2.8 8.8 2.8 2.5 0 5.2-1.2 8-3.8" /><path d="M6 16.5c2.4-2.4 5-3.6 7.8-3.6 3.8 0 5.9 2.5 9.1 2.5 2.3 0 4.6-.8 7-2.5" /><path d="M9 8.5h18" /></svg>
+          </span>
+          <span>
+            <span class="brand-name">Vietnam Air</span>
+            <span class="brand-subtitle">Observatory</span>
+          </span>
+        </div>
+
+        <div class="sidebar-rule"></div>
+        <p class="nav-eyebrow">Research views</p>
+        <nav class="primary-nav" id="primary-nav" aria-label="Research views">
+          <a href="#overview" class="nav-item is-active" data-view-link="overview">
+            <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></svg></span>
+            <span>Overview</span>
+          </a>
+          <a href="#air-quality" class="nav-item" data-view-link="air-quality">
+            <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 8.5h11.5a3.5 3.5 0 1 0-3.2-5"/><path d="M4 13h15a2.5 2.5 0 1 1-2.4 3.5"/><path d="M4 17.5h8.5"/></svg></span>
+            <span>Air quality</span>
+          </a>
+          <a href="#weather-context" class="nav-item" data-view-link="weather-context">
+            <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="8" cy="8" r="2.8"/><path d="M8 3.5v1M8 11.5v1M3.5 8h1M11.5 8h1M4.8 4.8l.7.7M10.5 10.5l.7.7"/><path d="M5 18h12.5a3.5 3.5 0 0 0 .4-7 5 5 0 0 0-9.7-1.1A4 4 0 0 0 5 18Z"/></svg></span>
+            <span>Weather context</span>
+          </a>
+          <a href="#model-diagnostics" class="nav-item" data-view-link="model-diagnostics">
+            <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 19.5V14"/><path d="M10 19.5V9"/><path d="M16 19.5V4.5"/><path d="M21 19.5H3"/></svg></span>
+            <span>Model diagnostics</span>
+          </a>
+          <a href="#methods-provenance" class="nav-item" data-view-link="methods-provenance">
+            <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 4.5h9l3 3v12H6z"/><path d="M14.5 4.5v3h3M9 12h6M9 15.5h6"/></svg></span>
+            <span>Methods &amp; provenance</span>
+          </a>
+        </nav>
+
+        <div class="sidebar-footer">
+          <div class="sidebar-rule"></div>
+          <div class="footer-status"><span class="status-dot" aria-hidden="true"></span><span id="sidebar-status">Read-only evidence</span></div>
+          <p>Frozen research window<br /><span id="sidebar-window">Awaiting data</span></p>
+        </div>
+      </aside>
+
+      <div class="main-column">
+        <header class="topbar">
+          <div class="topbar-left">
+            <div class="breadcrumb"><span>Research workspace</span><span class="breadcrumb-separator" aria-hidden="true">/</span><span id="breadcrumb-view">Overview</span></div>
+          </div>
+          <div class="topbar-actions">
+            <div class="dataset-status" id="dataset-status" role="status"><span class="status-dot" aria-hidden="true"></span><span>Loading local bundle</span></div>
+            <button class="icon-button" id="theme-toggle" type="button" aria-label="Switch to dark theme" title="Switch theme">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 15.3A7.8 7.8 0 0 1 8.7 3.5 8.2 8.2 0 1 0 20.5 15.3Z"/></svg>
+            </button>
+          </div>
+        </header>
+
+        <main id="main-content" class="main-content" tabindex="-1">
+          <div id="app-loading" class="state-panel state-loading" role="status">
+            <span class="loading-spinner" aria-hidden="true"></span>
+            <div><strong>Loading local evidence bundle</strong><p>Reading dashboard/data/dashboard.json…</p></div>
+          </div>
+          <div id="app-error" class="state-panel state-error" role="alert" hidden>
+            <span class="state-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 4 21 20H3z"/><path d="M12 9v5M12 17.5h.01"/></svg></span>
+            <div id="error"><strong>Evidence bundle unavailable</strong><p id="app-error-message">The dashboard could not read its local JSON bundle.</p><button class="button button-secondary" id="retry-load" type="button">Try again</button></div>
+          </div>
+
+          <div id="dashboard-app" hidden>
+            <section class="view" id="view-overview" data-view="overview" aria-labelledby="overview-title">
+              <div class="view-header">
+                <div>
+                  <p class="kicker">Vietnam Air Observatory</p>
+                  <h1 id="overview-title">A measured view of air quality</h1>
+                  <p class="view-intro">A read-only research surface for qualified PM2.5 observations, weather context, and frozen diagnostic outputs.</p>
+                </div>
+                <div class="header-scope"><span class="label">Frozen window</span><strong id="overview-window">—</strong><span id="overview-timezone">—</span></div>
+              </div>
+              <div id="overview-limitations"></div>
+              <section class="filter-bar" aria-label="Descriptive scope filters">
+                <div class="filter-heading"><span class="filter-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 6h16M7 12h10M10 18h4"/></svg></span><span>Descriptive scope</span></div>
+                <label class="control-label">Station<select id="global-sensor-filter"><option value="all">All monitored stations</option></select></label>
+                <label class="control-label">From<input id="global-start-filter" type="date" /></label>
+                <label class="control-label">To<input id="global-end-filter" type="date" /></label>
+                <button class="button button-quiet" id="reset-descriptive-filters" type="button">Reset</button>
+              </section>
+              <section class="metric-grid" id="overview-metrics" aria-label="Evidence metrics"></section>
+              <div class="section-heading-row"><div><p class="kicker">Descriptive signal</p><h2>Qualified daily PM2.5</h2></div><span class="unit-note">µg/m³ · full local days with ≥18 accepted hours</span></div>
+              <div class="content-grid overview-grid">
+                <div class="card chart-card chart-card-large" id="overview-trend-card"></div>
+                <div class="card" id="station-coverage-card"></div>
+              </div>
+              <div class="content-grid two-up">
+                <div class="card" id="overview-source-card"></div>
+                <div class="card" id="overview-scope-card"></div>
+              </div>
+            </section>
+
+            <section class="view" id="view-air-quality" data-view="air-quality" aria-labelledby="air-quality-title" hidden>
+              <div class="view-header compact-header"><div><p class="kicker">Descriptive observations</p><h1 id="air-quality-title">Air quality</h1><p class="view-intro">Accepted OpenAQ PM2.5 observations, with gaps and qualification boundaries preserved.</p></div><div class="header-scope"><span class="label">Analysis basis</span><strong>Frozen Phase 5 bundle</strong><span id="air-quality-window">—</span></div></div>
+              <div class="filter-bar" aria-label="Air quality filters">
+                <div class="filter-heading"><span class="filter-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 6h16M7 12h10M10 18h4"/></svg></span><span>Display scope</span></div>
+                <label class="control-label">Station<select id="air-sensor-filter"><option value="all">All monitored stations</option></select></label>
+                <label class="control-label">From<input id="air-start-filter" type="date" /></label>
+                <label class="control-label">To<input id="air-end-filter" type="date" /></label>
+                <button class="button button-quiet" id="reset-air-filters" type="button">Reset</button>
+              </div>
+              <div class="content-grid two-up">
+                <div class="card chart-card" id="air-diurnal-card"></div>
+                <div class="card" id="air-stats-card"></div>
+              </div>
+              <div class="card chart-card" id="air-hourly-card"></div>
+              <div class="card" id="air-coverage-card"></div>
+            </section>
+
+            <section class="view" id="view-weather-context" data-view="weather-context" aria-labelledby="weather-title" hidden>
+              <div class="view-header compact-header"><div><p class="kicker">Context, not ground truth</p><h1 id="weather-title">Weather context</h1><p class="view-intro">Measured-target context and descriptive weather associations. ERA5 and CAMS remain separate from captured PM2.5 evidence.</p></div><div class="header-scope"><span class="label">Sources</span><strong>ERA5 · CAMS · OpenAQ</strong><span id="weather-window">—</span></div></div>
+              <div class="filter-bar" aria-label="Weather context filters">
+                <div class="filter-heading"><span class="filter-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 6h16M7 12h10M10 18h4"/></svg></span><span>Display scope</span></div>
+                <label class="control-label">Station<select id="weather-sensor-filter"><option value="all">All monitored stations</option></select></label>
+                <label class="control-label">Variable<select id="weather-variable-filter"><option value="all">Available weather variables</option></select></label>
+                <label class="control-label">From<input id="weather-start-filter" type="date" /></label>
+                <label class="control-label">To<input id="weather-end-filter" type="date" /></label>
+                <button class="button button-quiet" id="reset-weather-filters" type="button">Reset</button>
+              </div>
+              <div class="content-grid two-up">
+                <div class="card chart-card" id="weather-hourly-card"></div>
+                <div class="card" id="weather-associations-card"></div>
+              </div>
+              <div class="card chart-card" id="cams-card"></div>
+            </section>
+
+            <section class="view" id="view-model-diagnostics" data-view="model-diagnostics" aria-labelledby="model-title" hidden>
+              <div class="view-header compact-header"><div><p class="kicker">Frozen diagnostic outputs</p><h1 id="model-title">Model diagnostics</h1><p class="view-intro">Calendar-only diagnostics over the frozen window; no prospective collection period is represented here.</p></div><div class="header-scope"><span class="label">Evaluation basis</span><strong>Fixed split and horizon</strong><span id="model-window">—</span></div></div>
+              <div id="model-limited-notice"></div>
+              <div class="filter-bar model-filter-bar" aria-label="Model diagnostic filters">
+                <div class="filter-heading"><span class="filter-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 6h16M7 12h10M10 18h4"/></svg></span><span>Diagnostic slice</span></div>
+                <label class="control-label">Sensor<select id="model-sensor-filter"><option value="all">All sensors</option></select></label>
+                <label class="control-label">Horizon<select id="model-horizon-filter"><option value="all">All horizons</option></select></label>
+                <label class="control-label">Split<select id="model-split-filter"><option value="all">All splits</option></select></label>
+                <label class="control-label">Features<select id="model-feature-filter"><option value="all">All feature sets</option></select></label>
+                <label class="control-label">Scope<select id="model-scope-filter"><option value="all">All scopes</option></select></label>
+                <button class="button button-quiet" id="reset-model-filters" type="button">Reset</button>
+              </div>
+              <div class="content-grid two-up">
+                <div class="card" id="model-summary-card"></div>
+                <div class="card" id="model-split-card"></div>
+              </div>
+              <div class="card" id="model-metrics-card"></div>
+              <div class="card" id="model-comparisons-card"></div>
+            </section>
+
+            <section class="view" id="view-methods-provenance" data-view="methods-provenance" aria-labelledby="methods-title" hidden>
+              <div class="view-header compact-header"><div><p class="kicker">Read the evidence boundary</p><h1 id="methods-title">Methods &amp; provenance</h1><p class="view-intro">Definitions, source separation, availability policy, and the artifact chain behind this dashboard.</p></div><div class="header-scope"><span class="label">Bundle schema</span><strong id="methods-schema">—</strong><span>static local JSON</span></div></div>
+              <div class="content-grid two-up methods-grid">
+                <div class="card" id="methods-window-card"></div>
+                <div class="card" id="methods-policy-card"></div>
+              </div>
+              <div class="content-grid two-up">
+                <div class="card" id="methods-source-card"></div>
+                <div class="card" id="methods-data-card"></div>
+              </div>
+              <div class="card" id="provenance-card"></div>
+            </section>
+          </div>
+        </main>
+      </div>
+    </div>
+    <script src="./app.js" defer></script>
+  </body>
+</html>

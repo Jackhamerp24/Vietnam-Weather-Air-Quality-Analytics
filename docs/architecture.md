@@ -4,8 +4,10 @@ Phase 2 implements the PostgreSQL schema, migrations, reviewed configuration and
 setup tooling. Phase 3 adds [on-demand ingestion](ingestion.md), retained raw
 evidence, resumable backfill and basic quality checks. Phase 4 adds a frozen,
 read-only data-quality audit. Phase 5 adds descriptive EDA artifacts based on
-that frozen audit. Scheduling, statistical analysis, feature computation,
-training and the dashboard remain **future phases**. The design follows
+that frozen audit. Phases 6–9 provide frozen statistics, availability-aware
+features, baselines and chronological ML diagnostics. Phase 10 presents the
+evidence through a static local dashboard. Scheduling and deployment remain
+future work. The design follows
 [Decision 0001](decisions/0001-data-sources.md) and the
 [authenticated source audit](research/openaq_qualification.md).
 
@@ -26,7 +28,7 @@ flowchart TD
     DB -. retrospective .-> EDA[Coverage, EDA and statistics]
     DB -. availability cutoff .-> Features[Leakage-aware features]
     Features -.-> Models[Baselines and chronological evaluation]
-    EDA -.-> Dashboard[Streamlit and Plotly]
+    EDA -. frozen public bundle .-> Dashboard[Static HTML/CSS/JavaScript]
     Models -.-> Dashboard
 ```
 
@@ -48,6 +50,17 @@ object storage or partitioning only after measuring growth.
 | `src/vn_air/ingestion/` | HTTP transport, pure parsers, transactional chunks, resume and aggregate reports |
 | `scripts/test_database.py` | Disposable Unix-socket-only PostgreSQL test cluster, independent of the existing service |
 | `tests/integration/test_schema.py` | Real PostgreSQL constraint, revision, provenance and migration tests |
+| `scripts/build_dashboard.py` | Stdlib-only hash-verified public projection of frozen Phase 5–9 artifacts |
+| `dashboard/` | Read-only browser interface, local JSON, responsive themes, charts and tables |
+| `scripts/serve_dashboard.py` | Loopback static asset allowlist; no database endpoints or repository listing |
+
+Phase 10 uses dependency-free static web assets in place of the roadmap's
+initial Streamlit/Plotly suggestion. The browser reads the generated public
+bundle only; it does not query PostgreSQL or load raw source payloads. Source
+hashes, scientific scope and the exact known Phase 5 README metadata exception
+are documented in the Phase 10 verification record. Public/static deployment
+and any direct database dashboard access would require a separate access and
+licensing review; the current loopback preview does not expose Supabase.
 
 The SQL migration is the schema authority. SQLAlchemy provides connections and
 bound parameters; Alembic records migration versions. There is no parallel ORM

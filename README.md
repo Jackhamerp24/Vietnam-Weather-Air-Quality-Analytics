@@ -5,18 +5,91 @@ air-quality prediction in Vietnamese urban areas. The intended workflow combines
 continuous data collection with historical analysis, statistical inference,
 leakage-aware model evaluation, and an interactive analytical dashboard.
 
-**Status: Phase 8 delivered: reproducible chronological baselines completed.** On-demand
+**Status: Phase 10 dashboard delivered locally; frozen research evidence.** On-demand
 polling and resumable backfill persist measured and modeled data to Supabase
 PostgreSQL; a frozen data-quality audit and descriptive EDA feed a pre-registered
 association study; an availability-aware feature pipeline (6h/24h horizons) is
-built and verified; and a database-free baseline runner evaluates persistence,
+built and verified; a database-free baseline runner evaluates persistence,
 strict trailing means, train-only local-hour climatology and an optional
-weather-augmented diagnostic under the inherited chronological split and purge.
+weather-augmented diagnostic under the inherited chronological split and purge;
+and a database-free Ridge and shallow bagged-tree runner performs
+calendar/history/weather ablations with train-only transforms, validation-only
+selection, a train-plus-validation final fit and a single untouched test score.
 The frozen historical window contains no prospectively captured evidence, so the
-captured feature artifact and the baseline artifact are limited diagnostics, and
-a prospective collection period is required before baselines on real data.
-Dashboard work, Phase 9 model training and scheduling remain future phases. No
+captured feature, baseline and model artifacts are limited diagnostics, and a
+prospective collection period is required before captured-feature model
+evaluation. The read-only Phase 10 dashboard presents these results locally;
+scheduling and deployment remain future work. No
 model-performance or operational-forecast claims exist.
+
+## Phase 10: Vietnam Air Observatory
+
+Launch the dashboard from the repository root (Python 3.11+, no new packages):
+
+```bash
+python3 -B scripts/serve_dashboard.py
+```
+
+Open [localhost:8765](http://127.0.0.1:8765/). Five research views cover the
+overview, air quality, weather context, model diagnostics, and methods/provenance.
+Use station/date filters, keyboard-inspectable charts, tables, CSV export,
+light/dark themes and responsive layouts. The server serves only approved
+dashboard assets; it exposes neither a database API nor the repository.
+
+The dashboard follows the `ui-ux-pro-max` design system and uses static
+HTML/CSS/JavaScript instead of the initially proposed Streamlit/Plotly stack.
+All displayed data come from the hash-verified public projection of the frozen
+Phase 5–9 artifacts. No runtime external requests, imputation or model fitting.
+The Methods view discloses one exact pre-existing checksum discrepancy in an
+unused Phase 5 README; the historical file is preserved, and displayed data
+remain strictly verified.
+
+See the [dashboard runbook](dashboard/README.md),
+[Phase 10 plan](docs/verification/phase_10_plan.md) and
+[verification record](docs/verification/phase_10.md).
+
+## Phase 9 Results
+
+- Database-free, deterministic Ridge and shallow bagged-tree runner over the
+  Phase 7 captured feature artifact, verified against the Phase 8 v2 reference.
+  Every declared input hash, identity, split/purge contract and feature/target
+  key alignment is checked before fitting; `run` and `replay` open no database
+  and make no network calls.
+- Four predeclared feature sets (`calendar_only`, `history_only`, `weather_only`,
+  `history_weather`), both `log1p` and `raw` target transforms, `pooled` and
+  `per_sensor` scopes and both 6h/24h horizons. Ridge alpha is selected on
+  validation RMSE only; the final model is refit on train plus validation and
+  the test period is scored once.
+- The frozen Phase 7 artifact still has zero captured PM/weather feature
+  evidence, so only calendar diagnostics trained: 24 of 96 model instances,
+  72 of 288 metric cells available and 216 unavailable with explicit reasons,
+  and no fabricated scores. All metrics are `descriptive_only`; only the paired
+  `local_hour_climatology` comparisons could be computed.
+- Verification: 53 ML tests; 262 offline tests ran (260 passed, 2 credential
+  checks skipped) and 52 isolated PostgreSQL tests passed; module, CLI and
+  relocated-input replay are byte-identical across all 7 output files;
+  `git diff --check` clean. No database write, migration, network call or
+  schedule.
+- The authoritative `phase9_ml_v4` run pins every Phase 7/8 payload byte before
+  parsing, preflights output directories before computation, removes an
+  undeclared log1p upper clamp, structurally aligns every Phase 8 reference row
+  to the Phase 7 keys, uses reviewed sensor locations (`cmt8`, `oceanpark`),
+  binds replay with a static contract projection plus digest equality, and
+  records sensor-scoped finite-row counts, comparison `location_id` and
+  fit-key-aware history labels (`not_paired`, `not_applicable`, `unknown`,
+  `training_history_mismatch`, `matched`); see the
+  [integrity correction plan](docs/verification/phase_9_integrity_replay_hardening_plan.md).
+  The v1 `phase_9_models_2026-09-11_final/`, v2
+  `phase_9_models_2026-09-11_corrected/` and v3
+  `phase_9_models_2026-09-12_review_hardened/` artifacts are preserved and
+  superseded. The v4 predictions, metrics, fitted parameters and seeds are
+  unchanged from v3 (metadata-only comparison correction).
+- Real captured-feature model evaluation remains blocked until the prospective
+  collection period supplies evidence.
+
+See the [Phase 9 verification](docs/verification/phase_9.md), [Phase 9 plan](docs/verification/phase_9_plan.md) and the authoritative
+[comparison-hardened model summary](docs/verification/phase_9_models_2026-09-12_comparison_hardened/phase_9_model_summary.json).
+No forecast-skill or model-performance claim exists.
 
 ## Phase 8 Results
 
@@ -162,8 +235,9 @@ development database contains bounded live smoke data. No synthetic test records
 were inserted into either study database. Project model/prediction tables are empty.
 
 Read the [architecture](docs/architecture.md), [Phase 4 verification](docs/verification/phase_4.md), [Phase 5 plan](docs/verification/phase_5_plan.md), [Phase 6 plan](docs/verification/phase_6_plan.md), [Phase 6 verification](docs/verification/phase_6.md), [Phase 7 plan](docs/verification/phase_7_plan.md), [Phase 7 verification](docs/verification/phase_7.md), [Phase 8 plan](docs/verification/phase_8_plan.md), [Phase 8 verification](docs/verification/phase_8.md), [schema and setup](docs/database.md)
-and [source contracts](docs/source_contracts.md). A free-tier deployment can use
-the documented [Supabase setup](docs/supabase.md).
+and [source contracts](docs/source_contracts.md). See the [Phase 9 ML plan](docs/verification/phase_9_plan.md)
+and [Phase 9 verification](docs/verification/phase_9.md); Phase 10 dashboard work is delivered locally.
+A free-tier deployment can use the documented [Supabase setup](docs/supabase.md).
 
 ## Research Question
 
@@ -237,8 +311,8 @@ See the [authenticated qualification report](docs/research/openaq_qualification.
 
 ## Architecture
 
-The database, reviewed configuration and on-demand ingestion exist. Scheduling,
-analytical computation and dashboard components below remain planned.
+The database, on-demand ingestion, frozen analytical pipelines and local
+dashboard exist. Scheduling and deployment remain planned.
 
 ```mermaid
 flowchart LR
@@ -250,7 +324,7 @@ flowchart LR
     D --> A[Coverage audits, EDA, statistics]
     D --> F[Availability-aware features]
     F --> M[Baselines and chronological ML evaluation]
-    A --> U[Streamlit and Plotly dashboard]
+    A --> U[Static read-only dashboard]
     M --> U
 ```
 
@@ -377,9 +451,10 @@ loading the variable, staged captures and the offline coverage audit.
 `probe_sources.py` stays keyless; `probe_openaq.py` reads the exported environment
 variable and sends it only to OpenAQ in `X-API-Key`.
 
-There are no model-training, dashboard, scheduler or Docker commands yet. Full
-data-quality audits come next; acquisition success does not establish scientific
-validity for every analysis.
+The dashboard preview runs through `scripts/serve_dashboard.py`; no scheduler
+or Docker workflow is installed. Model training and evaluation run offline from
+frozen artifacts, with no automatic retraining. Acquisition success does not
+establish scientific validity for every analysis.
 
 ## Roadmap
 
@@ -393,8 +468,8 @@ validity for every analysis.
 | 6. Statistics | Stated hypotheses, assumptions, effect sizes and uncertainty | Delivered; pre-registered estimates, intervals and sensitivity matrix |
 | 7. Features | Availability-time and leakage tests | Delivered; captured limited diagnostic, prospective collection required |
 | 8. Baselines | Reproducible chronological baseline results | Delivered; deterministic engine and limited-diagnostic artifact, prospective captured data required |
-| 9. ML | Walk-forward comparisons, final holdout, ablations and interpretation | Planned |
-| 10. Dashboard | Analytical views, source labels, working interactions | Planned |
+| 9. ML | Walk-forward comparisons, final holdout, ablations and interpretation | Delivered; deterministic Ridge/tree runner and limited-diagnostic artifact, prospective captured data required |
+| 10. Dashboard | Analytical views, source labels, working interactions | Delivered locally; static dashboard, deterministic public bundle, browser-verified interactions |
 | 11. Automation | Scheduled ingestion, failure alerts, recovery and backups | Planned |
 | 12. Portfolio polish | Executed notebooks, results, screenshots, reproducible runbook | Planned |
 

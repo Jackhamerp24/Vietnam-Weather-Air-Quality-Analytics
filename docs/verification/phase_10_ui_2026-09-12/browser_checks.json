@@ -1,0 +1,19 @@
+{
+  "checks": [
+    "Overview loads with Vietnam dates in a non-Vietnam browser timezone",
+    "Chart keyboard inspection, table alternative and CSV download",
+    "Station/date filters, invalid range feedback and reset",
+    "Five views and active navigation semantics",
+    "Skip link preserves the current research view",
+    "Provenance details and source digest",
+    "Weather variables, units and temporal-support labels",
+    "Model empty-feature state and visible test fit-history warnings",
+    "Light/dark text contrast and persisted theme preference",
+    "All views reflow at 375/768/1024/1440 and landscape; reduced motion",
+    "Live server rejects unlisted files and mutation",
+    "Visible data failure state and successful retry",
+    "No browser script errors or external network requests"
+  ],
+  "errors": [],
+  "external": []
+}
