@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  Phase 11 launchd template: hourly bounded ingestion cycle at minute 17.
+
+  This file is a reviewed template only. It is NOT installed, loaded or enabled
+  by the repository, and it contains no credential values. Before use the
+  operator must:
+
+    1. Replace every /path/to/... placeholder.
+    2. Copy or adapt ops/launchd/cycle_wrapper.example.sh outside the checkout
+       (or keep it and make it owner-only) and set VN_AIR_ENV_FILE to an
+       owner-only mode-600 literal KEY=value file stored outside the repository.
+       It must contain only DATABASE_URL and OPENAQ_API_KEY (no shell syntax).
+       scripts/run_automation.py parses it and execs with an environment allowlist.
+       launchd does
+       not inherit an interactive shell; never put DATABASE_URL or API keys in
+       this plist or in git.
+    3. Run the activation checklist in docs/operations.md, including a dry run,
+       isolated database run, live read-only health check, quota review, backup
+       restore drill and manual stop test.
+    4. Load with: launchctl bootstrap gui/"$(id -u)" <this-file>.plist
+       Pause with: launchctl bootout gui/"$(id -u)"/com.vnair.phase11.automation
+       Do not paste credentials into shell history.
+
+  A laptop sleeps and loses network: this template is not continuous
+  collection, exactly-once delivery or production readiness.
+-->
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.vnair.phase11.automation</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/sh</string>
+        <string>/path/to/checkout/ops/launchd/cycle_wrapper.example.sh</string>
+    </array>
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>VN_AIR_CHECKOUT</key>
+        <string>/path/to/checkout</string>
+        <key>VN_AIR_PYTHON</key>
+        <string>/path/to/checkout/.venv/bin/python</string>
+        <key>VN_AIR_ENV_FILE</key>
+        <string>/path/to/operator-only/automation.env</string>
+        <key>VN_AIR_OUTPUT_ROOT</key>
+        <string>/path/to/checkout/.local/automation/cycles</string>
+    </dict>
+    <key>WorkingDirectory</key>
+    <string>/path/to/checkout</string>
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Minute</key>
+        <integer>17</integer>
+    </dict>
+    <key>RunAtLoad</key>
+    <false/>
+    <key>ProcessType</key>
+    <string>Background</string>
+    <key>StandardOutPath</key>
+    <string>/path/to/checkout/.local/automation/launchd.out.log</string>
+    <key>StandardErrorPath</key>
+    <string>/path/to/checkout/.local/automation/launchd.err.log</string>
+</dict>
+</plist>

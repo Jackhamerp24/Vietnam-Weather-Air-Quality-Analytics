@@ -5,7 +5,8 @@ air-quality prediction in Vietnamese urban areas. The intended workflow combines
 continuous data collection with historical analysis, statistical inference,
 leakage-aware model evaluation, and an interactive analytical dashboard.
 
-**Status: Phase 10 dashboard delivered locally; frozen research evidence.** On-demand
+**Status: Phase 11 automation tooling delivered locally; no scheduler installed.**
+On-demand
 polling and resumable backfill persist measured and modeled data to Supabase
 PostgreSQL; a frozen data-quality audit and descriptive EDA feed a pre-registered
 association study; an availability-aware feature pipeline (6h/24h horizons) is
@@ -19,7 +20,9 @@ The frozen historical window contains no prospectively captured evidence, so the
 captured feature, baseline and model artifacts are limited diagnostics, and a
 prospective collection period is required before captured-feature model
 evaluation. The read-only Phase 10 dashboard presents these results locally;
-scheduling and deployment remain future work. No
+Phase 11 adds reviewed automation tooling (strict profile, supervised cycle,
+read-only health/recovery, project-scoped backups with a disposable restore
+drill) but installs no schedule or deployment. No
 model-performance or operational-forecast claims exist.
 
 ## Phase 10: Vietnam Air Observatory
@@ -47,6 +50,35 @@ remain strictly verified.
 See the [dashboard runbook](dashboard/README.md),
 [Phase 10 plan](docs/verification/phase_10_plan.md) and
 [verification record](docs/verification/phase_10.md).
+
+## Phase 11: Automation Tooling (not installed)
+
+Phase 11 adds a reviewed non-secret profile and tooling around the bounded
+Phase 3 worker without installing a schedule:
+
+- `automation plan` is an offline deterministic cycle preview;
+- `automation run --execute --output-dir NEW` runs the supervised bounded cycle
+  with a stable checkout lock, deadlines and allowlisted evidence;
+- `automation health` is a read-only health projection with alert exit codes,
+  and `automation recover` prints read-only recovery guidance;
+- `automation backup` creates project-scoped native PostgreSQL logical archives
+  with a strict manifest, and `automation backup-verify [--restore-drill]`
+  verifies checksums/listing and, optionally, a real restore into a fresh
+  disposable socket-only cluster.
+
+The Gate 2 correction pass adds explicit process-environment allowlists,
+no-replace backup publication, and per-target receipt freshness. Codex verified
+117 focused tests, 430 offline tests (428 passed, 2 credential skips), and 63
+isolated PostgreSQL tests. The closeout covers these scoped fixes; it is not a
+live-operation or independent-audit claim.
+
+Everything is local and uninstalled: no scheduler, no live Supabase check, no
+database migration, no public API and no automatic deletion. See the
+[operations runbook](docs/operations.md), the
+[Phase 11 plan](docs/verification/phase_11_plan.md) and the
+[verification record](docs/verification/phase_11.md). A least-privilege role
+and grants/RLS activation review plus a prospective captured collection period
+are still required.
 
 ## Phase 9 Results
 
@@ -470,7 +502,7 @@ establish scientific validity for every analysis.
 | 8. Baselines | Reproducible chronological baseline results | Delivered; deterministic engine and limited-diagnostic artifact, prospective captured data required |
 | 9. ML | Walk-forward comparisons, final holdout, ablations and interpretation | Delivered; deterministic Ridge/tree runner and limited-diagnostic artifact, prospective captured data required |
 | 10. Dashboard | Analytical views, source labels, working interactions | Delivered locally; static dashboard, deterministic public bundle, browser-verified interactions |
-| 11. Automation | Scheduled ingestion, failure alerts, recovery and backups | Planned |
+| 11. Automation | Tooling for reviewed cycles, failure alerts, recovery guidance and verified backups | Tooling delivered and locally verified; no scheduler, live cycle or real backup performed; activation review pending |
 | 12. Portfolio polish | Executed notebooks, results, screenshots, reproducible runbook | Planned |
 
 ## Limitations

@@ -1,0 +1,58 @@
+{
+  "version": 1,
+  "cycle": {
+    "job_timeout_seconds": 900,
+    "cycle_timeout_seconds": 2700,
+    "terminate_grace_seconds": 5,
+    "expected_cadence_seconds": 3600,
+    "stop_on_failure": true
+  },
+  "jobs": [
+    {
+      "id": "openaq_poll",
+      "source": "openaq",
+      "targets": ["openaq_11357424", "openaq_14581375"],
+      "max_requests": 10,
+      "timeout_seconds": 900,
+      "window": "openaq_last_72_complete_utc_hours"
+    },
+    {
+      "id": "weather_poll",
+      "source": "weather",
+      "targets": ["cmt8", "oceanpark"],
+      "max_requests": 5,
+      "timeout_seconds": 900,
+      "window": "model_three_utc_calendar_days_including_forecast_valid_times"
+    },
+    {
+      "id": "cams_poll",
+      "source": "cams",
+      "targets": ["hanoi", "hcmc", "da_nang"],
+      "max_requests": 5,
+      "timeout_seconds": 900,
+      "window": "model_three_utc_calendar_days_including_forecast_valid_times"
+    }
+  ],
+  "readiness": {
+    "max_database_mib": 400,
+    "schema_revision": "0003_response_integrity",
+    "fetch_success_age_seconds": 10800,
+    "openaq_latest_period_age_seconds": 21600,
+    "openaq_min_accepted_intervals": 18,
+    "openaq_coverage_window_hours": 24,
+    "modeled_capture_age_seconds": 21600,
+    "stale_running_age_seconds": 1800,
+    "backup_stale_after_seconds": 129600,
+    "overrides": {}
+  },
+  "output": {
+    "root": ".local/automation"
+  },
+  "backup": {
+    "scope": "project_logical",
+    "recommended_cadence_hours": 24,
+    "automatic_deletion": false,
+    "retention_note": "Operator-managed retention: keep at least 7 daily and 4 weekly project logical backups in a private location. Phase 11 never deletes backups; deletion requires a separate authorization and recovery policy.",
+    "offsite_note": "Copy completed archives to an encrypted operator-controlled off-site location. Credentials belong to the operator secret store, not this repository."
+  }
+}

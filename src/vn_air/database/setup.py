@@ -13,7 +13,7 @@ from sqlalchemy.engine import make_url
 from vn_air.config import StudyConfig
 
 
-def database_engine(url: str | None = None):
+def database_engine(url: str | None = None, *, connect_timeout: int = 10):
     value = url or os.environ.get("DATABASE_URL")
     if not value:
         raise ValueError("Set DATABASE_URL explicitly; no database is selected by default")
@@ -40,7 +40,7 @@ def database_engine(url: str | None = None):
     return create_engine(
         parsed.set(drivername="postgresql+psycopg"),
         hide_parameters=True,
-        connect_args={"connect_timeout": 10, "options": "-c timezone=UTC"},
+        connect_args={"connect_timeout": connect_timeout, "options": "-c timezone=UTC"},
     )
 
 

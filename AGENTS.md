@@ -12,7 +12,12 @@ Phases 1-3 are implemented:
 
 Phases 4-9 are implemented and verified; the Phase 9 v4 comparison-reporting
 review is complete. Phase 10 adds the local read-only dashboard described below.
-Phase 5 provides descriptive EDA from
+Phase 11 adds reviewed automation tooling (strict profile, supervised cycle,
+read-only health/recovery, project-scoped native backups with checksum/listing
+verification and a real synthetic disposable-cluster restore drill, CI and
+launchd templates, and `docs/operations.md`) but installs no scheduler, performs
+no live cycle or real project backup and adds no migration. Phase 5 provides
+descriptive EDA from
 the frozen Phase 4 dataset. Phase 6 provides pre-registered, sensor-level
 weather-PM2.5 association estimates with block-bootstrap uncertainty, replayed
 read-only from the frozen Phase 5 bundle; the authoritative Phase 6 artifact is
@@ -76,6 +81,13 @@ inferential outputs and everything else as exploratory sensitivity.
 - `docs/verification/phase_10_plan.md`
 - `docs/verification/phase_10_contract.md`
 - `docs/verification/phase_10.md`
+- `docs/verification/phase_11_plan.md`
+- `docs/verification/phase_11_stage_a_corrections.md`
+- `docs/verification/phase_11_stage_b_corrections.md`
+- `docs/verification/phase_11.md`
+- `docs/operations.md`
+- `/private/tmp/vietnam-weather-air-quality-analytics-handoff-2026-09-13.md`
+  (current cross-session handoff; stored outside the repository)
 - `dashboard/README.md`
 - `design-system/vietnam-air-observatory/pages/dashboard.md`
 
@@ -358,9 +370,10 @@ Phase 8 is delivered and verified against the authoritative artifact
 `docs/verification/phase_8_baselines_2026-09-11_v2_verified/`
 (`phase8_baselines_v2`; see `docs/verification/phase_8.md`). The v1 artifact and
 all intermediate v2 correction artifacts are preserved unchanged and
-superseded. The local Phase 10 dashboard is delivered; Phase 11 automation is
-future work. Do not implement scheduling while completing a handoff/read-only
-task.
+superseded. The local Phase 10 dashboard and Phase 11 automation tooling are
+delivered; schedule installation, live cycles and real backups remain separately
+authorized future work. Do not install scheduling while completing a
+handoff/read-only task.
 
 Contract to preserve:
 
@@ -412,8 +425,10 @@ revision `comparison_hardened`, manifest
 preserved unchanged and superseded by the integrity corrections (A–D),
 follow-up review corrections (E–J) and comparison-reporting closeout (K–M) in
 `docs/verification/phase_9_integrity_replay_hardening_plan.md`. Phase 10 is the
-delivered local dashboard; Phase 11 scheduling is future work. Do not add
-scheduling or automation while completing a handoff or read-only task.
+delivered local dashboard and Phase 11 automation tooling is delivered and
+locally verified; schedule installation, live cycles and real backups remain
+separately authorized future work. Do not add a scheduler, run live
+cycles/backups or touch Supabase while completing a handoff or read-only task.
 
 Contract to preserve:
 
@@ -501,7 +516,72 @@ Checks: 44 dashboard-data tests + 7 static-server tests, 313 offline tests
 (311 passed, 2 credential checks skipped), 52 isolated PostgreSQL tests, and
 browser interaction/contrast/reflow evidence in `docs/verification/phase_10.md`.
 The dashboard is a local presentation of limited diagnostics, not a deployed
-forecast product. Phase 11 scheduling remains separately authorized future work.
+forecast product. Phase 11 tooling is delivered without an installed schedule;
+scheduler activation remains separately authorized future work.
+
+## Phase 11 Focus: Safe Ingestion Automation
+
+Phase 11 is delivered and locally verified under `phase11_automation_v1` (see
+`docs/verification/phase_11.md`); Gate 1 passed on Codex re-review attempt 2/3
+and the Gate 2 correction pass is implemented, with final coordinator review
+complete. This is scoped coordinator verification, not a new independent
+reviewer approval. Stage A (strict profile, offline planner,
+supervised cycle, lock, allowlisted evidence, corrections A-D) is preserved as
+reviewed. Stage B adds `automation health`, `recover`, `backup` and
+`backup-verify` with a real synthetic restore drill, CI and launchd templates
+and `docs/operations.md`. Commands use `PYTHONPATH=src .venv/bin/python -B -m
+vn_air.cli` until the package is reinstalled.
+
+Contract to preserve:
+
+- The strict profile and cycle rules are unchanged: one job per source/target,
+  source order, stop-on-failure, effective per-job timeout, single checkout lock
+  released only after children are reaped, bounded preflight inside the cycle
+  deadline and allowlisted evidence with constant error codes. No scheduler, no
+  live cycle, no migration and no role provisioning was added.
+- Health is read-only with bounded parameterized queries and explicit severity
+  precedence (`failed > degraded > healthy`, exit `1/2/0`, invalid config `3`).
+  Missing/inaccessible evidence is not healthy; fetch freshness, accepted-data
+  freshness and coverage are separate; OpenAQ coverage uses the latest revision
+  before quality filtering; modeled freshness never uses future `valid_at` or
+  invalid-only payloads. One healthy sensor cannot hide another target.
+- Fetch receipts join ingestion runs by source and target, with the health
+  cutoff applied. OpenAQ runs can carry both sensor and location IDs; match by
+  sensor, not by assuming the location column is null.
+- Recovery is guidance only: no mutation, no orphan finalizer, no automatic
+  replay, no checkpoint reconciliation, unknown codes not retryable, OpenAQ
+  retries only as bounded explicit operator backfill and model history never
+  backfilled.
+- Backups are project-scoped native custom archives (`-n vn_air` plus `-t
+  public.vn_air_schema_version`; never combined because `-t` overrides `-n`),
+  created with a sanitized libpq environment, fixed owner-only files, strict
+  manifests and failure markers. `backup-verify` reports `checksum_verified`
+  and only a real disposable-cluster restore reports `restore_verified`. No
+  automatic deletion or off-site copy is implemented.
+- `pg_dump` writes unique owner-only temporary archives, which are published
+  to fixed names with no-replace links after inode/type checks. Existing or
+  racing final paths must not be overwritten; failures remove temporary names.
+- `automation_environment.py` allowlists process variables. Only ingestion gets
+  `DATABASE_URL` and `OPENAQ_API_KEY`; native tools get derived libpq settings.
+  The launcher parses an explicitly selected external owner-only file with two
+  literal assignments; no shell sourcing or automatic project `.env` loading.
+- Restore drills create a fresh private socket-only cluster, restore both
+  archives in manifest order, verify schema revision, reference counts, recorded
+  content counters, report views, absent unrelated schemas and representative
+  append-only/foreign-key constraints, and never repair with migrations. The
+  project database is never a restore target.
+- Never read `.env`, print credentials/URIs, pass them in argv, install or
+  enable `ops/launchd/*`, run live ingestion or backups, or claim a hosted CI
+  run that has not happened.
+
+Evidence: focused `tests/test_automation.py`,
+`tests/test_automation_health.py`, `tests/test_automation_backup.py` and
+`tests/test_automation_environment.py` (117 tests),
+extended `tests/integration/test_automation_database.py` and
+`tests/integration/test_automation_backup_database.py` (real synthetic
+dump/restore drill); full offline 430 tests (428 passed, 2 credential skips);
+isolated PostgreSQL 63 tests `OK`; `git diff --check` clean; Phase 4-10 artifacts and
+the Phase 10 public-bundle digest unchanged.
 
 ## Suggested Skills
 

@@ -95,6 +95,43 @@ def main():
     ml_replay.add_argument("--baseline-artifact", type=Path, required=True, help="Phase 8 v2 baseline artifact directory")
     ml_replay.add_argument("--summary", type=Path, required=True, help="Previous Phase 9 model summary JSON")
     ml_replay.add_argument("--output-dir", type=Path, required=True, help="NEW Phase 9 output directory; parent must exist")
+    automation = commands.add_parser("automation", help="Phase 11 bounded ingestion automation; installs no schedule")
+    automation_actions = automation.add_subparsers(dest="automation_action", required=True)
+    automation_plan = automation_actions.add_parser("plan", help="Offline deterministic cycle plan; no database, credential or network access")
+    automation_plan.add_argument("--automation-config", type=Path, default=Path("configs/automation.json"))
+    automation_plan.add_argument("--config", type=Path, default=Path("configs/study.json"))
+    automation_plan.add_argument("--now", type=audit_timestamp, help="Explicit offset-aware planning clock for reproducible dry runs")
+    automation_run = automation_actions.add_parser("run", help="Supervised bounded poll cycle; requires --execute")
+    automation_run.add_argument("--automation-config", type=Path, default=Path("configs/automation.json"))
+    automation_run.add_argument("--config", type=Path, default=Path("configs/study.json"))
+    automation_run.add_argument("--output-dir", type=Path, help="NEW owner-only evidence directory; parent must exist")
+    automation_run.add_argument("--execute", action="store_true", help="Required acknowledgement for a real bounded cycle")
+    automation_health = automation_actions.add_parser(
+        "health", help="Read-only health projection; exit 0 healthy, 2 degraded, 1 failed, 3 invalid")
+    automation_health.add_argument("--automation-config", type=Path, default=Path("configs/automation.json"))
+    automation_health.add_argument("--config", type=Path, default=Path("configs/study.json"))
+    automation_health.add_argument("--output", type=Path, help="Optional NEW JSON health snapshot; parent must exist")
+    automation_health.add_argument("--backup-dir", type=Path,
+                                   help="Optional operator backup directory; checks manifest presence, sizes and age only")
+    automation_recover = automation_actions.add_parser(
+        "recover", help="Read-only recovery guidance for stale/failed/partial runs; never mutates")
+    automation_recover.add_argument("--automation-config", type=Path, default=Path("configs/automation.json"))
+    automation_recover.add_argument("--config", type=Path, default=Path("configs/study.json"))
+    automation_recover.add_argument("--output", type=Path, help="Optional NEW JSON guidance file; parent must exist")
+    automation_backup = automation_actions.add_parser(
+        "backup", help="Project-scoped native logical backup; requires --execute and a NEW output directory")
+    automation_backup.add_argument("--automation-config", type=Path, default=Path("configs/automation.json"))
+    automation_backup.add_argument("--config", type=Path, default=Path("configs/study.json"))
+    automation_backup.add_argument("--output-dir", type=Path, help="NEW owner-only backup directory; parent must exist")
+    automation_backup.add_argument("--execute", action="store_true", help="Required acknowledgement for a real backup")
+    automation_backup_verify = automation_actions.add_parser(
+        "backup-verify", help="Verify backup manifest, sizes, hashes and listing; optional disposable restore drill")
+    automation_backup_verify.add_argument("--automation-config", type=Path, default=Path("configs/automation.json"))
+    automation_backup_verify.add_argument("--config", type=Path, default=Path("configs/study.json"))
+    automation_backup_verify.add_argument("--backup-dir", type=Path,
+                                          help="Existing backup directory produced by automation backup; required at run time")
+    automation_backup_verify.add_argument("--restore-drill", action="store_true",
+                                          help="Also restore into a new private disposable socket-only cluster")
     features = commands.add_parser("features", help="Phase 7 availability-aware feature engineering")
     feature_actions = features.add_subparsers(dest="feature_action", required=True)
     feature_extract = feature_actions.add_parser("extract")
@@ -226,6 +263,17 @@ def main():
             print(json.dumps(replay_ml(args.artifact, args.baseline_artifact, args.summary,
                                        args.output_dir), sort_keys=True))
             return 0
+        if args.command == "automation":
+            from vn_air.automation import automation_command
+            return automation_command(action=args.automation_action,
+                                      automation_config=args.automation_config,
+                                      study_config=args.config,
+                                      output_dir=getattr(args, "output_dir", None),
+                                      execute=getattr(args, "execute", False),
+                                      now=getattr(args, "now", None),
+                                      output=getattr(args, "output", None),
+                                      backup_dir=getattr(args, "backup_dir", None),
+                                      restore_drill=getattr(args, "restore_drill", False))
         if args.command == "features":
             from vn_air.features import bundle_file_sha256, build_features, load_bundle
             from vn_air.features_output import write_outputs
