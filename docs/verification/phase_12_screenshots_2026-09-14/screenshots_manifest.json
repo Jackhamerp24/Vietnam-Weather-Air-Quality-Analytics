@@ -1,0 +1,55 @@
+{
+  "command": "node scripts/capture_dashboard_screenshots.cjs http://127.0.0.1:8765/ <evidence-dir>",
+  "captured_at_utc": "2026-09-13T15:25:22.696Z",
+  "note": "Static screenshots of frozen artifacts; capture time is evidence metadata, not dashboard data.",
+  "dashboard": {
+    "source": "dashboard/data/dashboard.json",
+    "schema_version": "phase10_dashboard_v1",
+    "canonical_digest": "b3b43813751628cc0d3439c209484a7c588cbdc9f355eb38cbe9233b1e0a167d",
+    "file_sha256": "d2c017952150828f30a1a6617940983ece43c06c20aa4498a44d933046fe131d"
+  },
+  "screenshots": [
+    {
+      "file": "01-overview-desktop.png",
+      "label": "Overview with default full frozen window",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      }
+    },
+    {
+      "file": "02-air-quality-filtered-desktop.png",
+      "label": "Air quality filtered to CMT8, Vietnam-local 2026-07-01 to 2026-07-07",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      }
+    },
+    {
+      "file": "03-model-diagnostics-limited-desktop.png",
+      "label": "Model diagnostics showing the limited-diagnostic boundary",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      }
+    },
+    {
+      "file": "04-methods-provenance-desktop.png",
+      "label": "Methods and provenance with verified bundle identity",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      }
+    },
+    {
+      "file": "05-overview-mobile.png",
+      "label": "Overview at 375x812 narrow layout",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      }
+    }
+  ],
+  "errors": [],
+  "external": []
+}

@@ -1,0 +1,147 @@
+{
+  "command": "python3 -B reports/portfolio/walkthrough_04_dashboard_and_reproducibility.py --output-dir <output-dir>",
+  "frozen_window": {
+    "cutoff": "2026-09-06T20:59:00.669630Z",
+    "display_timezone": "Vietnam local dates (UTC+07:00) for daily qualification",
+    "end": "2026-09-06T00:00:00Z",
+    "start": "2026-06-08T00:00:00Z",
+    "storage_timezone": "UTC timestamptz"
+  },
+  "inputs": [
+    {
+      "expected_sha256": "d2c017952150828f30a1a6617940983ece43c06c20aa4498a44d933046fe131d",
+      "path": "dashboard/data/dashboard.json",
+      "sha256": "d2c017952150828f30a1a6617940983ece43c06c20aa4498a44d933046fe131d",
+      "verified": true
+    },
+    {
+      "expected_sha256": "e32a3ae84bf236504c4b183e277beccbc9682f4811f2e5c8956975f9ac3c4e89",
+      "path": "docs/verification/phase_5_eda_2026-09-07_final/SUCCESS.json",
+      "sha256": "e32a3ae84bf236504c4b183e277beccbc9682f4811f2e5c8956975f9ac3c4e89",
+      "verified": true
+    },
+    {
+      "expected_sha256": "017a901cb68a58f06e7fbc68e81bc17d76b4db675fe0032109907ec38a3bb4f3",
+      "path": "docs/verification/phase_6_statistics_2026-09-09_corrected/SUCCESS.json",
+      "sha256": "017a901cb68a58f06e7fbc68e81bc17d76b4db675fe0032109907ec38a3bb4f3",
+      "verified": true
+    },
+    {
+      "expected_sha256": "a7ea4cb56d378766ca83561d9e290bec3703ac161b88f69d4200ff155fbd2297",
+      "path": "docs/verification/phase_7_features_2026-09-10_structural_hardened/SUCCESS.json",
+      "sha256": "a7ea4cb56d378766ca83561d9e290bec3703ac161b88f69d4200ff155fbd2297",
+      "verified": true
+    },
+    {
+      "expected_sha256": "d178890fa503752e03ee09cd2d9633d1bcfc76af9d8f3365a02d63e5d06da336",
+      "path": "docs/verification/phase_8_baselines_2026-09-11_v2_verified/SUCCESS.json",
+      "sha256": "d178890fa503752e03ee09cd2d9633d1bcfc76af9d8f3365a02d63e5d06da336",
+      "verified": true
+    },
+    {
+      "expected_sha256": "68bdad7e7cc244bde48899b9fbb9934fbba8604aa9c11634d78a705945bcadad",
+      "path": "docs/verification/phase_9_models_2026-09-12_comparison_hardened/SUCCESS.json",
+      "sha256": "68bdad7e7cc244bde48899b9fbb9934fbba8604aa9c11634d78a705945bcadad",
+      "verified": true
+    }
+  ],
+  "labels": {
+    "descriptive_only": "coverage, diagnostics and Phase 8-9 comparisons",
+    "exploratory": "unadjusted or sensitivity output that is not the primary inferential claim",
+    "inferential": "adjusted Phase 6 family results justified by Holm or Benjamini-Hochberg",
+    "limited_diagnostic": "the frozen Phase 7-9 artifact status caused by missing prospectively captured PM/history and forecast-weather evidence"
+  },
+  "results": {
+    "boundary": "Loopback-only static server, read-only public JSON, no database API, no external assets, no model fitting in the browser.",
+    "canonical_digest": "b3b43813751628cc0d3439c209484a7c588cbdc9f355eb38cbe9233b1e0a167d",
+    "commands": {
+      "browser_checks": "node scripts/test_dashboard_ui.cjs http://127.0.0.1:8765/ <new-evidence-dir>",
+      "compare": "cmp dashboard/data/dashboard.json /private/tmp/vietnam-air-replay.json",
+      "rebuild": "python3 -B scripts/build_dashboard.py --output /private/tmp/vietnam-air-replay.json",
+      "screenshots": "node scripts/capture_dashboard_screenshots.cjs http://127.0.0.1:8765/ <new-evidence-dir>",
+      "serve": "python3 -B scripts/serve_dashboard.py"
+    },
+    "counts": {
+      "baseline_metric_cells": 90,
+      "cams_modeled_days": 273,
+      "daily_rows": 182,
+      "diurnal_rows": 48,
+      "hourly_absent": 129,
+      "hourly_accepted": 4191,
+      "hourly_rows": 4320,
+      "ml_comparisons": 360,
+      "ml_metric_cells": 288,
+      "recorded_statistics_fits": 31
+    },
+    "daily_policy": "Full 24-hour Vietnam date, at least 18 accepted hours; observed summaries retained for all dates",
+    "file_sha256": "d2c017952150828f30a1a6617940983ece43c06c20aa4498a44d933046fe131d",
+    "integrity_notes": [
+      "docs/verification/phase_5_eda_2026-09-07_final/README.md: Reviewed pre-existing documentation-only mismatch: the committed README ends in LF; one additional trailing LF would match its declared hash. The file is hashed but not consumed, normalized or rewritten. All displayed data are strictly verified; the complete Phase 5 artifact is not fully verified."
+    ],
+    "phase_status": {
+      "baselines": "limited_diagnostic",
+      "features": "limited_diagnostic",
+      "ml": "limited_diagnostic"
+    },
+    "provenance": [
+      {
+        "directory": "docs/verification/phase_5_eda_2026-09-07_final",
+        "files_verified": 25,
+        "identity": "92370a857153f2d2a476ab35dbceab3873503239ad6211170e99b8075d1e9e63",
+        "integrity_exceptions": [
+          {
+            "declared_sha256": "f6e76ba8011e6657c3894124639c7789806a17db9097dc4b82a5921f24d625cd",
+            "file": "README.md",
+            "observed_sha256": "f5de669c0c37f0f3d4e9fd7a02c0c4c21540f233397f34fbbb234082d0e68988",
+            "reason": "Reviewed pre-existing documentation-only mismatch: the committed README ends in LF; one additional trailing LF would match its declared hash. The file is hashed but not consumed, normalized or rewritten. All displayed data are strictly verified; the complete Phase 5 artifact is not fully verified."
+          }
+        ],
+        "label": "Frozen EDA",
+        "phase": 5
+      },
+      {
+        "directory": "docs/verification/phase_6_statistics_2026-09-09_corrected",
+        "files_verified": 4,
+        "identity": "71f7b17bff4bd43a406d235bbc585a268ec56b07f2554cc2b19939b5b5dcf918",
+        "integrity_exceptions": [],
+        "label": "Pre-registered statistics",
+        "phase": 6
+      },
+      {
+        "directory": "docs/verification/phase_7_features_2026-09-10_structural_hardened",
+        "files_verified": 5,
+        "identity": "6aa92f0add8046379445c2f3b5beb77fa2ad05cc981a43f6ca61f1af4fcf60aa",
+        "integrity_exceptions": [],
+        "label": "Availability-aware features",
+        "phase": 7
+      },
+      {
+        "directory": "docs/verification/phase_8_baselines_2026-09-11_v2_verified",
+        "files_verified": 4,
+        "identity": "ec651c4df04cb605f8849c1af96a3aea58f0902370e16ec39b9c48fdee22775e",
+        "integrity_exceptions": [],
+        "label": "Chronological baselines",
+        "phase": 8
+      },
+      {
+        "directory": "docs/verification/phase_9_models_2026-09-12_comparison_hardened",
+        "files_verified": 6,
+        "identity": "378f2e7f34476fe885ce6ec9827b7a48c346706f36b548fbc8db78ce94d8a770",
+        "integrity_exceptions": [],
+        "label": "Chronological ML",
+        "phase": 9
+      }
+    ],
+    "schema_version": "phase10_dashboard_v1",
+    "source_policy": "OpenAQ/AirGradient measured PM2.5 (ug/m3) is the target, not a city mean. Open-Meteo/ERA5 is retrospective weather context: instantaneous variables align to PM interval start; preceding-hour precipitation sums and radiation means align to interval end. CAMS via Open-Meteo is separate modeled PM2.5 context; Da Nang is modeled-only. Provider forecasts are not ground truth and ERA5/CAMS never replace measured values or captured forecast features."
+  },
+  "source_separation": {
+    "forecast": "Open-Meteo forecast snapshots; not ground truth",
+    "measured": "OpenAQ PM2.5 at CMT8 and OceanPark; not city averages",
+    "modeled": "CAMS modeled air-quality context; never a measured replacement",
+    "reanalysis": "ERA5 retrospective weather context; not operational availability"
+  },
+  "status": "ok",
+  "walkthrough": "04_dashboard_and_reproducibility",
+  "walkthrough_version": "phase12_walkthroughs_v1"
+}

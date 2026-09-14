@@ -139,10 +139,29 @@ async function main() {
       await page.setViewportSize({width,height});
       for (const view of ['overview',...views]) {
         await page.locator(`[data-view-link="${view}"]`).click();
+        await page.locator(`#view-${view}`).waitFor({ state: 'visible' });
         const dimensions = await page.evaluate(() => ({width:innerWidth, scroll:document.documentElement.scrollWidth}));
         assert(dimensions.scroll <= dimensions.width + 1, `${view} horizontal page overflow at ${width}: ${dimensions.scroll}`);
+        if (view === 'air-quality') {
+          const table = await page.locator('#statistics-table').evaluate(el => {
+            const wrapper = el.closest('.data-table-wrapper');
+            return {
+              firstColumn: el.querySelector('tbody td').getBoundingClientRect().width,
+              tableWidth: el.getBoundingClientRect().width,
+              wrapperWidth: wrapper.getBoundingClientRect().width,
+              overflow: getComputedStyle(wrapper).overflowX,
+              focusable: wrapper.tabIndex >= 0,
+            };
+          });
+          assert(table.firstColumn >= 140, `Statistics hypothesis column collapsed at ${width}: ${table.firstColumn}`);
+          assert(table.tableWidth >= 1000, 'Statistics table needs readable column widths');
+          assert(table.wrapperWidth <= width, 'Statistics scroll wrapper exceeds viewport');
+          assert.equal(table.overflow, 'auto');
+          assert(table.focusable, 'Statistics scroll region must be keyboard-focusable');
+        }
       }
     }
+    pass('Statistics table columns remain readable inside a keyboard-focusable scroll region');
     await page.setViewportSize({width:375,height:812});
     await page.locator('[data-view-link="overview"]').click();
     await screenshot('overview-mobile.png');

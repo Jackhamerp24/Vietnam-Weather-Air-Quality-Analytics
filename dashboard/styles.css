@@ -223,6 +223,10 @@ small { font-size: 12px; }
 .data-table tbody tr:hover { background: var(--surface-soft); }
 .data-table td { max-width: 360px; overflow-wrap: anywhere; }
 .data-table .number { text-align: right; white-space: nowrap; font-family: var(--mono); font-size: 10px; }
+/* The ten-column statistics table scrolls within its focusable wrapper;
+   preserve readable text widths even in the half-width desktop card. */
+#statistics-table { min-width: 1200px; }
+#statistics-table td:not(.number) { min-width: 140px; overflow-wrap: break-word; }
 .cell-main { color: var(--heading); font-weight: 550; }
 .cell-detail { display: block; font-size: 10px; line-height: 1.6; margin-top: 3px; color: var(--muted); }
 .cell-reason { max-width: 250px; }

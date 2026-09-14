@@ -1,0 +1,575 @@
+{
+  "command": "python3 -B reports/portfolio/walkthrough_02_sensor_associations.py --output-dir <output-dir>",
+  "frozen_window": {
+    "cutoff": "2026-09-06T20:59:00.669630Z",
+    "display_timezone": "Vietnam local dates (UTC+07:00) for daily qualification",
+    "end": "2026-09-06T00:00:00Z",
+    "start": "2026-06-08T00:00:00Z",
+    "storage_timezone": "UTC timestamptz"
+  },
+  "inputs": [
+    {
+      "expected_sha256": "017a901cb68a58f06e7fbc68e81bc17d76b4db675fe0032109907ec38a3bb4f3",
+      "path": "docs/verification/phase_6_statistics_2026-09-09_corrected/SUCCESS.json",
+      "sha256": "017a901cb68a58f06e7fbc68e81bc17d76b4db675fe0032109907ec38a3bb4f3",
+      "verified": true
+    },
+    {
+      "expected_sha256": "12a7236c50365c7777a0b07a7ac497167f0cb1bea6e57e963aa97dc5e3fb838d",
+      "path": "docs/verification/phase_6_statistics_2026-09-09_corrected/phase_6_statistics_summary.json",
+      "sha256": "12a7236c50365c7777a0b07a7ac497167f0cb1bea6e57e963aa97dc5e3fb838d",
+      "verified": true
+    },
+    {
+      "expected_sha256": "3d6a3f7e5a0ff4764da9596a4864af0619284fe78ae2b887c0f505d5d7cab306",
+      "path": "docs/verification/phase_6_statistics_2026-09-09_corrected/phase_6_estimates.csv",
+      "sha256": "3d6a3f7e5a0ff4764da9596a4864af0619284fe78ae2b887c0f505d5d7cab306",
+      "verified": true
+    },
+    {
+      "expected_sha256": "1fb8df8d339dce542c99a45be2b30f4c44a1b41fad9d02cb5c701fdf090b58f3",
+      "path": "docs/verification/phase_6_statistics_2026-09-09_corrected/phase_6_bootstrap_summary.csv",
+      "sha256": "1fb8df8d339dce542c99a45be2b30f4c44a1b41fad9d02cb5c701fdf090b58f3",
+      "verified": true
+    }
+  ],
+  "labels": {
+    "descriptive_only": "coverage, diagnostics and Phase 8-9 comparisons",
+    "exploratory": "unadjusted or sensitivity output that is not the primary inferential claim",
+    "inferential": "adjusted Phase 6 family results justified by Holm or Benjamini-Hochberg",
+    "limited_diagnostic": "the frozen Phase 7-9 artifact status caused by missing prospectively captured PM/history and forecast-weather evidence"
+  },
+  "results": {
+    "adjustments": {
+      "primary": {
+        "adjusted_p_values": [
+          0.00199900049975,
+          0.0679660169915
+        ],
+        "fit_ids": [
+          "H1_pooled_log1p_b1_pairwise_complete",
+          "H2_pooled_log1p_b1_pairwise_complete"
+        ],
+        "input_p_values": [
+          0.000999500249875,
+          0.0679660169915
+        ],
+        "method": "Holm"
+      },
+      "secondary": {
+        "adjusted_p_values": [
+          0.87956021989,
+          0.0899550224887,
+          0.233216724972,
+          0.00999500249875,
+          0.87956021989
+        ],
+        "fit_ids": [
+          "S_temperature_2m_pooled_log1p_b1_pairwise_complete",
+          "S_precipitation_pooled_log1p_b1_pairwise_complete",
+          "S_surface_pressure_pooled_log1p_b1_pairwise_complete",
+          "S_cloud_cover_pooled_log1p_b1_pairwise_complete",
+          "S_shortwave_radiation_pooled_log1p_b1_pairwise_complete"
+        ],
+        "input_p_values": [
+          0.868565717141,
+          0.0359820089955,
+          0.139930034983,
+          0.00199900049975,
+          0.87956021989
+        ],
+        "method": "Benjamini-Hochberg"
+      }
+    },
+    "design": {
+      "block_days": [
+        1,
+        2,
+        7
+      ],
+      "bootstrap_draw_policy": "Each replicate draws divmod(n_dates, block_days) full-length moving windows plus one remainder-length window when the remainder is nonzero, so every replicate spans exactly n_dates study dates (91 here)",
+      "extreme_review": {
+        "cmt8": {
+          "fence": 70.0,
+          "flagged_hours": 1,
+          "q1": 15.2,
+          "q3": 28.9
+        },
+        "oceanpark": {
+          "fence": 107.8,
+          "flagged_hours": 5,
+          "q1": 19.8,
+          "q3": 41.8
+        }
+      },
+      "gate_method": "Non-overlapping partitions of the ordered Vietnam local calendar dates anchored at the first frozen study date: consecutive chunks of at most block_days dates with a final shorter chunk. Moving windows are resampling candidates only and are recorded as candidate_windows; they are never the gate.",
+      "gate_thresholds": {
+        "min_eligible_blocks": 20,
+        "min_nonempty_blocks": 30
+      },
+      "h1_pooled_bootstrap": {
+        "candidate_windows": 91,
+        "eligible_independent_blocks": 86,
+        "nonempty_independent_blocks": 91,
+        "sampled_dates_per_replicate": 91,
+        "skipped_replicates": 0,
+        "usable_replicates": 2000
+      },
+      "independent_block_counts": {
+        "H1_cmt8_log1p_b1_pairwise_complete": {
+          "candidate_windows": 91,
+          "eligible_independent_blocks": 86,
+          "nonempty_independent_blocks": 91
+        },
+        "H1_oceanpark_log1p_b1_pairwise_complete": {
+          "candidate_windows": 91,
+          "eligible_independent_blocks": 82,
+          "nonempty_independent_blocks": 87
+        },
+        "H1_pooled_log1p_b1_complete_weather": {
+          "candidate_windows": 91,
+          "eligible_independent_blocks": 86,
+          "nonempty_independent_blocks": 91
+        },
+        "H1_pooled_log1p_b1_pairwise_complete": {
+          "candidate_windows": 91,
+          "eligible_independent_blocks": 86,
+          "nonempty_independent_blocks": 91
+        },
+        "H1_pooled_log1p_b1_pairwise_complete_excl_extreme": {
+          "candidate_windows": 91,
+          "eligible_independent_blocks": 86,
+          "nonempty_independent_blocks": 91
+        },
+        "H1_pooled_log1p_b2_pairwise_complete": {
+          "candidate_windows": 90,
+          "eligible_independent_blocks": 43,
+          "nonempty_independent_blocks": 46
+        },
+        "H1_pooled_log1p_b7_pairwise_complete": {
+          "candidate_windows": 85,
+          "eligible_independent_blocks": 13,
+          "nonempty_independent_blocks": 13
+        },
+        "H1_pooled_raw_b1_pairwise_complete": {
+          "candidate_windows": 91,
+          "eligible_independent_blocks": 86,
+          "nonempty_independent_blocks": 91
+        },
+        "H2_cmt8_log1p_b1_pairwise_complete": {
+          "candidate_windows": 91,
+          "eligible_independent_blocks": 86,
+          "nonempty_independent_blocks": 91
+        },
+        "H2_oceanpark_log1p_b1_pairwise_complete": {
+          "candidate_windows": 91,
+          "eligible_independent_blocks": 82,
+          "nonempty_independent_blocks": 87
+        },
+        "H2_pooled_log1p_b1_complete_weather": {
+          "candidate_windows": 91,
+          "eligible_independent_blocks": 86,
+          "nonempty_independent_blocks": 91
+        },
+        "H2_pooled_log1p_b1_pairwise_complete": {
+          "candidate_windows": 91,
+          "eligible_independent_blocks": 86,
+          "nonempty_independent_blocks": 91
+        },
+        "H2_pooled_log1p_b1_pairwise_complete_excl_extreme": {
+          "candidate_windows": 91,
+          "eligible_independent_blocks": 86,
+          "nonempty_independent_blocks": 91
+        },
+        "H2_pooled_log1p_b2_pairwise_complete": {
+          "candidate_windows": 90,
+          "eligible_independent_blocks": 43,
+          "nonempty_independent_blocks": 46
+        },
+        "H2_pooled_log1p_b7_pairwise_complete": {
+          "candidate_windows": 85,
+          "eligible_independent_blocks": 13,
+          "nonempty_independent_blocks": 13
+        },
+        "H2_pooled_raw_b1_pairwise_complete": {
+          "candidate_windows": 91,
+          "eligible_independent_blocks": 86,
+          "nonempty_independent_blocks": 91
+        },
+        "H3_shared_log1p_b1": {
+          "candidate_windows": 91,
+          "eligible_independent_blocks": 87,
+          "nonempty_independent_blocks": 87
+        },
+        "H3_shared_log1p_b1_excl_extreme": {
+          "candidate_windows": 91,
+          "eligible_independent_blocks": 87,
+          "nonempty_independent_blocks": 87
+        },
+        "H3_shared_log1p_b2": {
+          "candidate_windows": 90,
+          "eligible_independent_blocks": 44,
+          "nonempty_independent_blocks": 44
+        },
+        "H3_shared_log1p_b7": {
+          "candidate_windows": 85,
+          "eligible_independent_blocks": 13,
+          "nonempty_independent_blocks": 13
+        },
+        "H3_shared_raw_b1": {
+          "candidate_windows": 91,
+          "eligible_independent_blocks": 87,
+          "nonempty_independent_blocks": 87
+        },
+        "S_cloud_cover_pooled_log1p_b1_complete_weather": {
+          "candidate_windows": 91,
+          "eligible_independent_blocks": 86,
+          "nonempty_independent_blocks": 91
+        },
+        "S_cloud_cover_pooled_log1p_b1_pairwise_complete": {
+          "candidate_windows": 91,
+          "eligible_independent_blocks": 86,
+          "nonempty_independent_blocks": 91
+        },
+        "S_precipitation_pooled_log1p_b1_complete_weather": {
+          "candidate_windows": 91,
+          "eligible_independent_blocks": 86,
+          "nonempty_independent_blocks": 91
+        },
+        "S_precipitation_pooled_log1p_b1_pairwise_complete": {
+          "candidate_windows": 91,
+          "eligible_independent_blocks": 86,
+          "nonempty_independent_blocks": 91
+        },
+        "S_shortwave_radiation_pooled_log1p_b1_complete_weather": {
+          "candidate_windows": 91,
+          "eligible_independent_blocks": 86,
+          "nonempty_independent_blocks": 91
+        },
+        "S_shortwave_radiation_pooled_log1p_b1_pairwise_complete": {
+          "candidate_windows": 91,
+          "eligible_independent_blocks": 86,
+          "nonempty_independent_blocks": 91
+        },
+        "S_surface_pressure_pooled_log1p_b1_complete_weather": {
+          "candidate_windows": 91,
+          "eligible_independent_blocks": 86,
+          "nonempty_independent_blocks": 91
+        },
+        "S_surface_pressure_pooled_log1p_b1_pairwise_complete": {
+          "candidate_windows": 91,
+          "eligible_independent_blocks": 86,
+          "nonempty_independent_blocks": 91
+        },
+        "S_temperature_2m_pooled_log1p_b1_complete_weather": {
+          "candidate_windows": 91,
+          "eligible_independent_blocks": 86,
+          "nonempty_independent_blocks": 91
+        },
+        "S_temperature_2m_pooled_log1p_b1_pairwise_complete": {
+          "candidate_windows": 91,
+          "eligible_independent_blocks": 86,
+          "nonempty_independent_blocks": 91
+        }
+      },
+      "replicates": 2000,
+      "seed": 20260908
+    },
+    "manifest_digest": "71f7b17bff4bd43a406d235bbc585a268ec56b07f2554cc2b19939b5b5dcf918",
+    "phase5_bundle_digest": "92370a857153f2d2a476ab35dbceab3873503239ad6211170e99b8075d1e9e63",
+    "primary": [
+      {
+        "block_days": 1,
+        "ci_high": -0.166087269416,
+        "ci_low": -0.256867070417,
+        "estimand": "z_wind_speed_10m",
+        "estimate": -0.207758555768,
+        "exposure": "wind_speed_10m",
+        "fit_id": "H1_pooled_log1p_b1_pairwise_complete",
+        "hypothesis": "H1",
+        "inference": "inferential",
+        "n": 3951,
+        "p_value": 0.000999500249875,
+        "p_value_adjusted": 0.00199900049975,
+        "scale": "log1p",
+        "scope": "pooled",
+        "weather_case": "pairwise_complete"
+      },
+      {
+        "block_days": 1,
+        "ci_high": 0.186298167368,
+        "ci_low": -0.00576113493793,
+        "estimand": "z_relative_humidity_2m",
+        "estimate": 0.0986222781931,
+        "exposure": "relative_humidity_2m",
+        "fit_id": "H2_pooled_log1p_b1_pairwise_complete",
+        "hypothesis": "H2",
+        "inference": "inferential",
+        "n": 3951,
+        "p_value": 0.0679660169915,
+        "p_value_adjusted": 0.0679660169915,
+        "scale": "log1p",
+        "scope": "pooled",
+        "weather_case": "pairwise_complete"
+      },
+      {
+        "block_days": 1,
+        "ci_high": 0.296091871463,
+        "ci_low": 0.0596893954456,
+        "estimand": "sensor_oceanpark",
+        "estimate": 0.179237904693,
+        "exposure": "",
+        "fit_id": "H3_shared_log1p_b1",
+        "hypothesis": "H3",
+        "inference": "exploratory",
+        "n": 4070,
+        "p_value": 0.00299850074963,
+        "p_value_adjusted": null,
+        "scale": "log1p",
+        "scope": "shared",
+        "weather_case": "not_applicable"
+      }
+    ],
+    "primary_questions": {
+      "H1": "Within-sensor PM2.5 vs wind speed (adjusted)",
+      "H2": "Within-sensor PM2.5 vs relative humidity (adjusted)",
+      "H3": "OceanPark minus CMT8 on shared accepted hours"
+    },
+    "scope_statement": "Sensor-level associations over one frozen 90-day window at two non-reference low-cost sites; not city-wide exposure, causal effects or forecast skill.",
+    "secondary": [
+      {
+        "block_days": 1,
+        "ci_high": -0.0483079917918,
+        "ci_low": -0.127017383037,
+        "estimand": "z_cloud_cover",
+        "estimate": -0.0900205188395,
+        "exposure": "cloud_cover",
+        "fit_id": "S_cloud_cover_pooled_log1p_b1_pairwise_complete",
+        "hypothesis": "S",
+        "inference": "inferential",
+        "n": 3951,
+        "p_value": 0.00199900049975,
+        "p_value_adjusted": 0.00999500249875,
+        "scale": "log1p",
+        "scope": "pooled",
+        "weather_case": "pairwise_complete"
+      },
+      {
+        "block_days": 1,
+        "ci_high": -0.00489393354705,
+        "ci_low": -0.0822728027774,
+        "estimand": "z_precipitation",
+        "estimate": -0.0463695265032,
+        "exposure": "precipitation",
+        "fit_id": "S_precipitation_pooled_log1p_b1_pairwise_complete",
+        "hypothesis": "S",
+        "inference": "inferential",
+        "n": 3949,
+        "p_value": 0.0359820089955,
+        "p_value_adjusted": 0.0899550224887,
+        "scale": "log1p",
+        "scope": "pooled",
+        "weather_case": "pairwise_complete"
+      },
+      {
+        "block_days": 1,
+        "ci_high": 0.130387993032,
+        "ci_low": -0.108787201821,
+        "estimand": "z_shortwave_radiation",
+        "estimate": 0.0161320647126,
+        "exposure": "shortwave_radiation",
+        "fit_id": "S_shortwave_radiation_pooled_log1p_b1_pairwise_complete",
+        "hypothesis": "S",
+        "inference": "inferential",
+        "n": 3949,
+        "p_value": 0.87956021989,
+        "p_value_adjusted": 0.87956021989,
+        "scale": "log1p",
+        "scope": "pooled",
+        "weather_case": "pairwise_complete"
+      },
+      {
+        "block_days": 1,
+        "ci_high": 0.253788321096,
+        "ci_low": -0.0326559999346,
+        "estimand": "z_surface_pressure",
+        "estimate": 0.116601348897,
+        "exposure": "surface_pressure",
+        "fit_id": "S_surface_pressure_pooled_log1p_b1_pairwise_complete",
+        "hypothesis": "S",
+        "inference": "inferential",
+        "n": 3951,
+        "p_value": 0.139930034983,
+        "p_value_adjusted": 0.233216724972,
+        "scale": "log1p",
+        "scope": "pooled",
+        "weather_case": "pairwise_complete"
+      },
+      {
+        "block_days": 1,
+        "ci_high": 0.0924473856633,
+        "ci_low": -0.121071898142,
+        "estimand": "z_temperature_2m",
+        "estimate": -0.0119795640857,
+        "exposure": "temperature_2m",
+        "fit_id": "S_temperature_2m_pooled_log1p_b1_pairwise_complete",
+        "hypothesis": "S",
+        "inference": "inferential",
+        "n": 3951,
+        "p_value": 0.868565717141,
+        "p_value_adjusted": 0.87956021989,
+        "scale": "log1p",
+        "scope": "pooled",
+        "weather_case": "pairwise_complete"
+      }
+    ],
+    "sensitivities": {
+      "complete_weather_h1": {
+        "block_days": 1,
+        "ci_high": -0.164853623147,
+        "ci_low": -0.254242252792,
+        "estimand": "z_wind_speed_10m",
+        "estimate": -0.207808582517,
+        "exposure": "wind_speed_10m",
+        "fit_id": "H1_pooled_log1p_b1_complete_weather",
+        "hypothesis": "H1",
+        "inference": "exploratory",
+        "n": 3949,
+        "p_value": 0.000999500249875,
+        "p_value_adjusted": null,
+        "scale": "log1p",
+        "scope": "pooled",
+        "weather_case": "complete_weather"
+      },
+      "complete_weather_h2": {
+        "block_days": 1,
+        "ci_high": 0.195322041217,
+        "ci_low": -0.00148072268653,
+        "estimand": "z_relative_humidity_2m",
+        "estimate": 0.0987358546998,
+        "exposure": "relative_humidity_2m",
+        "fit_id": "H2_pooled_log1p_b1_complete_weather",
+        "hypothesis": "H2",
+        "inference": "exploratory",
+        "n": 3949,
+        "p_value": 0.055972013993,
+        "p_value_adjusted": null,
+        "scale": "log1p",
+        "scope": "pooled",
+        "weather_case": "complete_weather"
+      },
+      "extreme_rule_h1": {
+        "block_days": 1,
+        "ci_high": -0.162165301651,
+        "ci_low": -0.25555715149,
+        "estimand": "z_wind_speed_10m",
+        "estimate": -0.20708732678,
+        "exposure": "wind_speed_10m",
+        "fit_id": "H1_pooled_log1p_b1_pairwise_complete_excl_extreme",
+        "hypothesis": "H1",
+        "inference": "exploratory",
+        "n": 3945,
+        "p_value": 0.000999500249875,
+        "p_value_adjusted": null,
+        "scale": "log1p",
+        "scope": "pooled",
+        "weather_case": "pairwise_complete"
+      },
+      "raw_scale_humidity": {
+        "block_days": 1,
+        "ci_high": 3.80582057982,
+        "ci_low": -0.821705878263,
+        "estimand": "z_relative_humidity_2m",
+        "estimate": 1.51053656597,
+        "exposure": "relative_humidity_2m",
+        "fit_id": "H2_pooled_raw_b1_pairwise_complete",
+        "hypothesis": "H2",
+        "inference": "exploratory",
+        "n": 3951,
+        "p_value": 0.178910544728,
+        "p_value_adjusted": null,
+        "scale": "raw",
+        "scope": "pooled",
+        "weather_case": "pairwise_complete"
+      },
+      "raw_scale_primary": {
+        "block_days": 1,
+        "ci_high": -3.54720543214,
+        "ci_low": -5.48839739575,
+        "estimand": "z_wind_speed_10m",
+        "estimate": -4.50707727068,
+        "exposure": "wind_speed_10m",
+        "fit_id": "H1_pooled_raw_b1_pairwise_complete",
+        "hypothesis": "H1",
+        "inference": "exploratory",
+        "n": 3951,
+        "p_value": 0.000999500249875,
+        "p_value_adjusted": null,
+        "scale": "raw",
+        "scope": "pooled",
+        "weather_case": "pairwise_complete"
+      },
+      "seven_day_blocks_h1": {
+        "block_days": 7,
+        "ci_high": null,
+        "ci_low": null,
+        "estimand": "z_wind_speed_10m",
+        "estimate": -0.207758555768,
+        "exposure": "wind_speed_10m",
+        "fit_id": "H1_pooled_log1p_b7_pairwise_complete",
+        "hypothesis": "H1",
+        "inference": "descriptive_only",
+        "n": 3951,
+        "p_value": null,
+        "p_value_adjusted": null,
+        "scale": "log1p",
+        "scope": "pooled",
+        "weather_case": "pairwise_complete"
+      },
+      "two_day_blocks_h1": {
+        "block_days": 2,
+        "ci_high": -0.159253495991,
+        "ci_low": -0.259026139528,
+        "estimand": "z_wind_speed_10m",
+        "estimate": -0.207758555768,
+        "exposure": "wind_speed_10m",
+        "fit_id": "H1_pooled_log1p_b2_pairwise_complete",
+        "hypothesis": "H1",
+        "inference": "exploratory",
+        "n": 3951,
+        "p_value": 0.000999500249875,
+        "p_value_adjusted": null,
+        "scale": "log1p",
+        "scope": "pooled",
+        "weather_case": "pairwise_complete"
+      },
+      "two_day_blocks_h2": {
+        "block_days": 2,
+        "ci_high": 0.20901443185,
+        "ci_low": -0.0251575325498,
+        "estimand": "z_relative_humidity_2m",
+        "estimate": 0.0986222781931,
+        "exposure": "relative_humidity_2m",
+        "fit_id": "H2_pooled_log1p_b2_pairwise_complete",
+        "hypothesis": "H2",
+        "inference": "exploratory",
+        "n": 3951,
+        "p_value": 0.118940529735,
+        "p_value_adjusted": null,
+        "scale": "log1p",
+        "scope": "pooled",
+        "weather_case": "pairwise_complete"
+      }
+    },
+    "stats_version": "phase6_statistics_v2"
+  },
+  "source_separation": {
+    "forecast": "Open-Meteo forecast snapshots; not ground truth",
+    "measured": "OpenAQ PM2.5 at CMT8 and OceanPark; not city averages",
+    "modeled": "CAMS modeled air-quality context; never a measured replacement",
+    "reanalysis": "ERA5 retrospective weather context; not operational availability"
+  },
+  "status": "ok",
+  "walkthrough": "02_sensor_associations",
+  "walkthrough_version": "phase12_walkthroughs_v2"
+}

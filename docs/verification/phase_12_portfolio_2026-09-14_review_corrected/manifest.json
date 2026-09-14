@@ -1,0 +1,200 @@
+{
+  "command": "python3 -B reports/portfolio/run_walkthroughs.py --output-dir <output-dir>",
+  "files": {
+    "01_data_quality_and_eda.json": "913290db329f1048e096dd563311795ae24ac3b4c6763360d5969e58a2e03ccd",
+    "01_data_quality_and_eda.md": "c5e2e7885f6e49957aeb3163e917d8872228cd564c4c7cfa696e02fc5f8a330a",
+    "02_sensor_associations.json": "01eb418621280a734728ddb34ef79be157b8f2f1b17b2d7f96cdea39295aaad9",
+    "02_sensor_associations.md": "cf24163a03a608f7739ec79f4b0273d94b3912c921a3553be8a1fc0467996f70",
+    "03_feature_baseline_ml_contract.json": "773ce3911e2e9b293604e822e746f974fbc64d3c0cc88a13238f3f7f498e91e0",
+    "03_feature_baseline_ml_contract.md": "149a1643e2b220ec4fa27cc1902d38cc261c6a937fc3cc2f2cf9d9ee07d850ff",
+    "04_dashboard_and_reproducibility.json": "209e2f941841689abc59dba41e08a62e2428c5bb5ca262be2322c514b8d4c335",
+    "04_dashboard_and_reproducibility.md": "a470ffe22aa6fe3f187df2b981f4aec0048a600119cc5cd446467e47433aa205"
+  },
+  "frozen_window": {
+    "cutoff": "2026-09-06T20:59:00.669630Z",
+    "display_timezone": "Vietnam local dates (UTC+07:00) for daily qualification",
+    "end": "2026-09-06T00:00:00Z",
+    "start": "2026-06-08T00:00:00Z",
+    "storage_timezone": "UTC timestamptz"
+  },
+  "status": "ok",
+  "walkthrough_version": "phase12_walkthroughs_v2",
+  "walkthroughs": [
+    {
+      "id": "01_data_quality_and_eda",
+      "inputs": [
+        {
+          "expected_sha256": "c1570b8679b4385d693bb08ab960e4d0564c8315d52e99cf5231d13ce97b3713",
+          "path": "docs/verification/phase_4_quality_2026-09-07_final.json",
+          "sha256": "c1570b8679b4385d693bb08ab960e4d0564c8315d52e99cf5231d13ce97b3713",
+          "verified": true
+        },
+        {
+          "expected_sha256": "e32a3ae84bf236504c4b183e277beccbc9682f4811f2e5c8956975f9ac3c4e89",
+          "path": "docs/verification/phase_5_eda_2026-09-07_final/SUCCESS.json",
+          "sha256": "e32a3ae84bf236504c4b183e277beccbc9682f4811f2e5c8956975f9ac3c4e89",
+          "verified": true
+        },
+        {
+          "expected_sha256": "2007b3c8b06d932f592afb71664698e7c4c2a00a45c9cf7aac1eddb07404e021",
+          "path": "docs/verification/phase_5_eda_2026-09-07_final/eda_summary.json",
+          "sha256": "2007b3c8b06d932f592afb71664698e7c4c2a00a45c9cf7aac1eddb07404e021",
+          "verified": true
+        },
+        {
+          "expected_sha256": "00012495fd3fc455f5d9e43fdac18de9fd42ef686678f4ee843fa9ade82da18c",
+          "path": "docs/verification/phase_5_eda_2026-09-07_final/eda_bundle.json",
+          "sha256": "00012495fd3fc455f5d9e43fdac18de9fd42ef686678f4ee843fa9ade82da18c",
+          "verified": true
+        },
+        {
+          "expected_sha256": "aeb6db1accd5421b09abbec0d5e513e555cf829de4e56d4cf33d42a959960649",
+          "path": "docs/verification/phase_5_eda_2026-09-07_final/daily.csv",
+          "sha256": "aeb6db1accd5421b09abbec0d5e513e555cf829de4e56d4cf33d42a959960649",
+          "verified": true
+        },
+        {
+          "expected_sha256": "414f9746f733d1ffa34789bd9fb0b1aa34dd2afee6a4aaedd2645fa74888a2ca",
+          "path": "docs/verification/phase_5_eda_2026-09-07_final/hourly_pm25_weather_grid.csv",
+          "sha256": "414f9746f733d1ffa34789bd9fb0b1aa34dd2afee6a4aaedd2645fa74888a2ca",
+          "verified": true
+        }
+      ],
+      "outputs": {
+        "01_data_quality_and_eda.json": "913290db329f1048e096dd563311795ae24ac3b4c6763360d5969e58a2e03ccd",
+        "01_data_quality_and_eda.md": "c5e2e7885f6e49957aeb3163e917d8872228cd564c4c7cfa696e02fc5f8a330a"
+      },
+      "status": "ok",
+      "title": "Data quality, coverage gaps and descriptive EDA"
+    },
+    {
+      "id": "02_sensor_associations",
+      "inputs": [
+        {
+          "expected_sha256": "017a901cb68a58f06e7fbc68e81bc17d76b4db675fe0032109907ec38a3bb4f3",
+          "path": "docs/verification/phase_6_statistics_2026-09-09_corrected/SUCCESS.json",
+          "sha256": "017a901cb68a58f06e7fbc68e81bc17d76b4db675fe0032109907ec38a3bb4f3",
+          "verified": true
+        },
+        {
+          "expected_sha256": "12a7236c50365c7777a0b07a7ac497167f0cb1bea6e57e963aa97dc5e3fb838d",
+          "path": "docs/verification/phase_6_statistics_2026-09-09_corrected/phase_6_statistics_summary.json",
+          "sha256": "12a7236c50365c7777a0b07a7ac497167f0cb1bea6e57e963aa97dc5e3fb838d",
+          "verified": true
+        },
+        {
+          "expected_sha256": "3d6a3f7e5a0ff4764da9596a4864af0619284fe78ae2b887c0f505d5d7cab306",
+          "path": "docs/verification/phase_6_statistics_2026-09-09_corrected/phase_6_estimates.csv",
+          "sha256": "3d6a3f7e5a0ff4764da9596a4864af0619284fe78ae2b887c0f505d5d7cab306",
+          "verified": true
+        },
+        {
+          "expected_sha256": "1fb8df8d339dce542c99a45be2b30f4c44a1b41fad9d02cb5c701fdf090b58f3",
+          "path": "docs/verification/phase_6_statistics_2026-09-09_corrected/phase_6_bootstrap_summary.csv",
+          "sha256": "1fb8df8d339dce542c99a45be2b30f4c44a1b41fad9d02cb5c701fdf090b58f3",
+          "verified": true
+        }
+      ],
+      "outputs": {
+        "02_sensor_associations.json": "01eb418621280a734728ddb34ef79be157b8f2f1b17b2d7f96cdea39295aaad9",
+        "02_sensor_associations.md": "cf24163a03a608f7739ec79f4b0273d94b3912c921a3553be8a1fc0467996f70"
+      },
+      "status": "ok",
+      "title": "Pre-registered weather-PM2.5 sensor associations"
+    },
+    {
+      "id": "03_feature_baseline_ml_contract",
+      "inputs": [
+        {
+          "expected_sha256": "a7ea4cb56d378766ca83561d9e290bec3703ac161b88f69d4200ff155fbd2297",
+          "path": "docs/verification/phase_7_features_2026-09-10_structural_hardened/SUCCESS.json",
+          "sha256": "a7ea4cb56d378766ca83561d9e290bec3703ac161b88f69d4200ff155fbd2297",
+          "verified": true
+        },
+        {
+          "expected_sha256": "d178890fa503752e03ee09cd2d9633d1bcfc76af9d8f3365a02d63e5d06da336",
+          "path": "docs/verification/phase_8_baselines_2026-09-11_v2_verified/SUCCESS.json",
+          "sha256": "d178890fa503752e03ee09cd2d9633d1bcfc76af9d8f3365a02d63e5d06da336",
+          "verified": true
+        },
+        {
+          "expected_sha256": "68bdad7e7cc244bde48899b9fbb9934fbba8604aa9c11634d78a705945bcadad",
+          "path": "docs/verification/phase_9_models_2026-09-12_comparison_hardened/SUCCESS.json",
+          "sha256": "68bdad7e7cc244bde48899b9fbb9934fbba8604aa9c11634d78a705945bcadad",
+          "verified": true
+        },
+        {
+          "expected_sha256": "7fd1bfd725c5bec6df0088adf52af1f6e34f08d7d2244bb95b6172f7896e4d0b",
+          "path": "docs/verification/phase_7_features_2026-09-10_structural_hardened/phase_7_feature_summary.json",
+          "sha256": "7fd1bfd725c5bec6df0088adf52af1f6e34f08d7d2244bb95b6172f7896e4d0b",
+          "verified": true
+        },
+        {
+          "expected_sha256": "e7dbcd35f7d896b2ec7d3ec38b64ddb43f601efe56d4341d6b091cc8e2c9dc26",
+          "path": "docs/verification/phase_8_baselines_2026-09-11_v2_verified/phase_8_baselines_summary.json",
+          "sha256": "e7dbcd35f7d896b2ec7d3ec38b64ddb43f601efe56d4341d6b091cc8e2c9dc26",
+          "verified": true
+        },
+        {
+          "expected_sha256": "5f2061f3464df4a623fba2e0071e0a373275755b59eb2e13ae6161aff25efa45",
+          "path": "docs/verification/phase_9_models_2026-09-12_comparison_hardened/phase_9_model_summary.json",
+          "sha256": "5f2061f3464df4a623fba2e0071e0a373275755b59eb2e13ae6161aff25efa45",
+          "verified": true
+        }
+      ],
+      "outputs": {
+        "03_feature_baseline_ml_contract.json": "773ce3911e2e9b293604e822e746f974fbc64d3c0cc88a13238f3f7f498e91e0",
+        "03_feature_baseline_ml_contract.md": "149a1643e2b220ec4fa27cc1902d38cc261c6a937fc3cc2f2cf9d9ee07d850ff"
+      },
+      "status": "ok",
+      "title": "Availability contract, baselines and model diagnostics"
+    },
+    {
+      "id": "04_dashboard_and_reproducibility",
+      "inputs": [
+        {
+          "expected_sha256": "d2c017952150828f30a1a6617940983ece43c06c20aa4498a44d933046fe131d",
+          "path": "dashboard/data/dashboard.json",
+          "sha256": "d2c017952150828f30a1a6617940983ece43c06c20aa4498a44d933046fe131d",
+          "verified": true
+        },
+        {
+          "expected_sha256": "e32a3ae84bf236504c4b183e277beccbc9682f4811f2e5c8956975f9ac3c4e89",
+          "path": "docs/verification/phase_5_eda_2026-09-07_final/SUCCESS.json",
+          "sha256": "e32a3ae84bf236504c4b183e277beccbc9682f4811f2e5c8956975f9ac3c4e89",
+          "verified": true
+        },
+        {
+          "expected_sha256": "017a901cb68a58f06e7fbc68e81bc17d76b4db675fe0032109907ec38a3bb4f3",
+          "path": "docs/verification/phase_6_statistics_2026-09-09_corrected/SUCCESS.json",
+          "sha256": "017a901cb68a58f06e7fbc68e81bc17d76b4db675fe0032109907ec38a3bb4f3",
+          "verified": true
+        },
+        {
+          "expected_sha256": "a7ea4cb56d378766ca83561d9e290bec3703ac161b88f69d4200ff155fbd2297",
+          "path": "docs/verification/phase_7_features_2026-09-10_structural_hardened/SUCCESS.json",
+          "sha256": "a7ea4cb56d378766ca83561d9e290bec3703ac161b88f69d4200ff155fbd2297",
+          "verified": true
+        },
+        {
+          "expected_sha256": "d178890fa503752e03ee09cd2d9633d1bcfc76af9d8f3365a02d63e5d06da336",
+          "path": "docs/verification/phase_8_baselines_2026-09-11_v2_verified/SUCCESS.json",
+          "sha256": "d178890fa503752e03ee09cd2d9633d1bcfc76af9d8f3365a02d63e5d06da336",
+          "verified": true
+        },
+        {
+          "expected_sha256": "68bdad7e7cc244bde48899b9fbb9934fbba8604aa9c11634d78a705945bcadad",
+          "path": "docs/verification/phase_9_models_2026-09-12_comparison_hardened/SUCCESS.json",
+          "sha256": "68bdad7e7cc244bde48899b9fbb9934fbba8604aa9c11634d78a705945bcadad",
+          "verified": true
+        }
+      ],
+      "outputs": {
+        "04_dashboard_and_reproducibility.json": "209e2f941841689abc59dba41e08a62e2428c5bb5ca262be2322c514b8d4c335",
+        "04_dashboard_and_reproducibility.md": "a470ffe22aa6fe3f187df2b981f4aec0048a600119cc5cd446467e47433aa205"
+      },
+      "status": "ok",
+      "title": "Dashboard bundle identity and local reproducibility"
+    }
+  ]
+}

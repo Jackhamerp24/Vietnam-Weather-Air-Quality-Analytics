@@ -16,7 +16,10 @@ Phase 11 adds reviewed automation tooling (strict profile, supervised cycle,
 read-only health/recovery, project-scoped native backups with checksum/listing
 verification and a real synthetic disposable-cluster restore drill, CI and
 launchd templates, and `docs/operations.md`) but installs no scheduler, performs
-no live cycle or real project backup and adds no migration. Phase 5 provides
+no live cycle or real project backup and adds no migration. Phase 12 completes
+portfolio polish: a reader-oriented README, a curated results summary, four
+hash-verifying read-only walkthroughs, a local screenshot set, a credential-free
+portfolio runbook and a verification record. Phase 5 provides
 descriptive EDA from
 the frozen Phase 4 dataset. Phase 6 provides pre-registered, sensor-level
 weather-PM2.5 association estimates with block-bootstrap uncertainty, replayed
@@ -85,6 +88,11 @@ inferential outputs and everything else as exploratory sensitivity.
 - `docs/verification/phase_11_stage_a_corrections.md`
 - `docs/verification/phase_11_stage_b_corrections.md`
 - `docs/verification/phase_11.md`
+- `docs/verification/phase_12_portfolio_polish_plan.md`
+- `docs/verification/phase_12.md`
+- `docs/portfolio_runbook.md`
+- `reports/portfolio_summary.md`
+- `reports/portfolio/README.md`
 - `docs/operations.md`
 - `/private/tmp/vietnam-weather-air-quality-analytics-handoff-2026-09-13.md`
   (current cross-session handoff; stored outside the repository)
@@ -582,6 +590,56 @@ extended `tests/integration/test_automation_database.py` and
 dump/restore drill); full offline 430 tests (428 passed, 2 credential skips);
 isolated PostgreSQL 63 tests `OK`; `git diff --check` clean; Phase 4-10 artifacts and
 the Phase 10 public-bundle digest unchanged.
+
+## Phase 12 Focus: Portfolio Polish
+
+Phase 12 is delivered and verified under
+`docs/verification/phase_12.md`, including the 2026-09-14 coordinator correction
+review. Authoritative walkthroughs use `phase12_walkthroughs_v2` in
+`docs/verification/phase_12_portfolio_2026-09-14_review_corrected/`;
+the original v1 directory remains unchanged and superseded. This phase covers
+documentation, reproducibility and presentation. The correction review includes
+a scoped statistics-table CSS layout fix, with no data/calculation change,
+external source request, live operation, scheduler or project database change.
+
+Contract to preserve:
+
+- `README.md` is the reader-oriented portfolio narrative; the curated results
+  are in `reports/portfolio_summary.md` and every headline number links to its
+  authoritative artifact or verification record. Keep the Phase 6 label: the
+  estimates are sensor-level associations over one 90-day window, not city-wide
+  or causal claims. Keep Phase 7-9 described as limited diagnostics.
+- `docs/portfolio_runbook.md` is the credential-free reproduction path and must
+  never instruct a reader to source `.env`; operational activation stays in
+  `docs/operations.md` and remains authorization-gated.
+- `reports/portfolio/` contains four read-only walkthroughs
+  (`run_walkthroughs.py` plus per-walkthrough modules). They verify pinned
+  SHA-256 identities, write Markdown plus JSON into a new directory, fail
+  closed, and are byte-replayable. Generated evidence lives in
+  `docs/verification/phase_12_portfolio_2026-09-14_review_corrected/` and must not be
+  overwritten; re-run into a new path and compare.
+- `scripts/capture_dashboard_screenshots.cjs` captures the curated Phase 12
+  screenshot set into a new directory. The reviewed set is in
+  `docs/verification/phase_12_screenshots_2026-09-14_review_verified/`, with
+  PNG hashes/sizes/dimensions, viewport, verified served-bundle identity and
+  capture time. The original screenshot directory remains unchanged. It uses the
+  existing Playwright/Chrome verification runtime only; the dashboard remains
+  static; the review changes only the statistics-table layout, not its data.
+- The Phase 10 public bundle canonical digest and Phase 4-10 artifacts remain
+  unchanged by Phase 12. Do not regenerate historical JSON/CSV/PNG evidence to
+  make it easier to cite; add a new summary instead.
+
+Correction-review evidence: 450 offline tests (448 passed, 2 credential skips),
+71 focused dashboard/walkthrough tests, 63 isolated PostgreSQL tests, four
+Node capture-contract tests and 14 browser groups passed. Corrected walkthrough
+replay matches all nine files; the dashboard bundle and original Phase 12
+evidence remain unchanged. The scoped CSS fix and its rendered-width regression
+are documented in `docs/verification/phase_12.md`.
+
+Do not claim operational activation, captured-feature model evaluation,
+forecast skill or an independent review that did not occur. Scheduling, live
+cycles, real backups and prospective collection remain separately authorized
+future work.
 
 ## Suggested Skills
 

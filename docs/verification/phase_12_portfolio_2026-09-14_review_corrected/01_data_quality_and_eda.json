@@ -1,0 +1,143 @@
+{
+  "command": "python3 -B reports/portfolio/walkthrough_01_data_quality_and_eda.py --output-dir <output-dir>",
+  "frozen_window": {
+    "cutoff": "2026-09-06T20:59:00.669630Z",
+    "display_timezone": "Vietnam local dates (UTC+07:00) for daily qualification",
+    "end": "2026-09-06T00:00:00Z",
+    "start": "2026-06-08T00:00:00Z",
+    "storage_timezone": "UTC timestamptz"
+  },
+  "inputs": [
+    {
+      "expected_sha256": "c1570b8679b4385d693bb08ab960e4d0564c8315d52e99cf5231d13ce97b3713",
+      "path": "docs/verification/phase_4_quality_2026-09-07_final.json",
+      "sha256": "c1570b8679b4385d693bb08ab960e4d0564c8315d52e99cf5231d13ce97b3713",
+      "verified": true
+    },
+    {
+      "expected_sha256": "e32a3ae84bf236504c4b183e277beccbc9682f4811f2e5c8956975f9ac3c4e89",
+      "path": "docs/verification/phase_5_eda_2026-09-07_final/SUCCESS.json",
+      "sha256": "e32a3ae84bf236504c4b183e277beccbc9682f4811f2e5c8956975f9ac3c4e89",
+      "verified": true
+    },
+    {
+      "expected_sha256": "2007b3c8b06d932f592afb71664698e7c4c2a00a45c9cf7aac1eddb07404e021",
+      "path": "docs/verification/phase_5_eda_2026-09-07_final/eda_summary.json",
+      "sha256": "2007b3c8b06d932f592afb71664698e7c4c2a00a45c9cf7aac1eddb07404e021",
+      "verified": true
+    },
+    {
+      "expected_sha256": "00012495fd3fc455f5d9e43fdac18de9fd42ef686678f4ee843fa9ade82da18c",
+      "path": "docs/verification/phase_5_eda_2026-09-07_final/eda_bundle.json",
+      "sha256": "00012495fd3fc455f5d9e43fdac18de9fd42ef686678f4ee843fa9ade82da18c",
+      "verified": true
+    },
+    {
+      "expected_sha256": "aeb6db1accd5421b09abbec0d5e513e555cf829de4e56d4cf33d42a959960649",
+      "path": "docs/verification/phase_5_eda_2026-09-07_final/daily.csv",
+      "sha256": "aeb6db1accd5421b09abbec0d5e513e555cf829de4e56d4cf33d42a959960649",
+      "verified": true
+    },
+    {
+      "expected_sha256": "414f9746f733d1ffa34789bd9fb0b1aa34dd2afee6a4aaedd2645fa74888a2ca",
+      "path": "docs/verification/phase_5_eda_2026-09-07_final/hourly_pm25_weather_grid.csv",
+      "sha256": "414f9746f733d1ffa34789bd9fb0b1aa34dd2afee6a4aaedd2645fa74888a2ca",
+      "verified": true
+    }
+  ],
+  "labels": {
+    "descriptive_only": "coverage, diagnostics and Phase 8-9 comparisons",
+    "exploratory": "unadjusted or sensitivity output that is not the primary inferential claim",
+    "inferential": "adjusted Phase 6 family results justified by Holm or Benjamini-Hochberg",
+    "limited_diagnostic": "the frozen Phase 7-9 artifact status caused by missing prospectively captured PM/history and forecast-weather evidence"
+  },
+  "results": {
+    "common_accepted_sensor_hours": 2035,
+    "daily_rows": 182,
+    "forecast_captures_not_analyzed": 5,
+    "hourly_grid": {
+      "absent": 129,
+      "accepted": 4191,
+      "rows": 4320
+    },
+    "missing_policy": "Missing hours remain null and unplotted; no interpolation and no substitution with modeled values.",
+    "phase4_artifact_sha256": "c1570b8679b4385d693bb08ab960e4d0564c8315d52e99cf5231d13ce97b3713",
+    "phase5_bundle_digest": "92370a857153f2d2a476ab35dbceab3873503239ad6211170e99b8075d1e9e63",
+    "qualified_full_days": 172,
+    "quality_findings": {
+      "failed_runs_at_cutoff": 1,
+      "interval_errors": 0,
+      "provisional_accepted_selected_hours": 4191,
+      "quarantines_visible": 1,
+      "revision_transitions_value_changing": 0
+    },
+    "schema_revision": "0003_response_integrity",
+    "sensors": [
+      {
+        "accepted_hours": 2154,
+        "attribution": "OpenAQ; AirGradient; Thomas Versteeg",
+        "complete_weather_hours": 2033,
+        "completeness_percent": 99.7222,
+        "expected_hours": 2160,
+        "lag1_n": 2150,
+        "lag1_pearson": 0.810071085512981,
+        "location_id": "cmt8",
+        "longest_missing_run_hours": 3,
+        "missing_runs": 3,
+        "name": "CMT8",
+        "pm25_ug_m3": {
+          "maximum": 82.2,
+          "mean": 22.707567316620242,
+          "median": 20.9,
+          "minimum": 3.6,
+          "n": 2154,
+          "p25": 15.2,
+          "p5": 9.6,
+          "p75": 28.9,
+          "p95": 41.2,
+          "stdev": 9.899788797325346
+        },
+        "sensor_id": "openaq_11357424",
+        "wind_speed_n": 2034,
+        "wind_speed_pearson": -0.338661434978736
+      },
+      {
+        "accepted_hours": 2037,
+        "attribution": "OpenAQ; AirGradient",
+        "complete_weather_hours": 1916,
+        "completeness_percent": 94.3056,
+        "expected_hours": 2160,
+        "lag1_n": 2033,
+        "lag1_pearson": 0.8694115790245657,
+        "location_id": "oceanpark",
+        "longest_missing_run_hours": 119,
+        "missing_runs": 3,
+        "name": "OceanPark",
+        "pm25_ug_m3": {
+          "maximum": 149.0,
+          "mean": 32.01310751104565,
+          "median": 31.1,
+          "minimum": 0.0,
+          "n": 2037,
+          "p25": 19.8,
+          "p5": 3.9,
+          "p75": 41.8,
+          "p95": 65.55999999999995,
+          "stdev": 18.521016311237016
+        },
+        "sensor_id": "openaq_14581375",
+        "wind_speed_n": 1917,
+        "wind_speed_pearson": -0.31036286439527827
+      }
+    ]
+  },
+  "source_separation": {
+    "forecast": "Open-Meteo forecast snapshots; not ground truth",
+    "measured": "OpenAQ PM2.5 at CMT8 and OceanPark; not city averages",
+    "modeled": "CAMS modeled air-quality context; never a measured replacement",
+    "reanalysis": "ERA5 retrospective weather context; not operational availability"
+  },
+  "status": "ok",
+  "walkthrough": "01_data_quality_and_eda",
+  "walkthrough_version": "phase12_walkthroughs_v2"
+}
