@@ -30,6 +30,10 @@ stale or had null licences. We did not infer shutdown causes or permission from
 station names. Do not merge similarly named old/new station IDs without checking
 instrument continuity, coordinates, overlap and rights.
 
+Addendum, 2026-09-17: three further licensed locations in this same capture are not
+dispositioned by the table above. See
+[Undispositioned Licensed Candidates](#addendum-undispositioned-licensed-candidates-2026-09-17).
+
 ## Licence And Measurement Type
 
 Both selected feeds use provider **AirGradient (66)**, `isMonitor=false`, and
@@ -173,3 +177,46 @@ sensor values were fresh when requested, but a single freshness check cannot
 establish a latency distribution or uptime. Models, EDA, significance and
 environmental associations remain uncomputed; the Phase 1 result is a defensible
 source choice and a reproducible coverage audit.
+
+## Addendum: Undispositioned Licensed Candidates (2026-09-17)
+
+A cross-check of the captured inventory against the disposition table in
+[Findings](#findings) was performed on 2026-09-17. It found three locations that
+carry a recorded licence and appear nowhere in the tracked repository, by
+identifier or by name:
+
+| Location ID | Name | Instrument | Licence | Metadata window | Span |
+| --- | --- | --- | --- | --- | --- |
+| 4743591 | Trường Đại học Khoa học Tự nhiên, ĐHQG-HCM, Cơ sở Linh Trung. | Unknown AirGradient Sensor | 41, CC BY 4.0 | 2025-06-15T05:00Z to 2025-06-15T08:00Z | 0 days |
+| 6068138 | Care Centre | AirGradient ONE Generation 9 (I-9PSL-DE) | 41, CC BY 4.0 | 2025-10-09T01:00Z to 2025-12-08T02:00Z | 60 days |
+| 6273386 | VNUHCMUS CAMPUS 1 | Unknown AirGradient Sensor | 41, CC BY 4.0 | 2026-03-16T03:00Z to 2026-03-30T05:00Z | 14 days |
+
+All three use provider **AirGradient (66)** and `isMonitor=false`, matching the
+two selected feeds. Two sit close to CMT8: Care Centre is 1.57 km away and
+VNUHCMUS CAMPUS 1 is 2.92 km away, using a haversine distance with Earth radius
+6,371 km. Linh Trung is 17.24 km from CMT8. None is near Da Nang, so this
+changes nothing about the modeled-only status of that city.
+
+What this addendum does and does not establish:
+
+- It establishes that the inventory contains three further AirGradient locations
+  with the same CC BY 4.0 licence record as the selected feeds, and that no
+  tracked file dispositions them.
+- The windows and spans above are inventory `datetimeFirst`/`datetimeLast`
+  metadata, not the interval-level audit applied to CMT8 and OceanPark. No hourly
+  history was requested for these locations, so their true coverage, gaps,
+  duplicates, freshness and value ranges remain **unverified**. This addendum
+  makes no completeness claim.
+- The 90-day preliminary-modeling gate in
+  [Decision 0001](../decisions/0001-data-sources.md) is not met by these metadata
+  spans. That is a planning observation from metadata, not an audit finding, and
+  no selection, rejection or deferral decision is made here. Dispositioning these
+  locations remains an open project decision.
+- Nothing else changes. The two selected measured feeds, the Phase 3 persisted
+  counts, the Phase 4 cutoff and every downstream artifact are unaffected. This
+  addendum supersedes and corrects nothing; the original text above is preserved
+  unchanged.
+
+The cross-check used local exploratory tooling under `.local/typesafe/`, which is
+git-ignored and is not a project deliverable. No tracked artifact, test or
+verification record depends on it.
