@@ -1,0 +1,70 @@
+{
+  "version": 1,
+  "purpose": "Reviewed, sourced rules for screening OpenAQ Vietnam inventory records. Placement and identity are decided here, in code, from evidence that is documented rather than inferred from a name. A semantic model is asked only about records that no rule resolves.",
+  "provenance": "Rules were written after independent verification of 6 locations and 6 candidate pairs on 2026-09-17 (see docs/research/typesafe_screening.md). The AirGradient and EPA rules come from manufacturer and agency documentation, not from the verified labels.",
+  "caveats": [
+    "The identity distance thresholds (100 m, 10000 m) are proposals derived from the six verified pairs. They are project decisions and require sign-off before this file is treated as reviewed.",
+    "The identity rules reproduce the six verified pairs by construction, because those pairs were used to choose the thresholds. That is not validation; it is a compact, inspectable restatement.",
+    "Candidate pairs are only generated where normalised names are at least 80 percent similar, so identity screening cannot see a same-station pair whose names differ.",
+    "No rule resolves the 37 Hanoi network stations or the HabitatMap community sensors; those remain the model's only remaining subject and its answers are hints for review, never dispositions."
+  ],
+  "placement_rules": [
+    {
+      "id": "airgradient_open_air_is_outdoor",
+      "placement": "outdoor_ambient",
+      "match": {"instrument_contains_any": ["Open Air", "O-1PST"]},
+      "basis": "Manufacturer product documentation.",
+      "source": "https://www.airgradient.com/outdoor/",
+      "source_note": "AirGradient documents Open Air (Model O-1PST) as an outdoor air quality monitor.",
+      "verified_locations": [6123215]
+    },
+    {
+      "id": "airgradient_one_is_indoor",
+      "placement": "sheltered_or_indoor",
+      "match": {"instrument_contains_any": ["AirGradient ONE", "I-9PSL"]},
+      "basis": "Manufacturer product documentation.",
+      "source": "https://www.airgradient.com/indoor/",
+      "source_note": "AirGradient documents ONE (Model I-9PSL / I-9PSL-DE) as an indoor air quality monitor.",
+      "verified_locations": [6068138]
+    },
+    {
+      "id": "us_dos_post_monitors_are_ambient",
+      "placement": "outdoor_ambient",
+      "match": {"name_startswith_any": ["US Diplomatic Post"], "provider_contains_any": ["AirNow", "StateAir"]},
+      "match_mode": "any",
+      "basis": "US EPA documentation of the Department of State embassy and consulate monitor network.",
+      "source": "https://gispub.epa.gov/airnowembassy/",
+      "source_note": "EPA states that the embassies and consulates map displays data from reference-grade air quality monitors at U.S. embassies and consulates, reporting ambient PM2.5. The project's own qualification report identifies these inventory records as the diplomatic-post feeds.",
+      "verified_locations": [7441, 7440, 2539, 2446]
+    }
+  ],
+  "identity_rules": [
+    {
+      "id": "far_apart_is_distinct_station",
+      "decision": "leave_unlinked",
+      "when": {"distance_m_gte": 10000},
+      "basis": "Coordinates.",
+      "source": "inventory coordinates",
+      "source_note": "Records this far apart cannot describe one physical station, however similar the names.",
+      "verified_pairs": ["2161313|2161323"]
+    },
+    {
+      "id": "same_name_within_colocation_radius",
+      "decision": "merge",
+      "when": {"distance_m_lte": 100, "normalized_names_equal": true},
+      "basis": "Coordinates plus identical normalised name.",
+      "source": "inventory coordinates",
+      "source_note": "Identical name inside the co-location radius. Threshold is a proposed project decision, not a measured value.",
+      "verified_pairs": ["6477970|6477971", "2446|7440", "1285357|18"]
+    },
+    {
+      "id": "otherwise_curator",
+      "decision": "curator",
+      "when": {},
+      "basis": "Default when no rule resolves the pair.",
+      "source": "",
+      "source_note": "A human decides. Includes same-name records between the two distance thresholds, which may be one redeployed device or two devices.",
+      "verified_pairs": ["268816|268821", "6473874|6497944"]
+    }
+  ]
+}
